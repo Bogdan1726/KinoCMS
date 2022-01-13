@@ -67,3 +67,4 @@ class UserUpdateForm(UserChangeForm):
             'language': forms.RadioSelect(),
             'gender': forms.RadioSelect(),
         }
+
