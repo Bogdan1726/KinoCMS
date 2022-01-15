@@ -41,6 +41,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+
     def form_valid(self, form):
         self.object = form.save()
         messages.success(self.request, 'Данные обновлены')

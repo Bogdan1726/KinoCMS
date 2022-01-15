@@ -3,72 +3,13 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import make_password
+from.managers import CustomUserManager
 from django.core.mail import send_mail
 from django.contrib import auth
 from django.db import models
 
 
 # Create your models here.
-
-
-class CustomUserManager(BaseUserManager):
-    use_in_migrations = True
-
-    def _create_user(self, email, password, **extra_fields):
-        """
-        Create and save a user with the given username, email, and password.
-        """
-        if not email:
-            raise ValueError('The given username must be set')
-        email = self.normalize_email(email)
-        # Lookup the real model class from the global app registry so this
-        # manager method can be used in migrations. This is fine because
-        # managers are by definition working on the real model.
-        user = self.model(email=email, **extra_fields)
-        user.password = make_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
-
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-        return self._create_user(email, password, **extra_fields)
-
-    def with_perm(self, perm, is_active=True, include_superusers=True, backend=None, obj=None):
-        if backend is None:
-            backends = auth._get_backends(return_tuples=True)
-            if len(backends) == 1:
-                backend, _ = backends[0]
-            else:
-                raise ValueError(
-                    'You have multiple authentication backends configured and '
-                    'therefore must provide the `backend` argument.'
-                )
-        elif not isinstance(backend, str):
-            raise TypeError(
-                'backend must be a dotted import path string (got %r).'
-                % backend
-            )
-        else:
-            backend = auth.load_backend(backend)
-        if hasattr(backend, 'with_perm'):
-            return backend.with_perm(
-                perm,
-                is_active=is_active,
-                include_superusers=include_superusers,
-                obj=obj,
-            )
-        return self.none()
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -95,9 +36,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=100, blank=True, verbose_name='Адресс')
     language = models.CharField(max_length=2, default=LANGUAGE[0][0], choices=LANGUAGE, verbose_name='Язык')
     gender = models.CharField(max_length=5, default='', choices=GENDER, verbose_name='Пол')
-    phone_number = models.CharField(max_length=15, blank=True, verbose_name='Телефон')
+    phone_number = models.CharField(max_length=10, unique=True, blank=True, verbose_name='Телефон')
     date_of_birth = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
-    number_card = models.CharField(max_length=19, blank=True, verbose_name='Номер карты')
+    number_card = models.CharField(max_length=16, blank=True, verbose_name='Номер карты')
     town = models.ForeignKey('Town', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Город')
 
     objects = CustomUserManager()

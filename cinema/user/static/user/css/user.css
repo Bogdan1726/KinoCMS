@@ -11,7 +11,7 @@ h2 {
 }
 
 
-input[type=text], [type=email], select {
+input[type=text], [type=email], [type=password], select {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
@@ -21,6 +21,15 @@ input[type=text], [type=email], select {
     margin: 10px;
 }
 
+input[type=date] {
+    width: 100%;
+    margin: 10px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
 label {
     padding: 12px 12px 12px 0;
     display: inline-block;
@@ -28,9 +37,12 @@ label {
 
 }
 
-.client-container{
+.client-container {
     margin: 0 30px 0 30px;
 }
 
+.errors{
+    color: #842029;
+}
 
 
