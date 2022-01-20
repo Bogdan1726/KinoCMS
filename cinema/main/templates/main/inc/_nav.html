@@ -18,6 +18,9 @@
                     </a>
                     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
                         <li><a class="dropdown-item" href="{% url 'user' %}">Профиль</a></li>
+                        {% if request.user.is_superuser %}
+                        <li><a class="dropdown-item" href="{% url 'cms' %}">Админ панель</a></li>
+                        {% endif %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>

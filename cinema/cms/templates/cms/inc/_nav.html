@@ -1,0 +1,21 @@
+
+
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom">
+    <a href="{% url 'main' %}"
+       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <h3>KinoCMS</h3>
+    </a>
+    <ul class="nav">
+        <li class="nav-item">
+            <a href="{% url 'user' %}" class="nav-link">
+                <img src="/static/cms/media/user.png" alt="avatar" width="30" height="30">
+                <span style="color: black;">Administrator</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link">
+                <img src="/static/cms/media/logout.jpg" alt="logout" width="30" height="30">
+            </a>
+        </li>
+    </ul>
+</div>

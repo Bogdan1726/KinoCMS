@@ -1,0 +1,74 @@
+{% extends 'cms/elements/base.html'%}
+
+{% block title %}
+{{ block.super }}|Пользователи
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <h3>Пользователи</h3>
+
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div id="example1_filter" class="dataTables_filter">
+            <label>Поиск:<input type="search"
+                                class="form-control form-control-sm"
+                                placeholder="поиск"
+                                aria-controls="example1">
+            </label>
+        </div>
+    </div>
+</div>
+
+<table id="example2" class="table table-bordered table-hover dataTable dtr-inline" role="grid"
+       aria-describedby="example2_info">
+    <thead>
+    <tr role="row">
+        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending">ID
+        </th>
+        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="Browser: activate to sort column ascending">Дата регистрации
+        </th>
+        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="Platform(s): activate to sort column ascending">Дата рождения
+        </th>
+        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="Engine version: activate to sort column ascending">Email
+        </th>
+        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="CSS grade: activate to sort column ascending">Телефон
+        </th>
+        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="CSS grade: activate to sort column ascending">ФИО
+        </th>
+        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="CSS grade: activate to sort column ascending">Псевдоним
+        </th>
+        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+            aria-label="CSS grade: activate to sort column ascending">Город
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in user %}
+    <tr class="odd">
+        <td>{{ item.id }}</td>
+        <td>{{ item.date_joined|date:"d.m.Y" }}</td>
+        <td>{{ item.date_of_birth|date:"d.m.Y" }}</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.phone_number }}</td>
+        <td>{{ item.first_name }} {{ item.last_name }}</td>
+        <td>{{ item.username }}</td>
+        <td>{{ item.town }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
+
+{% endblock %}
+
