@@ -10,7 +10,9 @@ urlpatterns = [
     path('news/', news, name='news'),
     path('promotions/', promotions, name='promotions'),
     path('pages/', pages, name='pages'),
-    path('users/', UserListView.as_view(), name='users'),
+    path('users/', CmsUserListView.as_view(), name='users'),
+    path('users/edit/<int:pk>/', CmsUserUpdateView.as_view(), name='user_edit'),
+    path('users/delete/<int:pk>/', CmsUserDeleteView.as_view(), name='user_delete'),
     path('mailing/', mailing, name='mailing')
 
 

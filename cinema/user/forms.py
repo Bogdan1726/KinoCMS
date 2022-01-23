@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
@@ -61,19 +62,20 @@ class UserUpdateForm(UserChangeForm):
     error_messages = {
         'password_mismatch': _('The two password fields didn’t match.'),
         'error_date': 'Дата рождения не может быть позже текущей даты',
-        'error_phone': 'Неверный формат номера телефона попробуйте 0(код оператора) 000 00 00',
-        'error_number_card': 'Номер карты неверного формата'
+        'error_phone': 'Неверный формат номера телефона',
+        'error_number_card': 'Номер карты неверного формата',
+        'duplicate_phone_number': _('Этот номер телефона уже использовался для регистрации.')
     }
 
     new_password1 = forms.CharField(
         label=_("New password"),
         required=False,
-        widget=forms.PasswordInput(),
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
     new_password2 = forms.CharField(
         label=_("New password confirmation"),
         required=False,
-        widget=forms.PasswordInput(),
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
 
     class Meta:
@@ -85,11 +87,21 @@ class UserUpdateForm(UserChangeForm):
                   ]
 
         widgets = {
-            'language': forms.RadioSelect(),
-            'gender': forms.RadioSelect(),
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
-            'phone_number': forms.TextInput(attrs={'placeholder': 'Пример (0931231221)'}),
-            'number_card': forms.TextInput(attrs={'placeholder': '16-ти значный номер вашей карты'})
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'language': forms.RadioSelect(attrs={'class': 'icheck-primary d-inline'}),
+            'gender': forms.RadioSelect(attrs={'class': 'icheck-primary d-inline'}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'placeholder': '+38(092)-222-22-22',
+                                                   'class': 'form-control',
+                                                   'data-mask': '+38(000)-000-00-00'}),
+            'number_card': forms.TextInput(attrs={'placeholder': 'Номер вашей карты',
+                                                  'class': 'form-control',
+                                                  'data-mask': '0000-0000-0000-0000'}),
+            'town': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def clean_date_of_birth(self):
@@ -103,31 +115,27 @@ class UserUpdateForm(UserChangeForm):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
-        if len(phone_number) > 0:
-            if phone_number.isdigit():
-                if len(phone_number) < 10:
-                    raise forms.ValidationError(
-                        self.error_messages['error_phone']
-                    )
-            if not phone_number.isdigit():
-                raise forms.ValidationError(
-                    self.error_messages['error_phone']
-                )
-        return phone_number
+        phone = re.sub(r'\D', '', phone_number)
+        if len(phone) == 0:
+            phone_number = None
+            return phone_number
+        if re.search(r"^380[1-9]{2}\d{7}$", phone):
+            return phone_number
+        raise forms.ValidationError(
+            self.error_messages['error_phone']
+        )
 
     def clean_number_card(self):
         number_card = self.cleaned_data['number_card']
-        if len(number_card) > 0:
-            if number_card.isdigit():
-                if len(number_card) < 16:
-                    raise forms.ValidationError(
-                        self.error_messages['error_number_card']
-                    )
-            if not number_card.isdigit():
-                raise ValidationError(
-                    self.error_messages['error_number_card']
-                )
-        return number_card
+        card = re.sub(r'\D', '', number_card)
+        if len(card) == 0:
+            return number_card
+        if re.search(r'^4[0-9]{12}(?:[0-9]{3})?$', card) or \
+                re.search(r'^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})$', card):
+            return number_card
+        raise forms.ValidationError(
+            self.error_messages['error_number_card']
+        )
 
     def clean_new_password2(self):
         password1 = self.cleaned_data.get("new_password1")

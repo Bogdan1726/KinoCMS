@@ -1,15 +1,51 @@
-from django.shortcuts import render
-from django.views.generic import ListView
-
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, UpdateView, DeleteView
+from user.forms import UserUpdateForm
 from user.models import User
 
 
 # Create your views here.
 
-class UserListView(ListView):
+class CmsUserListView(ListView):
     model = User
-    context_object_name = 'user'
+    context_object_name = 'users'
     template_name = 'cms/pages/users/list_users.html'
+
+
+class CmsUserUpdateView(UpdateView):
+    model = User
+    template_name = 'cms/pages/users/update_user.html'
+    success_url = reverse_lazy('users')
+    form_class = UserUpdateForm
+
+    def form_valid(self, form):
+        if self.request.user.is_superuser:
+            self.object = form.save()
+            username = form.cleaned_data['username']
+            messages.success(self.request, f'Данные пользователя {username} обновлены')
+            return super().form_valid(form)
+        messages.warning(self.request, 'Для редактирования пользователей нужно иметь права администратора')
+        return redirect('users')
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
+class CmsUserDeleteView(DeleteView):
+    model = User
+    success_url = reverse_lazy('users')
+    template_name = 'cms/pages/users/list_users.html'
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            messages.success(request, 'Пользователь удалён!')
+            return self.delete(request, *args, **kwargs)
+        messages.warning(request, 'Для удаления пользователей нужно иметь права администратора')
+        return redirect('users')
 
 
 def index(request):
@@ -50,5 +86,3 @@ def pages(request):
 
 def mailing(request):
     return render(request, 'cms/pages/mailing/mailing.html')
-
-

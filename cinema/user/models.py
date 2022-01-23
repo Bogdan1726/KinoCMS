@@ -36,9 +36,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=100, blank=True, verbose_name='Адресс')
     language = models.CharField(max_length=2, default=LANGUAGE[0][0], choices=LANGUAGE, verbose_name='Язык')
     gender = models.CharField(max_length=5, default='', choices=GENDER, verbose_name='Пол')
-    phone_number = models.CharField(max_length=10, unique=True, blank=True, verbose_name='Телефон')
+    phone_number = models.TextField(blank=True, null=True, unique=True, verbose_name='Телефон')
     date_of_birth = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
-    number_card = models.CharField(max_length=16, blank=True, verbose_name='Номер карты')
+    number_card = models.CharField(max_length=19, blank=True, verbose_name='Номер карты')
     town = models.ForeignKey('Town', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Город')
 
     objects = CustomUserManager()

@@ -1,74 +1,142 @@
 {% extends 'cms/elements/base.html'%}
+{% load static %}
 
 {% block title %}
 {{ block.super }}|Пользователи
 {% endblock %}
 
+{% block style %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'cms/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'cms/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'cms/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+<!--/.dataTables-->
+{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm-12 col-md-6">
-        <h3>Пользователи</h3>
+<div class="card">
+    <div class="card-body">
+        {% include 'cms/inc/_messages.html' %}
+        <table id="example1" class="table table-bordered text-center">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата регистрации</th>
+                <th>День рождения</th>
+                <th>Email</th>
+                <th>Телефон</th>
+                <th>ФИО</th>
+                <th>Псевдоним</th>
+                <th>Город</th>
+                {% if request.user.is_superuser %}
+                <th class="sorting_asc_disabled sorting_desc_disabled"></th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.date_joined|date:"d.m.Y" }}</td>
+                <!-- user.date_of_birth -->
+                {% if user.date_of_birth %}
+                <td>{{ user.date_of_birth|date:"d.m.Y" }}</td>
+                {% else %}
+                <td><i class="fas fa-minus"></i></td>
+                {% endif %}
+                <!-- /.user.date_of_birth -->
+                <td>{{ user.email }}</td>
+                <!-- user.phone_number -->
+                {% if user.phone_number %}
+                <td>{{ user.phone_number }}</td>
+                {% else %}
+                <td><i class="fas fa-minus"></i></td>
+                {% endif %}
+                <!-- /.user.phone_number -->
+                <!-- user.first_name or user.last_name -->
+                {% if user.first_name or user.last_name %}
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                {% else %}
+                <td><i class="fas fa-minus"></i></td>
+                {% endif %}
+                <!-- /.user.first_name or user.last_name -->
+                <td>{{ user.username }}</td>
+                <!-- user.town -->
+                {% if user.town %}
+                <td>{{ user.town }}</td>
+                {% else %}
+                <td><i class="fas fa-minus"></i></td>
+                {% endif %}
+                <!-- /.user.town -->
+                {% if request.user.is_superuser %}
+                <td>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="{% url 'user_edit' user.id %}" class="fas fa-edit">
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="" class="fas fa-trash text-danger"
+                               data-target="#exampleModal-{{ forloop.counter }}"
+                               data-toggle="modal">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Model for delete -->
+                    <div class="modal fade" id="exampleModal-{{ forloop.counter }}" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel-{{ forloop.counter }}">Удаление
+                                        пользователя</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form method="post" action="{% url 'user_delete' user.id %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        Ви уверены что хотите удалить пользователя {{ user.username }}?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Удалить</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.model for delete -->
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
     </div>
-    <div class="col-sm-12 col-md-6">
-        <div id="example1_filter" class="dataTables_filter">
-            <label>Поиск:<input type="search"
-                                class="form-control form-control-sm"
-                                placeholder="поиск"
-                                aria-controls="example1">
-            </label>
-        </div>
-    </div>
+    <!-- /.card-body -->
 </div>
+{% endblock %}
 
-<table id="example2" class="table table-bordered table-hover dataTable dtr-inline" role="grid"
-       aria-describedby="example2_info">
-    <thead>
-    <tr role="row">
-        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending">ID
-        </th>
-        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="Browser: activate to sort column ascending">Дата регистрации
-        </th>
-        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="Platform(s): activate to sort column ascending">Дата рождения
-        </th>
-        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="Engine version: activate to sort column ascending">Email
-        </th>
-        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="CSS grade: activate to sort column ascending">Телефон
-        </th>
-        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="CSS grade: activate to sort column ascending">ФИО
-        </th>
-        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="CSS grade: activate to sort column ascending">Псевдоним
-        </th>
-        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
-            aria-label="CSS grade: activate to sort column ascending">Город
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for item in user %}
-    <tr class="odd">
-        <td>{{ item.id }}</td>
-        <td>{{ item.date_joined|date:"d.m.Y" }}</td>
-        <td>{{ item.date_of_birth|date:"d.m.Y" }}</td>
-        <td>{{ item.email }}</td>
-        <td>{{ item.phone_number }}</td>
-        <td>{{ item.first_name }} {{ item.last_name }}</td>
-        <td>{{ item.username }}</td>
-        <td>{{ item.town }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
+{% block script %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'cms/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'cms/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'cms/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'cms/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
 
-</table>
-
-
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+        })
+    });
+</script>
+<!--/datatable-->
 {% endblock %}
 
