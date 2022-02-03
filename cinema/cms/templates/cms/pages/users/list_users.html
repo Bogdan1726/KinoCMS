@@ -17,7 +17,8 @@
 <div class="card">
     <div class="card-body">
         {% include 'cms/inc/_messages.html' %}
-        <table id="example1" class="table table-bordered text-center">
+        <h4 style="text-align:center;">Пользователи</h4>
+        <table id="users" class="table table-bordered text-center">
             <thead>
             <tr>
                 <th>ID</th>
@@ -132,11 +133,26 @@
 
 <script>
     $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
+        $("#users").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "language": {
+                "infoFiltered": "(Отфильтровано _MAX_ записей)",
+                "zeroRecords": "Записей не найдено",
+                "info": "Показано с _START_ по _END_ записей из _TOTAL_",
+                "infoEmpty": "Нет записей.",
+                "search": "Поиск:",
+                "paginate": {
+                    "previous": "Предыдущая",
+                    "last": "Последняя",
+                    "next": "Следующая"
+                }
+            }
         })
     });
 </script>
+
 <!--/datatable-->
 {% endblock %}
 

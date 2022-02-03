@@ -1,0 +1,148 @@
+{% extends 'cms/elements/base.html'%}
+{% load static i18n %}
+
+{% block title %}
+{{ block.super }}|Добавить страницу
+{% endblock %}
+
+
+{% block style %}
+<style>
+    .custom-control-label {
+        transform: scale(1.6);
+        cursor: pointer;
+    }
+
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        {% include 'cms/inc/_messages.html' %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'cms/inc/_active_and_language.html' %}
+            <div class="form-group row tab-content">
+                <label id="title" class="col-sm-2 col-form-label">Название</label>
+                <div class="col-sm-3">
+                    {{ form.title }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label id="description" class="col-sm-2 col-form-label">Описание</label>
+                <div class="col-sm-10">
+                    {{ form.description }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Главная картинка</label>
+                <div class="col-sm-10">
+                    <img id="blah" class="home_image" src="{{ form.instance.image.url }}" alt="logo" width="200"
+                         height="200">
+                    <span class="btn btn-outline-success btn-file">Загрузить
+                        {{ form.image }}
+                    </span>
+                    <button type="reset" class="btn btn-outline-danger"
+                            onclick="document.getElementById('blah').src = ('{{ form.instance.image.url }}')">Удалить
+                    </button>
+                </div>
+            </div>
+
+            <label>
+                Галерея картинок
+            </label>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Размер 1000x190</label>
+                {{ formset_gallery.management_form }}
+                {% for form in formset_gallery %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                <div class="col-sm-2">
+                    {% if form.instance.image %}
+                    <img src="{{ form.instance.image.url }}" width=100, height=100, alt="logo">
+                    {% endif %}
+                    {{ form.DELETE }}
+                    {{ form.image }}
+                    {{ form.is_active }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label>
+                        SEO блок:
+                    </label>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group row">
+                        <div class="col-sm-8">
+                            {{ seo_block_form.url }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-8">
+                            {{ seo_block_form.title_seo }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-8">
+                            {{ seo_block_form.keywords }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-8">
+                            {{ seo_block_form.description_seo }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center">
+                <button type="submit" class="btn btn-outline-dark">Сохранить</button>
+                <a href="{% url 'pages' %}" class="btn btn-outline-dark">Назад</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+    $("#uk").on("click", function () {
+        $('#ru').css('background-color', 'white')
+        $('#uk').css('background-color', '#ddd')
+        $('#title').text('Назва');
+        $('#description').text('Опис')
+    });
+    $("#ru").on("click", function () {
+        $('#ru').css('background-color', '#ddd')
+        $('#uk').css('background-color', 'white')
+        $('#title').text('Название');
+        $('#description').text('Описание')
+    });
+</script>
+{% endblock %}

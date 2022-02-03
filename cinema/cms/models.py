@@ -1,18 +1,22 @@
 from django.conf import settings
 from django.db import models
-
+import datetime
 
 # Create your models here.
 
 class SeoBlock(models.Model):
+    objects = None
     url = models.URLField(verbose_name='url')
-    title = models.CharField(max_length=50, verbose_name='Заголовок')
+    title_seo = models.CharField(max_length=30, blank=True, default='', verbose_name='Заголовок')
     keywords = models.CharField(max_length=50, verbose_name='Ключевые слова')
-    description = models.TextField(verbose_name='Описание')
+    description_seo = models.TextField(blank=True, default='', verbose_name='Описание')
 
     class Meta:
         verbose_name = 'Seo блок'
         verbose_name_plural = 'Seo блок'
+
+    def __str__(self):
+        return f'{self.title_seo}'
 
 
 class Gallery(models.Model):
@@ -183,6 +187,7 @@ class Promotions(models.Model):
 class Page(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название')
     active = models.BooleanField(default=True, verbose_name='Активна')
+    creation_date = models.DateField(auto_now_add=True, null=True, verbose_name='Дата создания')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='pages/', verbose_name='Главная картинка', unique=True)
     gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL, verbose_name='Галерея картинок')
@@ -197,9 +202,11 @@ class Page(models.Model):
 
 
 class HomePage(models.Model):
+    objects = None
     phone_number1 = models.CharField(max_length=15, verbose_name='')
     phone_number2 = models.CharField(max_length=15, verbose_name='')
     active = models.BooleanField(default=True, verbose_name='')
+    creation_date = models.DateField(auto_now_add=True, null=True, verbose_name='Дата создания')
     seo_text = models.TextField(verbose_name='')
     seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL, verbose_name='SEO блок')
 
@@ -209,8 +216,10 @@ class HomePage(models.Model):
 
 
 class ContactsPage(models.Model):
+    objects = None
     title = models.CharField(max_length=100, verbose_name='Название кинотеатра')
     active = models.BooleanField(default=True, verbose_name='Активна')
+    creation_date = models.DateField(auto_now_add=True, null=True, verbose_name='Дата создания')
     address = models.TextField(verbose_name='Адресс')
     coordinates = models.CharField(max_length=100, verbose_name='Координаты для карты')
     logo = models.ImageField(upload_to='pages/contacts/', verbose_name='Логотип', unique=True)
