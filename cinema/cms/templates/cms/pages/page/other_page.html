@@ -1,5 +1,7 @@
 {% extends 'cms/elements/base.html'%}
 {% load static i18n %}
+{% load crispy_forms_tags %}
+
 
 {% block title %}
 {{ block.super }}|Добавить страницу
@@ -33,6 +35,10 @@
         cursor: inherit;
         display: block;
     }
+
+    .fa-trash:hover {
+        cursor: pointer;
+    }
 </style>
 {% endblock %}
 
@@ -41,7 +47,7 @@
 <div class="card">
     <div class="card-body">
         {% include 'cms/inc/_messages.html' %}
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" id="pet_form" enctype="multipart/form-data">
             {% csrf_token %}
             {% include 'cms/inc/_active_and_language.html' %}
             <div class="form-group row tab-content">
@@ -62,8 +68,8 @@
                     <img id="blah" class="home_image" src="{{ form.instance.image.url }}" alt="logo" width="200"
                          height="200">
                     <span class="btn btn-outline-success btn-file">Загрузить
-                        {{ form.image }}
-                    </span>
+                                        {{ form.image }}
+                                    </span>
                     <button type="reset" class="btn btn-outline-danger"
                             onclick="document.getElementById('blah').src = ('{{ form.instance.image.url }}')">Удалить
                     </button>
@@ -74,22 +80,34 @@
                 Галерея картинок
             </label>
 
-            <div class="form-group row">
+            <div class="form-group row" id="formset">
                 <label class="col-sm-2 col-form-label">Размер 1000x190</label>
+                <div class="col-sm-2">
+                    <a id="add-image" class="btn btn-outline-dark">Добавить</a>
+                </div>
                 {{ formset_gallery.management_form }}
                 {% for form in formset_gallery %}
-                {% for hidden in form.hidden_fields %}
-                    {{ hidden }}
-                {% endfor %}
-                <div class="col-sm-2">
-                    {% if form.instance.image %}
-                    <img src="{{ form.instance.image.url }}" width=100, height=100, alt="logo">
-                    {% endif %}
-                    {{ form.DELETE }}
-                    {{ form.image }}
-                    {{ form.is_active }}
+                <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ form.prefix }}">
+                    <div class="image-form">
+                        {% if form.instance.image %}
+                        <img src="{{ form.instance.image.url }}" width=100, height=100, alt="logo">
+                        {% endif %}
+                        <a onclick="delete_image(event)" id="{{ form.prefix }}"
+                           class="fas fa-trash text-danger"></a>
+                        {{ form }}
+
+                    </div>
                 </div>
                 {% endfor %}
+                <div class="empty_form" style="display: none;">
+                    <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ formset_gallery.empty_form.prefix }}">
+                        <img src="/static/cms/media/not_image.svg" width=100, height=100, alt="logo">
+                        <a onclick="delete_image(event)" id="{{ formset_gallery.empty_form.prefix }}"
+                           class="fas fa-trash text-danger"></a>
+                        {{ formset_gallery.empty_form }}
+
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-3">
@@ -121,7 +139,7 @@
                 </div>
             </div>
             <div style="text-align:center">
-                <button type="submit" class="btn btn-outline-dark">Сохранить</button>
+                <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
                 <a href="{% url 'pages' %}" class="btn btn-outline-dark">Назад</a>
             </div>
         </form>
@@ -131,6 +149,24 @@
 
 
 {% block script %}
+<script>
+    $("#add-image").on('click', function () {
+        const form_idx = $('#id_form-TOTAL_FORMS').val();
+        $("#formset").append($('.empty_form').html().replace(/__prefix__/g, form_idx))
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    })
+
+
+    function delete_image(event) {
+        const index = event.target.id;
+        const form_idx = $('#id_form-TOTAL_FORMS').val();
+        $("#" + index).remove();
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) - 1);
+
+    }
+
+</script>
+
 <script>
     $("#uk").on("click", function () {
         $('#ru').css('background-color', 'white')
@@ -145,4 +181,5 @@
         $('#description').text('Описание')
     });
 </script>
+
 {% endblock %}

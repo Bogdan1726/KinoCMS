@@ -126,11 +126,10 @@ class CmsPageUpdateView(UpdateView):
         if self.request.method == 'POST':
             context['seo_block_form'] = CmsSeoBlockForm(self.request.POST, instance=self.object.seo_block)
             context['formset_gallery'] = CmsImageFormSet(self.request.POST, self.request.FILES,
-                                                         queryset=Images.objects.filter(gallery=4))
+                                                         queryset=Images.objects.filter(gallery=self.object.gallery))
         else:
             context['seo_block_form'] = CmsSeoBlockForm(instance=self.object.seo_block)
             context['formset_gallery'] = CmsImageFormSet(queryset=Images.objects.filter(gallery=self.object.gallery))
-            print(CmsImageFormSet)
         return context
 
     def form_valid(self, form):

@@ -41,6 +41,11 @@ class CmsImageForm(forms.ModelForm):
         model = Images
         exclude = ('gallery', )
 
+        widgets = {
+            'image': forms.FileInput(attrs={'type': 'file'})
+
+        }
+
 
 CmsImageFormSet = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
 
