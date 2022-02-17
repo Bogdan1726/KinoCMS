@@ -1,7 +1,10 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from django.views.generic.edit import ModelFormMixin, ProcessFormView, FormView
+
 from user.forms import UserUpdateForm
 from user.models import User
 from .forms import *
@@ -81,7 +84,7 @@ class CmsPagesListView(ListView):
 
 class CmsHomePageUpdateView(UpdateView):
     """
-    Create a CMS home page
+    Update a CMS home page
     """
     model = HomePage
     template_name = 'cms/pages/page/main_page.html'
@@ -90,10 +93,8 @@ class CmsHomePageUpdateView(UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(CmsHomePageUpdateView, self).get_context_data()
-        if self.request.method == 'POST':
-            context['seo_block_form'] = CmsSeoBlockForm(self.request.POST, instance=self.object.seo_block)
-        else:
-            context['seo_block_form'] = CmsSeoBlockForm(instance=self.object.seo_block)
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
+                                                    instance=self.object.seo_block)
         return context
 
     def form_valid(self, form):
@@ -101,11 +102,14 @@ class CmsHomePageUpdateView(UpdateView):
         seo_block_form = context['seo_block_form']
         if seo_block_form.is_valid():
             seo_block_form.save()
-        home_page = form.save(commit=False)
-        home_page.seo_block = seo_block_form.instance
-        home_page.save()
-        messages.success(self.request, 'Данные обновлены')
-        return super().form_valid(form)
+            home_page = form.save(commit=False)
+            home_page.seo_block = seo_block_form.instance
+            home_page.save()
+            messages.success(self.request, 'Данные обновлены')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
 
     def form_invalid(self, form):
         messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
@@ -114,7 +118,7 @@ class CmsHomePageUpdateView(UpdateView):
 
 class CmsPageUpdateView(UpdateView):
     """
-    Create a CMS pages
+    Update a CMS pages
     """
     model = Page
     template_name = 'cms/pages/page/other_page.html'
@@ -123,39 +127,103 @@ class CmsPageUpdateView(UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(CmsPageUpdateView, self).get_context_data()
-        if self.request.method == 'POST':
-            context['seo_block_form'] = CmsSeoBlockForm(self.request.POST, instance=self.object.seo_block)
-            context['formset_gallery'] = CmsImageFormSet(self.request.POST, self.request.FILES,
-                                                         queryset=Images.objects.filter(gallery=self.object.gallery))
-        else:
-            context['seo_block_form'] = CmsSeoBlockForm(instance=self.object.seo_block)
-            context['formset_gallery'] = CmsImageFormSet(queryset=Images.objects.filter(gallery=self.object.gallery))
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None, instance=self.object.seo_block)
+        context['formset_gallery'] = CmsImageFormSet(self.request.POST or None,
+                                                     self.request.FILES or None,
+                                                     queryset=Images.objects.filter(gallery=self.object.gallery))
+
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         seo_block_form = context['seo_block_form']
         formset_gallery = context['formset_gallery']
-        if seo_block_form.is_valid():
+        if seo_block_form.is_valid() and formset_gallery.is_valid():
             seo_block_form.save()
-        if formset_gallery.is_valid():
             for image in formset_gallery:
                 if image.cleaned_data:
-                    images = image.save(commit=False)
-                    images.gallery = self.object.gallery
-                    images.save()
+                    if image.is_valid():
+                        images = image.save(commit=False)
+                        images.gallery = self.object.gallery
+                        images.save()
             formset_gallery.save()
-        page = form.save(commit=False)
-        page.save()
-        messages.success(self.request, 'Данные обновлены')
-        return super().form_valid(form)
+            page = form.save(commit=False)
+            page.save()
+            messages.success(self.request, 'Данные обновлены')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
 
     def form_invalid(self, form):
         messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
         return super().form_invalid(form)
 
 
+class CmsContactsUpdateView(UpdateView):
+    """
+        Update a CMS contacts page
+    """
+    model = ContactsPage
+    template_name = 'cms/pages/page/contacts_page.html'
+    success_url = reverse_lazy('pages')
+    form_class = CmsContactsPageUpdateForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CmsContactsUpdateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
+                                                    instance=self.object.seo_block)
+        context['contacts_formset'] = CmsContactsPageFormSet(self.request.POST or None,
+                                                             self.request.FILES or None,
+                                                             queryset=ContactsPage.objects.filter(id=self.object.id))
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        seo_block_form = context['seo_block_form']
+        if seo_block_form.is_valid():
+            print('soe ok')
+            seo_block_form.save()
+            formset = form.save(commit=False)
+            formset.seo_block = seo_block_form.instance
+            formset.save()
+            messages.success(self.request, 'Данные обновлены')
+            return super().form_valid(form)
+        else:
+            print('ok')
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        print('invalid')
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
 # pages end
+
+# def update_contacts(request, pk):
+#     objects = get_object_or_404(ContactsPage, id=pk)
+#     if request.method == 'POST':
+#         seo_block_form = CmsSeoBlockForm(request.POST)
+#         contacts_formset = CmsContactsPageFormSet(request.POST,
+#                                                   request.FILES,
+#                                                   queryset=ContactsPage.objects.filter(id=pk))
+#         if seo_block_form.is_valid() and contacts_formset.is_valid():
+#             seo_block_form.save()
+#             contacts_formset.save()
+#             messages.success(request, 'Save its okay')
+#         else:
+#             print(contacts_formset)
+#             messages.warning(request, 'error valid')
+#     seo_block_form = CmsSeoBlockForm(instance=objects.seo_block)
+#     contacts_formset = CmsContactsPageFormSet
+#     context = {
+#         'form': CmsPageUpdateForm,
+#         'seo_block_form': seo_block_form,
+#         'contacts_formset': contacts_formset
+#     }
+#     return render(request, 'cms/pages/page/contacts_page.html', context)
 
 
 def index(request):

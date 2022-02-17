@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.db import models
 import datetime
-
+from django.core.validators import validate_image_file_extension
 # Create your models here.
 
 class SeoBlock(models.Model):
     objects = None
     url = models.URLField(verbose_name='url')
-    title_seo = models.CharField(max_length=30, blank=True, default='', verbose_name='Заголовок')
+    title_seo = models.CharField(max_length=30, verbose_name='Заголовок')
     keywords = models.CharField(max_length=50, verbose_name='Ключевые слова')
     description_seo = models.TextField(blank=True, default='', verbose_name='Описание')
 
@@ -31,7 +31,8 @@ class Gallery(models.Model):
 
 
 class Images(models.Model):
-    image = models.ImageField(upload_to='gallery/', verbose_name='Картинка', unique=True)
+    objects = None
+    image = models.ImageField(upload_to='gallery/', verbose_name='Картинка',unique=True)
     gallery = models.ForeignKey('Gallery', on_delete=models.CASCADE, verbose_name='Галерея')
 
     class Meta:

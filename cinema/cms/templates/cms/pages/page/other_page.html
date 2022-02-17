@@ -1,7 +1,5 @@
 {% extends 'cms/elements/base.html'%}
-{% load static i18n %}
-{% load crispy_forms_tags %}
-
+{% load static %}
 
 {% block title %}
 {{ block.super }}|Добавить страницу
@@ -9,37 +7,7 @@
 
 
 {% block style %}
-<style>
-    .custom-control-label {
-        transform: scale(1.6);
-        cursor: pointer;
-    }
-
-    .btn-file {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-file input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        background: white;
-        cursor: inherit;
-        display: block;
-    }
-
-    .fa-trash:hover {
-        cursor: pointer;
-    }
-</style>
+<link href="{% static 'cms/css/other_page.css' %}" rel="stylesheet">
 {% endblock %}
 
 
@@ -47,9 +15,9 @@
 <div class="card">
     <div class="card-body">
         {% include 'cms/inc/_messages.html' %}
-        <form method="post" id="pet_form" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% include 'cms/inc/_active_and_language.html' %}
+            {% include 'cms/inc/_active_and_language_tabs.html' %}
             <div class="form-group row tab-content">
                 <label id="title" class="col-sm-2 col-form-label">Название</label>
                 <div class="col-sm-3">
@@ -64,14 +32,16 @@
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Главная картинка</label>
-                <div class="col-sm-10">
-                    <img id="blah" class="home_image" src="{{ form.instance.image.url }}" alt="logo" width="200"
-                         height="200">
-                    <span class="btn btn-outline-success btn-file">Загрузить
-                                        {{ form.image }}
-                                    </span>
+                <div class="col-sm-4" style="margin-bottom: 10px;">
+                    <img id="logo" src="{{ form.instance.image.url }}" alt="logo" width="100%"
+                         height="100%">
+                </div>
+                <div class="col-sm-4 center">
+                    <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
+                        {{ form.image }}
+                    </a>
                     <button type="reset" class="btn btn-outline-danger"
-                            onclick="document.getElementById('blah').src = ('{{ form.instance.image.url }}')">Удалить
+                            onclick="document.getElementById('logo').src = ('{{ form.instance.image.url }}')">Удалить
                     </button>
                 </div>
             </div>
@@ -81,30 +51,68 @@
             </label>
 
             <div class="form-group row" id="formset">
-                <label class="col-sm-2 col-form-label">Размер 1000x190</label>
-                <div class="col-sm-2">
+                <div class="col-sm-2 center">
+                    <label class="col-form-label">Размер 1000x190</label>
+                </div>
+                <div class="col-sm-2 center">
                     <a id="add-image" class="btn btn-outline-dark">Добавить</a>
                 </div>
                 {{ formset_gallery.management_form }}
+                <div class="can-delete-list"></div>
                 {% for form in formset_gallery %}
                 <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ form.prefix }}">
-                    <div class="image-form">
-                        {% if form.instance.image %}
-                        <img src="{{ form.instance.image.url }}" width=100, height=100, alt="logo">
-                        {% endif %}
+                    <div class="text-right">
                         <a onclick="delete_image(event)" id="{{ form.prefix }}"
-                           class="fas fa-trash text-danger"></a>
-                        {{ form }}
-
+                           class="fas fa-minus-circle text-danger"></a>
                     </div>
+                    {% if form.instance.image %}
+                    <img class="{{ form.prefix }}" src="{{ form.instance.image.url }}" width=100%, height=150,
+                         alt="logo">
+                    {% else %}
+                    <img class="{{ form.prefix }}" src="/static/cms/media/not_image.png" width=100%, height=150,
+                         alt="logo">
+                    {% endif %}
+                    {{ form.id }}
+                    <div style="padding-top: 10px; text-align:center;">
+                            <span onchange="validations_image(event, this)"
+                                  id="{{ form.prefix }}"
+                                  class="btn btn-outline-success btn-file">Загрузить
+                        {{ form.image }}
+                        </span>
+                    </div>
+                    <span style="color: red;">
+                            {{ form.image.errors }}
+                            <p id="errors-{{ form.prefix }}"
+                               value="disabled"
+                               style="display: none;">Размер изображения должен быть 1000x190</p>
+                    </span>
                 </div>
                 {% endfor %}
                 <div class="empty_form" style="display: none;">
                     <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ formset_gallery.empty_form.prefix }}">
-                        <img src="/static/cms/media/not_image.svg" width=100, height=100, alt="logo">
-                        <a onclick="delete_image(event)" id="{{ formset_gallery.empty_form.prefix }}"
-                           class="fas fa-trash text-danger"></a>
-                        {{ formset_gallery.empty_form }}
+                        <div class="text-right">
+                            <a onclick="delete_image(event)"
+                               id="{{ formset_gallery.empty_form.prefix }}"
+                               class="fas fa-minus-circle text-danger"></a>
+                        </div>
+                        <img class="{{ formset_gallery.empty_form.prefix }}"
+                             src="/static/cms/media/not_image.png"
+                             width=100%, height=150, alt="logo">
+
+                        {{ formset_gallery.empty_form.id }}
+                        <div style="padding-top: 10px; text-align: center;">
+                        <span onchange="validations_image(event, this)"
+                              id="{{ formset_gallery.empty_form.prefix }}"
+                              class="btn btn-outline-success btn-file">Загрузить
+                        {{ formset_gallery.empty_form.image }}
+                        </span>
+                        </div>
+                        <span style="color: red;">
+                            {{ formset_gallery.empty_form.errors }}
+                            <p id="errors-{{ formset_gallery.empty_form.prefix }}"
+                               value="disabled"
+                               style="display: none;">Размер изображения должен быть 1000x190</p>
+                        </span>
 
                     </div>
                 </div>
@@ -119,6 +127,9 @@
                     <div class="form-group row">
                         <div class="col-sm-8">
                             {{ seo_block_form.url }}
+                            <span style="color: red;">
+                            {{ seo_block_form.url.errors }}
+                            </span>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -149,37 +160,9 @@
 
 
 {% block script %}
-<script>
-    $("#add-image").on('click', function () {
-        const form_idx = $('#id_form-TOTAL_FORMS').val();
-        $("#formset").append($('.empty_form').html().replace(/__prefix__/g, form_idx))
-        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-    })
 
+<script src="{% static 'cms/js/dynamic_formset.js' %}"></script>
+<script src="{% static 'cms/js/language_tabs_other_page.js' %}"></script>
 
-    function delete_image(event) {
-        const index = event.target.id;
-        const form_idx = $('#id_form-TOTAL_FORMS').val();
-        $("#" + index).remove();
-        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) - 1);
-
-    }
-
-</script>
-
-<script>
-    $("#uk").on("click", function () {
-        $('#ru').css('background-color', 'white')
-        $('#uk').css('background-color', '#ddd')
-        $('#title').text('Назва');
-        $('#description').text('Опис')
-    });
-    $("#ru").on("click", function () {
-        $('#ru').css('background-color', '#ddd')
-        $('#uk').css('background-color', 'white')
-        $('#title').text('Название');
-        $('#description').text('Описание')
-    });
-</script>
 
 {% endblock %}

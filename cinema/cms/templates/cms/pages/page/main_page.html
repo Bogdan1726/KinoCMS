@@ -28,12 +28,19 @@
                 <label class="col-sm-2 col-form-label">Телефон</label>
                 <div class="col-sm-2">
                     {{ form.phone_number1 }}
+                    <span style="color: red;">
+                    {{ form.phone_number1.errors }}
+                    </span>
                 </div>
+
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-2">
                     {{ form.phone_number2 }}
+                    <span style="color: red;">
+                    {{ form.phone_number2.errors }}
+                    </span>
                 </div>
             </div>
 
@@ -53,6 +60,9 @@
                     <div class="form-group row">
                         <div class="col-sm-8">
                             {{ seo_block_form.url }}
+                            <span style="color: red;">
+                            {{ seo_block_form.url.errors }}
+                            </span>
                         </div>
                     </div>
                     <div class="form-group row">

@@ -13,6 +13,7 @@ urlpatterns = [
     path('pages/', CmsPagesListView.as_view(), name='pages'),
     path('pages/home_page/<int:pk>/', CmsHomePageUpdateView.as_view(), name='home_page'),
     path('pages/page/<int:pk>/', CmsPageUpdateView.as_view(), name='page'),
+    path('pages/contacts_page/<int:pk>/', CmsContactsUpdateView.as_view(), name='contact'),
     # pages end
 
     # users
