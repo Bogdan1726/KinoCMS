@@ -20,7 +20,8 @@ class SeoBlock(models.Model):
 
 
 class Gallery(models.Model):
-    title = models.CharField(max_length=30, verbose_name='Заголовок', unique=True)
+    objects = None
+    title = models.CharField(max_length=30, verbose_name='Заголовок')
 
     def __str__(self):
         return f'{self.title}'

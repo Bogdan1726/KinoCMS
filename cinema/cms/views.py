@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.forms import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -202,29 +203,129 @@ class CmsContactsUpdateView(UpdateView):
 
 # pages end
 
-# def update_contacts(request, pk):
-#     objects = get_object_or_404(ContactsPage, id=pk)
-#     if request.method == 'POST':
-#         seo_block_form = CmsSeoBlockForm(request.POST)
-#         contacts_formset = CmsContactsPageFormSet(request.POST,
-#                                                   request.FILES,
-#                                                   queryset=ContactsPage.objects.filter(id=pk))
-#         if seo_block_form.is_valid() and contacts_formset.is_valid():
-#             seo_block_form.save()
-#             contacts_formset.save()
-#             messages.success(request, 'Save its okay')
-#         else:
-#             print(contacts_formset)
-#             messages.warning(request, 'error valid')
-#     seo_block_form = CmsSeoBlockForm(instance=objects.seo_block)
-#     contacts_formset = CmsContactsPageFormSet
-#     context = {
-#         'form': CmsPageUpdateForm,
-#         'seo_block_form': seo_block_form,
-#         'contacts_formset': contacts_formset
-#     }
-#     return render(request, 'cms/pages/page/contacts_page.html', context)
+# promotions
 
+class CmsPromotionListView(ListView):
+    """
+    list of promotion
+    """
+    model = Promotions
+    context_object_name = 'promotions'
+    template_name = 'cms/pages/promotions/list_promotions.html'
+
+
+class CmsPromotionCreateView(CreateView):
+    """
+    Create a new promotion
+    """
+    model = Promotions
+    template_name = 'cms/pages/promotions/create_promotions.html'
+    form_class = CmsPromotionCreateForm
+    success_url = reverse_lazy('promotions')
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CmsPromotionCreateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None)
+        context['formset_gallery'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None)
+
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        seo_block_form = context['seo_block_form']
+        formset_gallery = context['formset_gallery']
+        if seo_block_form.is_valid() and formset_gallery.is_valid():
+            seo_block_form.save()
+            promotion = form.save(commit=False)
+            promotion.seo_block = seo_block_form.instance
+            gallery = Gallery.objects.create(title=promotion.title)
+            promotion.gallery = get_object_or_404(Gallery, id=gallery.id)
+            for image in formset_gallery:
+                if image.cleaned_data:
+                    if image.is_valid():
+                        images = image.save(commit=False)
+                        images.gallery = promotion.gallery
+                        images.save()
+            formset_gallery.save()
+            promotion.save()
+
+            messages.success(self.request, 'Данные обновлены')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        print('invalid')
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
+class CmsPromotionsUpdateView(UpdateView):
+    """
+    Update a promotions
+    """
+    model = Promotions
+    template_name = 'cms/pages/promotions/update_promotions.html'
+    form_class = CmsPromotionCreateForm
+    success_url = reverse_lazy('promotions')
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CmsPromotionsUpdateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
+                                                    instance=self.object.seo_block)
+        context['formset_gallery'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None,
+                                                  queryset=Images.objects.filter(gallery=self.object.gallery))
+
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        seo_block_form = context['seo_block_form']
+        formset_gallery = context['formset_gallery']
+        if seo_block_form.is_valid() and formset_gallery.is_valid():
+            seo_block_form.save()
+            promotion = form.save(commit=False)
+            promotion.seo_block = seo_block_form.instance
+            for image in formset_gallery:
+                if image.cleaned_data:
+                    if image.is_valid():
+                        images = image.save(commit=False)
+                        images.gallery = self.object.gallery
+                        images.save()
+            formset_gallery.save()
+            promotion.save()
+
+            messages.success(self.request, 'Данные обновлены')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        print('invalid')
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
+class CmsPromotionDeleteView(DeleteView):
+    model = Promotions
+    template_name = 'cms/pages/promotions/list_promotions.html'
+    success_url = reverse_lazy('promotions')
+
+    def post(self, request, *args, **kwargs):
+        messages.success(request, 'Акция удалена!')
+        return self.delete(request, *args, **kwargs)
+
+
+
+
+
+# promotions end
 
 def index(request):
     return render(request, 'cms/elements/base.html')
@@ -251,6 +352,7 @@ def cinemas(request):
 
 
 def news(request):
+
     return render(request, 'cms/pages/news/list_news.html')
 
 

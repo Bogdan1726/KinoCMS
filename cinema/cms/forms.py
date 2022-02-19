@@ -49,6 +49,7 @@ class CmsPageUpdateForm(forms.ModelForm):
     """
     Form Pages
     """
+
     class Meta:
         model = Page
         exclude = ['seo_block', 'gallery']
@@ -69,6 +70,7 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
     """
     Form Contacts Page
     """
+
     class Meta:
         model = ContactsPage
         exclude = ('creation_date', 'seo_block')
@@ -88,6 +90,30 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
 
 
 CmsContactsPageFormSet = modelformset_factory(ContactsPage, form=CmsContactsPageUpdateForm, extra=0)
+
+
+class CmsPromotionCreateForm(forms.ModelForm):
+    """
+    Form Promotions
+    """
+
+    class Meta:
+        model = Promotions
+        exclude = ('gallery', 'seo_block')
+
+        widgets = {
+            'is_published': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
+            'title': forms.TextInput(attrs={'class': 'form-control',
+                                            'placeholder': 'Название акции'}),
+            'date_published': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                 'placeholder': 'Описание'}),
+            'image': forms.FileInput(attrs={'type': 'file',
+                                            'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"}),
+
+            'link': forms.URLInput(attrs={'class': 'form-control',
+                                          'placeholder': 'Ссылка на видео в youtube'}),
+        }
 
 
 class CmsImageForm(forms.ModelForm):

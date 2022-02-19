@@ -8,7 +8,14 @@ urlpatterns = [
     path('banners/', banners, name='banners'),
     path('cinemas/', cinemas, name='cinemas'),
     path('news/', news, name='news'),
-    path('promotions/', promotions, name='promotions'),
+
+    # promotions
+    path('promotions/', CmsPromotionListView.as_view(), name='promotions'),
+    path('promotions/create/', CmsPromotionCreateView.as_view(), name='promotions_add'),
+    path('promotions/delete/<int:pk>/', CmsPromotionDeleteView.as_view(), name='promotions_delete'),
+    path('promotions/edit/<int:pk>/', CmsPromotionsUpdateView.as_view(), name='promotions_edit'),
+    # promotions end
+
     # pages
     path('pages/', CmsPagesListView.as_view(), name='pages'),
     path('pages/home_page/<int:pk>/', CmsHomePageUpdateView.as_view(), name='home_page'),
@@ -23,11 +30,5 @@ urlpatterns = [
     # users end
 
     path('mailing/', mailing, name='mailing')
-
-
-
-
-
-
 
 ]
