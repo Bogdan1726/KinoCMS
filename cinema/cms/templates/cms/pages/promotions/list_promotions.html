@@ -42,6 +42,7 @@
             </thead>
             <tbody>
             {% for promotion in promotions %}
+            {% if promotion.type == 'promotions' %}
             <tr>
                 <td>{{ promotion.title }}</td>
                 <td>{{ promotion.date_published|date:"d.m.Y" }}</td>
@@ -53,11 +54,11 @@
                 <td width="100px;">
                     <div class="row">
                         <div class="col-md-6 text-center">
-                            <a href="{% url 'promotions_edit' promotion.id %}" class="fas fa-edit">
+                            <a href="{% url 'events_edit' promotion.id %}" class="fas fa-edit">
                             </a>
                         </div>
                         <div class="col-md-6 text-center">
-                            <a href="{% url 'promotions_delete' promotion.id %}" class="fas fa-trash text-danger"
+                            <a href="{% url 'events_delete' promotion.id %}" class="fas fa-trash text-danger"
                                data-target="#deleteModal-{{ forloop.counter }}"
                                data-toggle="modal">
                             </a>
@@ -76,7 +77,7 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form method="post" action="{% url 'promotions_delete' promotion.id %}">
+                                <form method="post" action="{% url 'events_delete' promotion.id %}">
                                     {% csrf_token %}
                                     <div class="modal-body">
                                         Ви уверены что хотите удалить акцию {{ promotion.title }}?
@@ -94,6 +95,7 @@
                     <!-- /.model for delete -->
                 </td>
             </tr>
+            {% endif %}
             {% endfor %}
             </tbody>
         </table>
@@ -121,16 +123,7 @@
             "ordering": false,
             "info": false,
             "language": {
-                "infoFiltered": "(Отфильтровано _MAX_ записей)",
                 "zeroRecords": "Записей не найдено",
-                "info": "Показано с _START_ по _END_ записей из _TOTAL_",
-                "infoEmpty": "Нет записей.",
-                "search": "Поиск:",
-                "paginate": {
-                    "previous": "Предыдущая",
-                    "last": "Последняя",
-                    "next": "Следующая"
-                }
             }
         })
     });

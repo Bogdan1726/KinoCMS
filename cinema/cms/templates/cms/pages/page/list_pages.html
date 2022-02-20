@@ -80,20 +80,18 @@
             <!-- /.pages -->
 
             <!-- contacts pages -->
-            {% for page in contacts_pages %}
             <tr>
                 <td>Контакты</td>
-                <td>{{ page.creation_date|date:"d.m.Y" }}</td>
-                {% if page.active == True %}
+                <td>{{ contacts_pages.creation_date|date:"d.m.Y" }}</td>
+                {% if contacts_pages.active == True %}
                 <td>ВКЛ</td>
                 {% else %}
                 <td>ВЫКЛ</td>
                 {% endif %}
                 <td style="width: 5%; text-align: center;">
-                    <a href="{% url 'contact' page.id %}" class="fas fa-edit"></a>
+                    <a href="{% url 'contact' contacts_pages.id %}" class="fas fa-edit"></a>
                 </td>
             </tr>
-            {% endfor %}
             <!-- /.contacts pages -->
 
             </tbody>

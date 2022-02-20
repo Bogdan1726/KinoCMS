@@ -1,10 +1,9 @@
 from django.contrib import messages
-from django.forms import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
-from django.views.generic.edit import ModelFormMixin, ProcessFormView, FormView
+from django.views.generic.base import ContextMixin
+from django.views.generic.edit import FormMixin
 
 from user.forms import UserUpdateForm
 from user.models import User
@@ -79,7 +78,7 @@ class CmsPagesListView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(CmsPagesListView, self).get_context_data()
         context['home_pages'] = HomePage.objects.all()
-        context['contacts_pages'] = ContactsPage.objects.all()
+        context['contacts_pages'] = ContactsPage.objects.all()[0]
         return context
 
 
@@ -128,7 +127,8 @@ class CmsPageUpdateView(UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(CmsPageUpdateView, self).get_context_data()
-        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None, instance=self.object.seo_block)
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
+                                                    instance=self.object.seo_block)
         context['formset_gallery'] = CmsImageFormSet(self.request.POST or None,
                                                      self.request.FILES or None,
                                                      queryset=Images.objects.filter(gallery=self.object.gallery))
@@ -167,65 +167,88 @@ class CmsContactsUpdateView(UpdateView):
     """
     model = ContactsPage
     template_name = 'cms/pages/page/contacts_page.html'
-    success_url = reverse_lazy('pages')
-    form_class = CmsContactsPageUpdateForm
+
+    def get_success_url(self):
+        return reverse_lazy('pages')
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = modelformset_factory(ContactsPage, form=CmsContactsPageUpdateForm, extra=0)
+        return form_class(self.request.POST or None,
+                          self.request.FILES or None,
+                          queryset=ContactsPage.objects.all())
 
     def get_context_data(self, *args, **kwargs):
         context = super(CmsContactsUpdateView, self).get_context_data()
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
                                                     instance=self.object.seo_block)
-        context['contacts_formset'] = CmsContactsPageFormSet(self.request.POST or None,
-                                                             self.request.FILES or None,
-                                                             queryset=ContactsPage.objects.filter(id=self.object.id))
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         seo_block_form = context['seo_block_form']
         if seo_block_form.is_valid():
-            print('soe ok')
             seo_block_form.save()
-            formset = form.save(commit=False)
-            formset.seo_block = seo_block_form.instance
-            formset.save()
+            for contacts in form:
+                if contacts.cleaned_data:
+                    if contacts.is_valid():
+                        contacts = contacts.save(commit=False)
+                        contacts.seo_block = seo_block_form.instance
+                        contacts.save()
+            form.save()
             messages.success(self.request, 'Данные обновлены')
             return super().form_valid(form)
         else:
-            print('ok')
             messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
             return super().form_invalid(form)
 
     def form_invalid(self, form):
-        print('invalid')
+        print(form.errors)
         messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
         return super().form_invalid(form)
 
 
 # pages end
 
-# promotions
+# Events
 
 class CmsPromotionListView(ListView):
     """
     list of promotion
     """
-    model = Promotions
+    model = Events
     context_object_name = 'promotions'
     template_name = 'cms/pages/promotions/list_promotions.html'
 
 
-class CmsPromotionCreateView(CreateView):
+class CmsNewsListView(ListView):
     """
-    Create a new promotion
+    list of news
     """
-    model = Promotions
-    template_name = 'cms/pages/promotions/create_promotions.html'
-    form_class = CmsPromotionCreateForm
-    success_url = reverse_lazy('promotions')
+    model = Events
+    context_object_name = 'news'
+    template_name = 'cms/pages/news/list_news.html'
+
+
+class CmsEventsCreateView(CreateView):
+    """
+    Create a new events(news/promotions)
+    """
+    model = Events
+    template_name = 'cms/pages/promotions/create_events.html'
+    form_class = CmsEventsForm
     formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
 
+    def get_success_url(self):
+        url_request = self.request.get_full_path()
+        if url_request == '/cms/promotions/create/':
+            return reverse_lazy('promotions')
+        else:
+            return reverse_lazy('news')
+
     def get_context_data(self, *args, **kwargs):
-        context = super(CmsPromotionCreateView, self).get_context_data()
+        context = super(CmsEventsCreateView, self).get_context_data()
+        context['get_path'] = self.request.get_full_path()
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None)
         context['formset_gallery'] = self.formset(self.request.POST or None,
                                                   self.request.FILES or None)
@@ -240,6 +263,10 @@ class CmsPromotionCreateView(CreateView):
             seo_block_form.save()
             promotion = form.save(commit=False)
             promotion.seo_block = seo_block_form.instance
+            if self.request.get_full_path() == '/cms/promotions/create/':
+                promotion.type = 'promotions'
+            else:
+                promotion.type = 'news'
             gallery = Gallery.objects.create(title=promotion.title)
             promotion.gallery = get_object_or_404(Gallery, id=gallery.id)
             for image in formset_gallery:
@@ -263,18 +290,25 @@ class CmsPromotionCreateView(CreateView):
         return super().form_invalid(form)
 
 
-class CmsPromotionsUpdateView(UpdateView):
+class CmsEventsUpdateView(UpdateView):
     """
-    Update a promotions
+    Update events(news/promotions)
     """
-    model = Promotions
-    template_name = 'cms/pages/promotions/update_promotions.html'
-    form_class = CmsPromotionCreateForm
-    success_url = reverse_lazy('promotions')
+    model = Events
+    template_name = 'cms/pages/promotions/update_events.html'
+    form_class = CmsEventsForm
     formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
 
+    def get_success_url(self):
+        type_events = self.object.type
+        if type_events == 'promotions':
+            return reverse_lazy('promotions')
+        else:
+            return reverse_lazy('news')
+
     def get_context_data(self, *args, **kwargs):
-        context = super(CmsPromotionsUpdateView, self).get_context_data()
+        context = super(CmsEventsUpdateView, self).get_context_data()
+        context['type_object'] = self.object.type
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
                                                     instance=self.object.seo_block)
         context['formset_gallery'] = self.formset(self.request.POST or None,
@@ -288,9 +322,6 @@ class CmsPromotionsUpdateView(UpdateView):
         seo_block_form = context['seo_block_form']
         formset_gallery = context['formset_gallery']
         if seo_block_form.is_valid() and formset_gallery.is_valid():
-            seo_block_form.save()
-            promotion = form.save(commit=False)
-            promotion.seo_block = seo_block_form.instance
             for image in formset_gallery:
                 if image.cleaned_data:
                     if image.is_valid():
@@ -298,8 +329,8 @@ class CmsPromotionsUpdateView(UpdateView):
                         images.gallery = self.object.gallery
                         images.save()
             formset_gallery.save()
-            promotion.save()
-
+            seo_block_form.save()
+            self.object = form.save()
             messages.success(self.request, 'Данные обновлены')
             return super().form_valid(form)
         else:
@@ -312,20 +343,24 @@ class CmsPromotionsUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-class CmsPromotionDeleteView(DeleteView):
-    model = Promotions
+class CmsEventsDeleteView(DeleteView):
+    """
+    Delete events(news/promotions)
+    """
+    model = Events
     template_name = 'cms/pages/promotions/list_promotions.html'
-    success_url = reverse_lazy('promotions')
 
-    def post(self, request, *args, **kwargs):
-        messages.success(request, 'Акция удалена!')
-        return self.delete(request, *args, **kwargs)
+    def get_success_url(self):
+        type_events = self.object.type
+        if type_events == 'promotions':
+            messages.success(self.request, 'Акция удалена!')
+            return reverse_lazy('promotions')
+        else:
+            messages.success(self.request, 'Новость удалена!')
+            return reverse_lazy('news')
 
+# Events end
 
-
-
-
-# promotions end
 
 def index(request):
     return render(request, 'cms/elements/base.html')
@@ -351,13 +386,6 @@ def cinemas(request):
     return render(request, 'cms/pages/cinemas/list_cinemas.html')
 
 
-def news(request):
-
-    return render(request, 'cms/pages/news/list_news.html')
-
-
-def promotions(request):
-    return render(request, 'cms/pages/promotions/list_promotions.html')
 
 
 def mailing(request):

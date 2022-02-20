@@ -61,13 +61,8 @@ class CinemaAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Promotions)
-class PromotionsAdmin(admin.ModelAdmin):
+@admin.register(Events)
+class EventsAdmin(admin.ModelAdmin):
     pass
 
 

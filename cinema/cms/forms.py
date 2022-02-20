@@ -73,7 +73,7 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
 
     class Meta:
         model = ContactsPage
-        exclude = ('creation_date', 'seo_block')
+        fields = ['title', 'address', 'active', 'coordinates', 'logo']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control',
@@ -83,8 +83,7 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
                                              'placeholder': 'Адресс кинотеатра'}),
             'coordinates': forms.TextInput(attrs={'class': 'form-control',
                                                   'placeholder': 'Координаты для карты'}),
-            'logo': forms.FileInput(attrs={'type': 'file',
-                                           'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"})
+            'logo': forms.FileInput(attrs={'type': 'file'})
 
         }
 
@@ -92,19 +91,19 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
 CmsContactsPageFormSet = modelformset_factory(ContactsPage, form=CmsContactsPageUpdateForm, extra=0)
 
 
-class CmsPromotionCreateForm(forms.ModelForm):
+class CmsEventsForm(forms.ModelForm):
     """
     Form Promotions
     """
 
     class Meta:
-        model = Promotions
-        exclude = ('gallery', 'seo_block')
+        model = Events
+        exclude = ('gallery', 'seo_block', 'type')
 
         widgets = {
             'is_published': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
             'title': forms.TextInput(attrs={'class': 'form-control',
-                                            'placeholder': 'Название акции'}),
+                                            'placeholder': 'Название'}),
             'date_published': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
                                                  'placeholder': 'Описание'}),

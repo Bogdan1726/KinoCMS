@@ -17,10 +17,10 @@
         {% include 'cms/inc/_messages.html' %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% with contacts_formset as forms %}
-            {{ forms.management_form }}
+            {{ form.management_form }}
             <div id="formset">
-                {% for form in forms %}
+                {% for form in form %}
+                {{ form.id }}
                 <div class="contacts_container" id="{{ form.prefix }}">
                     {% include 'cms/inc/_active_and_language.html' %}
                     <div class="form-group row">
@@ -53,19 +53,29 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Лого</label>
+
                         <div class="col-sm-4" style="margin-bottom: 10px;">
                             {% if form.instance.logo %}
-                            <img id="logo" class="home_image" src="{{ form.instance.logo.url }}" alt="logo" width="100%"
+                            <img class="{{ form.prefix }}"
+                                 src="{{ form.instance.logo.url }}" alt="logo" width="100%"
                                  height="100%">
                             {% else %}
-                            <img id="logo" class="home_image" src="/static/cms/media/not_image.png" alt="logo"
+                            <img class="{{ form.prefix }}"
+                                 src="/static/cms/media/not_image.png" alt="logo"
                                  width="100%"
                                  height="100%">
                             {% endif %}
                         </div>
                         <div class="col-sm-4 center">
-                            <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
+                            <a class="btn btn-outline-success btn-file"
+                               id="{{ form.prefix }}"
+                               onchange="load_logo(event, this)"
+                               style="margin-right: 10px;">Загрузить
                                 {{ form.logo }}
+                            </a>
+                            <a class="btn btn-outline-danger"
+                               id="{{ form.prefix }}"
+                               onclick="$('.' + '{{ form.prefix }}').attr('src', '{{ form.instance.logo.url }}')">Удалить
                             </a>
                             <span style="color: red;">
                             {{ form.logo.errors }}
@@ -75,12 +85,11 @@
                 </div>
                 {% endfor %}
             </div>
-            {% endwith %}
 
 
             <div class="empty_form" style="display: none;">
                 <div class="contacts_container" id="{{ contacts_formset.empty_form.prefix }}">
-                    {% with contacts_formset.empty_form as form %}
+                    {% with form.empty_form as form %}
                     {% include 'cms/inc/_active_and_language.html' %}
                     <div class="form-group row">
                         <label id="title-{{ form.prefix }}" class="col-sm-2 col-form-label">Название
@@ -104,20 +113,25 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Лого</label>
+
                         <div class="col-sm-4" style="margin-bottom: 10px;">
-                            <img id="" class="home_image" src="/static/cms/media/not_image.png"
+                            <img class="{{ form.prefix }}" src="/static/cms/media/not_image.png"
                                  alt="logo"
                                  width="100%"
                                  height="100%">
                         </div>
+
                         <div class="col-sm-4 center">
-                            <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
+                            <a class="btn btn-outline-success btn-file"
+                               id="{{ form.prefix }}"
+                               onchange="load_logo(event, this)"
+                               style="margin-right: 10px;">Загрузить
                                 {{ form.logo }}
                             </a>
-                            <button type="reset" class="btn btn-outline-danger"
-                                    onclick="document.getElementById('logo').src = ('{{ contacts_formset.instance.logo.url }}')">
-                                Удалить
-                            </button>
+                            <a class="btn btn-outline-danger"
+                               id="{{ form.prefix }}"
+                               onclick="$('.' + '{{ form.prefix }}').attr('src', '/static/cms/media/not_image.png')">Удалить
+                            </a>
                         </div>
                     </div>
                     {% endwith %}
@@ -186,6 +200,46 @@
     })
 </script>
 
+<script>
+
+    function load_logo(event, obj) {
+        const index = obj.id;
+        const file = event.target.files[0];
+        $("." + index).attr("src", window.URL.createObjectURL(file));
+    }
+
+
+    // // check value in errors gallary
+    // function clean_errors() {
+    //     var element = $("[value=enabled]");
+    //     if (element.length) {
+    //         $("#sub").attr("disabled", "disabled");
+    //     } else {
+    //         $("#sub").removeAttr("disabled");
+    //     }
+    // }
+    //
+    //
+    // $("#add-image").on('click', function () {
+    //     const form_idx = $('#id_form-TOTAL_FORMS').val();
+    //     $("#formset").append($('.empty_form').html().replace(/__prefix__/g, form_idx))
+    //     $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    // })
+    //
+    //
+    // function delete_image(event) {
+    //     const index = event.target.id;
+    //     $("#" + index).css('display', 'none');
+    //     $('.can-delete-list').append('<input type="hidden" value="on" name="' + index + '-DELETE" id="id_' + index + '-DELETE">');
+    //
+    //
+    //     // validations_image if delete_image
+    //     $("#errors-" + index).attr("value", 'disabled');
+    //     clean_errors();
+    // }
+
+
+</script>
 {% endblock %}
 
 

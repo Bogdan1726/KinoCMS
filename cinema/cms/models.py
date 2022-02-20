@@ -150,13 +150,20 @@ class Cinema(models.Model):
         verbose_name_plural = 'Кинотеатры'
 
 
-class News(models.Model):
-    title = models.CharField(max_length=100, verbose_name='Название новости')
+class Events(models.Model):
+
+    TYPE_EVENTS = [
+        ('news', 'Новость'),
+        ('promotions', 'Акция'),
+    ]
+
+    title = models.CharField(max_length=100, verbose_name='Название события')
     date_published = models.DateField(verbose_name='Дата публикации')
     is_published = models.BooleanField(default=True, verbose_name='Опубликована')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='news/', verbose_name='Главная картинка', unique=True)
     link = models.URLField(verbose_name='Ссылка на видео')
+    type = models.CharField(max_length=10, choices=TYPE_EVENTS, verbose_name='Тип события')
     gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL, verbose_name='Галерея картинок')
     seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL, verbose_name='SEO блок')
 
@@ -164,26 +171,8 @@ class News(models.Model):
         return f'{self.title}'
 
     class Meta:
-        verbose_name = 'Новость'
-        verbose_name_plural = 'Новости'
-
-
-class Promotions(models.Model):
-    title = models.CharField(max_length=100, verbose_name='Название акции')
-    date_published = models.DateField(verbose_name='Дата публикации')
-    is_published = models.BooleanField(default=True, verbose_name='Опубликована')
-    description = models.TextField(verbose_name='Описание')
-    image = models.ImageField(upload_to='promotions/', verbose_name='Главная картинка', unique=True)
-    link = models.URLField(verbose_name='Ссылка на видео')
-    gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL, verbose_name='Галерея картинок')
-    seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL, verbose_name='SEO блок')
-
-    def __str__(self):
-        return f'{self.title}'
-
-    class Meta:
-        verbose_name = 'Акцию'
-        verbose_name_plural = 'Акции'
+        verbose_name = 'Событие'
+        verbose_name_plural = 'События'
 
 
 class Page(models.Model):

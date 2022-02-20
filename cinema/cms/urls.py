@@ -7,13 +7,18 @@ urlpatterns = [
     path('page_movie/', page_movie, name='page_movie'),
     path('banners/', banners, name='banners'),
     path('cinemas/', cinemas, name='cinemas'),
-    path('news/', news, name='news'),
+
+    # news
+    path('news/', CmsNewsListView.as_view(), name='news'),
+    path('news/create/', CmsEventsCreateView.as_view(), name='news_add'),
+
+    # news end
 
     # promotions
     path('promotions/', CmsPromotionListView.as_view(), name='promotions'),
-    path('promotions/create/', CmsPromotionCreateView.as_view(), name='promotions_add'),
-    path('promotions/delete/<int:pk>/', CmsPromotionDeleteView.as_view(), name='promotions_delete'),
-    path('promotions/edit/<int:pk>/', CmsPromotionsUpdateView.as_view(), name='promotions_edit'),
+    path('promotions/create/', CmsEventsCreateView.as_view(), name='promotions_add'),
+    path('promotions/delete/<int:pk>/', CmsEventsDeleteView.as_view(), name='events_delete'),
+    path('promotions/edit/<int:pk>/', CmsEventsUpdateView.as_view(), name='events_edit'),
     # promotions end
 
     # pages

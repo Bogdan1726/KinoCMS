@@ -31,7 +31,11 @@
             {% include 'cms/inc/_active_and_language_promotions_news.html' %}
             <!--            active end-->
             <div class="form-group row tab-content">
-                <label id="title" class="col-sm-2 col-form-label">Название Акции</label>
+                {% if type_object == 'promotions' %}
+                <label id="title_promotions" class="col-sm-2 col-form-label">Название Акции</label>
+                {% else %}
+                <label id="title_news" class="col-sm-2 col-form-label">Название Новости</label>
+                {% endif %}
                 <div class="col-sm-4">
                     {{ form.title }}
                 </div>
@@ -188,5 +192,5 @@
 
 {% block script %}
 <script src="{% static 'cms/js/dynamic_formset.js' %}"></script>
-<script src="{% static 'cms/js/language_tabs_promotions.js' %}"></script>
+<script src="{% static 'cms/js/language_tabs_events.js' %}"></script>
 {% endblock %}
