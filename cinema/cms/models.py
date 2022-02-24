@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 import datetime
 from django.core.validators import validate_image_file_extension
+
+
 # Create your models here.
 
 class SeoBlock(models.Model):
@@ -33,7 +35,7 @@ class Gallery(models.Model):
 
 class Images(models.Model):
     objects = None
-    image = models.ImageField(upload_to='gallery/', verbose_name='Картинка',unique=True)
+    image = models.ImageField(upload_to='gallery/', verbose_name='Картинка', unique=True)
     gallery = models.ForeignKey('Gallery', on_delete=models.CASCADE, verbose_name='Галерея')
 
     class Meta:
@@ -95,13 +97,40 @@ class Movies(models.Model):
         verbose_name_plural = 'Фильмы'
 
 
-class Halls(models.Model):
-    number = models.PositiveIntegerField(verbose_name='Номер зала')
-    description = models.TextField(verbose_name='Описание зала')
-    layout = models.ImageField(upload_to='halls/layout', verbose_name='Схема зала', unique=True)
-    banner = models.ImageField(upload_to='halls/banners', verbose_name='Верхний баннер', unique=True)
+class Cinema(models.Model):
+    title = models.CharField(max_length=100, verbose_name='Название кинотеатра')
+    description = models.TextField(verbose_name='Описание')
+    conditions = models.TextField(verbose_name='Условия')
+    logo = models.ImageField(upload_to='cinema/logo/', verbose_name='Логотип', unique=True)
+    photo = models.ImageField(upload_to='cinema/photo/', verbose_name='Фото верхнего баннера', unique=True)
     gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL, verbose_name='Галерея картинок')
     seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL, verbose_name='SEO блок')
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'Кинотеатр'
+        verbose_name_plural = 'Кинотеатры'
+
+
+class Halls(models.Model):
+    objects = None
+    number = models.PositiveIntegerField(verbose_name='Номер зала')
+    description = models.TextField(verbose_name='Описание зала')
+    layout = models.ImageField(upload_to='halls/layout',
+                               verbose_name='Схема зала',
+                               unique=True)
+    banner = models.ImageField(upload_to='halls/banners',
+                               verbose_name='Верхний баннер',
+                               unique=True)
+    creation_date = models.DateField(auto_now_add=True, null=True, verbose_name='Дата создания')
+    gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL,
+                                verbose_name='Галерея картинок')
+    seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL,
+                                  verbose_name='SEO блок')
+    cinemas = models.ForeignKey(Cinema, null=True, on_delete=models.SET_NULL,
+                                verbose_name='Кинотеатр')
 
     class Meta:
         verbose_name = 'Зал'
@@ -132,26 +161,7 @@ class Ticket(models.Model):
         verbose_name_plural = 'Билеты'
 
 
-class Cinema(models.Model):
-    title = models.CharField(max_length=100, verbose_name='Название кинотеатра')
-    description = models.TextField(verbose_name='Описание')
-    conditions = models.TextField(verbose_name='Условия')
-    logo = models.ImageField(upload_to='cinema/logo/', verbose_name='Логотип', unique=True)
-    photo = models.ImageField(upload_to='cinema/photo/', verbose_name='Фото верхнего баннера', unique=True)
-    gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL, verbose_name='Галерея картинок')
-    seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL, verbose_name='SEO блок')
-    halls = models.ForeignKey(Halls, null=True, on_delete=models.SET_NULL, verbose_name='Список залов')
-
-    def __str__(self):
-        return f'{self.title}'
-
-    class Meta:
-        verbose_name = 'Кинотеатр'
-        verbose_name_plural = 'Кинотеатры'
-
-
 class Events(models.Model):
-
     TYPE_EVENTS = [
         ('news', 'Новость'),
         ('promotions', 'Акция'),

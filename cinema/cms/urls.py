@@ -6,12 +6,22 @@ urlpatterns = [
     path('list_movie/', list_movie, name='list_movie'),
     path('page_movie/', page_movie, name='page_movie'),
     path('banners/', banners, name='banners'),
-    path('cinemas/', cinemas, name='cinemas'),
+
+
+
+    # cinemas
+    path('cinemas/', CmsCinemasListView.as_view(), name='cinemas'),
+    path('cinemas/create/', CmsCinemasCreateView.as_view(), name='cinemas_add'),
+    path('cinemas/update/<int:pk>/', CmsCinemasUpdateView.as_view(), name='cinemas_edit'),
+    path('cinemas/halls/create/<int:pk>/', CmsHallsCreateView.as_view(), name='halls_add'),
+    path('cinemas/halls/delete/<int:pk>/', CmsHallsDeleteView.as_view(), name='halls_delete'),
+    path('cinemas/halls/update/<int:pk>/', CmsHallsUpdateView.as_view(), name='halls_edit'),
+    # cinemas end
+
 
     # news
     path('news/', CmsNewsListView.as_view(), name='news'),
     path('news/create/', CmsEventsCreateView.as_view(), name='news_add'),
-
     # news end
 
     # promotions

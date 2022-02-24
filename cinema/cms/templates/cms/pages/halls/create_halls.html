@@ -2,16 +2,12 @@
 {% load static %}
 
 {% block title %}
-{{ block.super }}|Акции
+{{ block.super }}|Добавить Зал
 {% endblock %}
+
 
 {% block style %}
 <style>
-    .custom-control-label {
-        transform: scale(1.6);
-        cursor: pointer;
-    }
-
     .center {
         display: flex;
         justify-content: center;
@@ -26,42 +22,65 @@
     <div class="card-body">
         {% include 'cms/inc/_messages.html' %}
         <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <!--            active-->
-            {% include 'cms/inc/_active_and_language_promotions_news.html' %}
-            <!--            active end-->
-            <div class="form-group row tab-content">
-                {% if get_path == '/cms/promotions/create/' %}
-                <label id="title_promotions" class="col-sm-2 col-form-label">Название Акции</label>
-                {% else %}
-                <label id="title_news" class="col-sm-2 col-form-label">Название Новости</label>
-                {% endif %}
-                <div class="col-sm-4">
-                    {{ form.title }}
+            <!--            language tabs-->
+            <div class="row mb-4">
+                <div class="col-sm-6">
                 </div>
-                <label id="date" class="col-sm-2 col-form-label">Дата публикации</label>
+                <div class="col-sm-6" style="text-align: right;">
+                    <div class="btn-group">
+                        <button id="ru-{{form.prefix }}" value="{{ form.prefix }}"
+                                onclick="russian(event)" type="button" class="btn btn-default"
+                                style="background-color: #ddd">Русский
+                        </button>
+                        <button id="uk-{{form.prefix }}" value="{{ form.prefix }}"
+                                onclick="ukraine(event)" type="button" class="btn btn-default">
+                            Украинский
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <!--            language tabs end-->
+            {% csrf_token %}
+            <div class="form-group row tab-content">
+                <label id="title" class="col-sm-2 col-form-label">Номер зала</label>
                 <div class="col-sm-4">
-                    {{ form.date_published }}
+                    {{ form.number }}
                 </div>
             </div>
             <div class="form-group row tab-content">
-                <label id="description" class="col-sm-2 col-form-label">Описание</label>
+                <label id="description" class="col-sm-2 col-form-label">Описание зала</label>
                 <div class="col-sm-10">
                     {{ form.description }}
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Главная картинка</label>
+                <label class="col-sm-2 col-form-label">Схема зала</label>
                 <div class="col-sm-4" style="margin-bottom: 10px;">
                     <img id="logo" src="/static/cms/media/not_image.png" alt="logo" width="100%"
                          height="100%">
                 </div>
                 <div class="col-sm-4 center">
                     <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
-                        {{ form.image }}
+                        {{ form.layout }}
                     </a>
                     <button type="reset" class="btn btn-outline-danger"
                             onclick="document.getElementById('logo').src = ('/static/cms/media/not_image.png')">Удалить
+                    </button>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Фото верхнего баннера</label>
+                <div class="col-sm-4" style="margin-bottom: 10px;">
+                    <img id="photo" src="/static/cms/media/not_image.png" alt="logo" width="100%"
+                         height="100%">
+                </div>
+                <div class="col-sm-4 center">
+                    <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
+                        {{ form.banner }}
+                    </a>
+                    <button type="reset" class="btn btn-outline-danger"
+                            onclick="document.getElementById('photo').src = ('/static/cms/media/not_image.png')">Удалить
                     </button>
                 </div>
             </div>
@@ -76,31 +95,31 @@
                 <div class="col-sm-2 center">
                     <a id="add-image" class="btn btn-outline-dark">Добавить</a>
                 </div>
-                {{ formset_gallery.management_form }}
+                {{ gallery_formset.management_form }}
                 <div class="empty_form" style="display: none;">
-                    <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ formset_gallery.empty_form.prefix }}">
+                    <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ gallery_formset.empty_form.prefix }}">
                         <div class="text-right">
                             <a onclick="delete_image(event)"
-                               id="{{ formset_gallery.empty_form.prefix }}"
+                               id="{{ gallery_formset.empty_form.prefix }}"
                                class="fas fa-minus-circle text-danger"></a>
                         </div>
-                        <img class="{{ formset_gallery.empty_form.prefix }}"
+                        <img class="{{ gallery_formset.empty_form.prefix }}"
                              src="/static/cms/media/not_image.png"
                              width=100%, height=150, alt="logo">
 
-                        {{ formset_gallery.empty_form.id }}
+                        {{ gallery_formset.empty_form.id }}
                         <div style="padding-top: 10px; text-align: center;">
                         <span onchange="validations_image(event, this)"
-                              id="{{ formset_gallery.empty_form.prefix }}"
+                              id="{{ gallery_formset.empty_form.prefix }}"
                               class="btn btn-outline-success btn-file">Загрузить
-                        {{ formset_gallery.empty_form.image }}
+                        {{ gallery_formset.empty_form.image }}
                         </span>
                         </div>
                         <span style="color: red;">
-                            {{ formset_gallery.empty_form.errors }}
-                            <p id="errors-{{ formset_gallery.empty_form.prefix }}"
+                            {{ gallery_formset.empty_form.errors }}
+                            <a id="errors-{{ gallery_formset.empty_form.prefix }}"
                                value="disabled"
-                               style="display: none;">Размер изображения должен быть 1000x190</p>
+                               style="display: none;">Размер изображения должен быть 1000x190</a>
                         </span>
 
                     </div>
@@ -108,13 +127,7 @@
             </div>
             <!--            gallery formset end-->
             <!--            seo block-->
-            <div class="form-group row tab-content">
-                <label id="link" class="col-sm-2 col-form-label">Ссылка на видео</label>
-                <div class="col-sm-10">
-                    {{ form.link }}
-                </div>
-            </div>
-            <div class="row">
+            <div class="row" style="padding-top: 20px;">
                 <div class="col-md-3">
                     <label>
                         SEO блок:
@@ -124,6 +137,9 @@
                     <div class="form-group row">
                         <div class="col-sm-8">
                             {{ seo_block_form.url }}
+                            <span style="color: red;">
+                            {{ seo_block_form.url.errors }}
+                            </span>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -143,11 +159,11 @@
                     </div>
                 </div>
             </div>
-            <!--            seo block end-->
+            <!--            seo block end -->
 
             <div style="text-align:center">
                 <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
-                <a href="{% url 'promotions' %}" class="btn btn-outline-dark">Назад</a>
+                <a href="{% url 'cinemas' %}" class="btn btn-outline-dark">Назад</a>
             </div>
         </form>
     </div>
@@ -156,17 +172,16 @@
 
 
 {% block script %}
+
 <script src="{% static 'cms/js/dynamic_formset.js' %}"></script>
-<script src="{% static 'cms/js/language_tabs_events.js' %}"></script>
-
+<script src="{% static 'cms/js/language_tabs_other_page.js' %}"></script>
 <script>
-
-//    $(document).ready(function () {
-//        $('#id_form-TOTAL_FORMS').val(0);
-//        $('#id_form-INITIAL_FORMS').val(0);
-//    });
-
+        $(document).ready(function () {
+        $('#id_form-TOTAL_FORMS').val(0);
+        $('#id_form-INITIAL_FORMS').val(0);
+    });
 </script>
+
 
 
 {% endblock %}

@@ -1,10 +1,65 @@
 import re
 from django import forms
 from django.forms import modelformset_factory
-from PIL import Image
 from django.core.files.images import get_image_dimensions
 
 from .models import *
+
+
+# halls
+
+class CmsHallsForm(forms.ModelForm):
+    """
+    Form to Halls
+    """
+
+    class Meta:
+        model = Halls
+        exclude = ('gallery', 'seo_block', 'cinemas')
+
+        widgets = {
+            'title': forms.NumberInput(attrs={'class': 'form-control',
+                                              'placeholder': 'Номер зала'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                 'placeholder': 'Описание'}),
+            'banner': forms.FileInput(attrs={'type': 'file',
+                                             'onchange': "document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])"}),
+            'layout': forms.FileInput(attrs={'type': 'file',
+                                             'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"})
+        }
+
+
+# halls end
+
+
+# cinemas
+
+
+class CmsCinemasForm(forms.ModelForm):
+    """
+    Form to Cinemas
+    """
+    class Meta:
+        model = Cinema
+        exclude = ('gallery', 'seo_block', 'halls')
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control',
+                                            'placeholder': 'Название кинотеатра'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                 'placeholder': 'Описание'}),
+            'conditions': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                'placeholder': 'Условия'}),
+            'photo': forms.FileInput(attrs={'type': 'file',
+                                            'onchange': "document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])"}),
+            'logo': forms.FileInput(attrs={'type': 'file',
+                                           'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"})
+        }
+
+
+# cinemas end
+
+# pages
 
 
 class CmsHomePageUpdateForm(forms.ModelForm):
@@ -88,7 +143,7 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
         }
 
 
-CmsContactsPageFormSet = modelformset_factory(ContactsPage, form=CmsContactsPageUpdateForm, extra=0)
+# pages end
 
 
 class CmsEventsForm(forms.ModelForm):
@@ -140,9 +195,6 @@ class CmsImageForm(forms.ModelForm):
                     self.error_messages['error_image']
                 )
         return images
-
-
-CmsImageFormSet = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
 
 
 class CmsSeoBlockForm(forms.ModelForm):

@@ -1,14 +1,15 @@
 from django.contrib import messages
+from django.forms import modelformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
-from django.views.generic.base import ContextMixin
-from django.views.generic.edit import FormMixin
-
 from user.forms import UserUpdateForm
 from user.models import User
-from .forms import *
-from .models import *
+from .forms import CmsHallsForm, CmsCinemasForm, CmsHomePageUpdateForm, \
+    CmsPageUpdateForm, CmsContactsPageUpdateForm, \
+    CmsEventsForm, CmsImageForm, CmsSeoBlockForm
+from .models import SeoBlock, Gallery, Images, HomePageBanner, PromotionsPageBanner, \
+    BackgroundBanner, Movies, Cinema, Halls, Seance, Ticket, Events, Page, HomePage, ContactsPage
 
 
 # Create your views here.
@@ -65,8 +66,196 @@ class CmsUserDeleteView(DeleteView):
 
 # users end
 
+# cinemas
+
+class CmsCinemasListView(ListView):
+    model = Cinema
+    context_object_name = 'cinemas'
+    template_name = 'cms/pages/cinemas/list_cinemas.html'
+
+
+class CmsCinemasUpdateView(UpdateView):
+    model = Cinema
+    template_name = 'cms/pages/cinemas/update_cinemas.html'
+    form_class = CmsCinemasForm
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CmsCinemasUpdateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
+                                                    instance=self.object.seo_block)
+        context['gallery_formset'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None,
+                                                  queryset=Images.objects.filter(gallery=self.object.gallery))
+        context['list_halls'] = Halls.objects.all()
+        context['cinemas_id'] = self.object.id
+        return context
+
+
+class CmsCinemasCreateView(CreateView):
+    model = Cinema
+    template_name = 'cms/pages/cinemas/create_cinemas.html'
+    success_url = reverse_lazy('cinemas')
+    form_class = CmsCinemasForm
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CmsCinemasCreateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None)
+        context['gallery_formset'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        seo_block_form = context['seo_block_form']
+        gallery_formset = context['gallery_formset']
+        if seo_block_form.is_valid() and gallery_formset.is_valid():
+            seo_block_form.save()
+            cinemas = form.save(commit=False)
+            cinemas.seo_block = seo_block_form.instance
+            gallery = Gallery.objects.create(title=cinemas.title)
+            cinemas.gallery = get_object_or_404(Gallery, id=gallery.id)
+            for image in gallery_formset:
+                if image.cleaned_data:
+                    if image.is_valid():
+                        images = image.save(commit=False)
+                        images.gallery = cinemas.gallery
+                        images.save()
+            gallery_formset.save()
+            cinemas.save()
+
+            messages.success(self.request, 'Добавлен новый кинотеатр')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
+# cinemas end
+
+
+# halls
+
+class CmsHallsCreateView(CreateView):
+    """
+    Create Halls
+    """
+    model = Halls
+    template_name = 'cms/pages/halls/create_halls.html'
+    form_class = CmsHallsForm
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_success_url(self):
+        return reverse_lazy('cinemas_edit', kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_context_data(self, *args, **kwargs):
+        print(self.request.path)
+        context = super(CmsHallsCreateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None)
+        context['gallery_formset'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        seo_block_form = context['seo_block_form']
+        gallery_formset = context['gallery_formset']
+        if seo_block_form.is_valid() and gallery_formset.is_valid():
+            seo_block_form.save()
+            halls = form.save(commit=False)
+            halls.seo_block = seo_block_form.instance
+            gallery = Gallery.objects.create(title=f"Зал-{halls.number}")
+            halls.gallery = get_object_or_404(Gallery, id=gallery.id)
+            halls.cinemas = get_object_or_404(Cinema, id=self.kwargs.get('pk'))
+            for image in gallery_formset:
+                if image.cleaned_data:
+                    if image.is_valid():
+                        images = image.save(commit=False)
+                        images.gallery = halls.gallery
+                        images.save()
+            gallery_formset.save()
+            halls.save()
+
+            messages.success(self.request, 'Добавлен новый зал')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
+class CmsHallsUpdateView(UpdateView):
+    model = Halls
+    template_name = 'cms/pages/halls/update_halls.html'
+    form_class = CmsHallsForm
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_success_url(self):
+        return reverse_lazy('cinemas')
+
+    def get_context_data(self, *args, **kwargs):
+        print(self.request.path)
+        context = super(CmsHallsUpdateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
+                                                    instance=self.object.seo_block)
+        context['gallery_formset'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None,
+                                                  queryset=Images.objects.filter(gallery=self.object.gallery))
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        seo_block_form = context['seo_block_form']
+        gallery_formset = context['gallery_formset']
+        if seo_block_form.is_valid() and gallery_formset.is_valid():
+            seo_block_form.save()
+            halls = form.save(commit=False)
+            for image in gallery_formset:
+                if image.cleaned_data:
+                    if image.is_valid():
+                        images = image.save(commit=False)
+                        images.gallery = halls.gallery
+                        images.save()
+            gallery_formset.save()
+            halls.save()
+
+            messages.success(self.request, 'Зал обновлён')
+            return super().form_valid(form)
+        else:
+            messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
+class CmsHallsDeleteView(DeleteView):
+    """
+    Delete halls
+    """
+    model = Halls
+    template_name = 'cms/pages/promotions/update_cinemas.html'
+
+    def get_success_url(self):
+        print(self.kwargs.get('pk'))
+        messages.success(self.request, f'Зал № {self.object.number} удалён!')
+        return reverse_lazy('cinemas_edit', kwargs={'pk': 3})
+
+
+# halls end
 
 # pages
+
+
 class CmsPagesListView(ListView):
     """
     list of pages
@@ -124,14 +313,15 @@ class CmsPageUpdateView(UpdateView):
     template_name = 'cms/pages/page/other_page.html'
     success_url = reverse_lazy('pages')
     form_class = CmsPageUpdateForm
+    formset = modelformset_factory(ContactsPage, form=CmsContactsPageUpdateForm, extra=0)
 
     def get_context_data(self, *args, **kwargs):
         context = super(CmsPageUpdateView, self).get_context_data()
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
                                                     instance=self.object.seo_block)
-        context['formset_gallery'] = CmsImageFormSet(self.request.POST or None,
-                                                     self.request.FILES or None,
-                                                     queryset=Images.objects.filter(gallery=self.object.gallery))
+        context['formset_gallery'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None,
+                                                  queryset=Images.objects.filter(gallery=self.object.gallery))
 
         return context
 
@@ -251,8 +441,10 @@ class CmsEventsCreateView(CreateView):
         context['get_path'] = self.request.get_full_path()
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None)
         context['formset_gallery'] = self.formset(self.request.POST or None,
-                                                  self.request.FILES or None)
-
+                                                  self.request.FILES or None,
+                                                  queryset=Images.objects.none())
+        for form in Images.objects.all():
+            print(form.image)
         return context
 
     def form_valid(self, form):
@@ -359,6 +551,7 @@ class CmsEventsDeleteView(DeleteView):
             messages.success(self.request, 'Новость удалена!')
             return reverse_lazy('news')
 
+
 # Events end
 
 
@@ -380,12 +573,6 @@ def statistics(request):
 
 def banners(request):
     return render(request, 'cms/pages/banners.html')
-
-
-def cinemas(request):
-    return render(request, 'cms/pages/cinemas/list_cinemas.html')
-
-
 
 
 def mailing(request):

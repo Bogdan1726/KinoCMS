@@ -4,7 +4,56 @@
 {{ block.super }}|Кинотеатры
 {% endblock %}
 
+{% block style %}
+<style>
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .add_cinemas:hover {
+        cursor: pointer;
+        opacity: 0.7;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-Кинотеатры
+<div class="card">
+    <div class="card-body">
+        {% include 'cms/inc/_messages.html' %}
+        <h4 class="text-center">Список кинотеатров</h4>
+        <div class="row">
+            {% for cinema in cinemas %}
+            <div class="col-sm-3" style="padding-bottom: 10px;">
+                <div class="text-right">
+                    <a class="fas fa-minus-circle text-danger"></a>
+                </div>
+                {% if cinema.logo %}
+                <a class="add_cinemas" href="{% url 'cinemas_edit' cinema.id %}">
+                    <img src="{{ cinema.logo.url }}" width=100%, height=200,
+                         alt="logo">
+                </a>
+                {% else %}
+                <a class="add_cinemas" href="{% url 'cinemas_edit' cinema.id %}">
+                    <img src="/static/cms/media/not_image.png" width=100%, height=150,
+                         alt="logo">
+                </a>
+                {% endif %}
+                <h4 class="text-center">{{ cinema.title }}</h4>
+            </div>
+            {% endfor %}
+            <div class="col-sm-3 center" style="padding-bottom: 10px;">
+                <a href="{% url 'cinemas_add' %}">
+                    <img class="add_cinemas"
+                         src="/static/cms/media/add.png"
+                         width=80px,
+                         height=80px, alt="add">
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}
