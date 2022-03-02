@@ -6,7 +6,44 @@ from django.core.files.images import get_image_dimensions
 from .models import *
 
 
+# movies
+
+
+class CmsMoviesForm(forms.ModelForm):
+    """
+    Movies form
+    """
+
+    class Meta:
+        model = Movies
+        exclude = ('gallery', 'seo_block')
+
+        widgets = {
+            'active': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
+            'title': forms.TextInput(attrs={'class': 'form-control',
+                                            'placeholder': 'Название фильма'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                 'placeholder': 'Описание'}),
+            'image': forms.FileInput(attrs={'type': 'file',
+                                            'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"}),
+            'link': forms.URLInput(attrs={'class': 'form-control',
+                                          'placeholder': 'Ссылка на трейлер'}),
+            'date_premier': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'type_3d': forms.CheckboxInput(attrs={'class': 'form-check-input',
+                                                  'id': 'customCheckbox1'}),
+            'type_2d': forms.CheckboxInput(attrs={'class': 'form-check-input',
+                                                  'id': 'customCheckbox2'}),
+            'type_imax': forms.CheckboxInput(attrs={'class': 'form-check-input',
+                                                    'id': 'customCheckbox3'})
+
+        }
+
+
+
+# movies end
+
 # halls
+
 
 class CmsHallsForm(forms.ModelForm):
     """
@@ -18,8 +55,8 @@ class CmsHallsForm(forms.ModelForm):
         exclude = ('gallery', 'seo_block', 'cinemas')
 
         widgets = {
-            'title': forms.NumberInput(attrs={'class': 'form-control',
-                                              'placeholder': 'Номер зала'}),
+            'number': forms.NumberInput(attrs={'class': 'form-control',
+                                               'placeholder': 'Номер зала'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
                                                  'placeholder': 'Описание'}),
             'banner': forms.FileInput(attrs={'type': 'file',
@@ -39,6 +76,7 @@ class CmsCinemasForm(forms.ModelForm):
     """
     Form to Cinemas
     """
+
     class Meta:
         model = Cinema
         exclude = ('gallery', 'seo_block', 'halls')
@@ -168,6 +206,7 @@ class CmsEventsForm(forms.ModelForm):
             'link': forms.URLInput(attrs={'class': 'form-control',
                                           'placeholder': 'Ссылка на видео в youtube'}),
         }
+
 
 
 class CmsImageForm(forms.ModelForm):

@@ -75,17 +75,17 @@ class BackgroundBanner(models.Model):
 
 
 class Movies(models.Model):
-    TYPES_MOVIE = [
-        ('3d', '3D'),
-        ('2d', '2D'),
-        ('imax', 'IMAX')
-    ]
 
+    objects = None
     title = models.CharField(max_length=100, verbose_name='Название фильма')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='movies/', verbose_name='Главная картинка', unique=True)
     link = models.URLField(verbose_name='Ссылка на трейлер')
-    type = models.CharField(max_length=4, choices=TYPES_MOVIE, verbose_name='Тип кино')
+    date_premier = models.DateField(verbose_name='Дата премьеры', null=True)
+    active = models.BooleanField(default=True, verbose_name='Активен')
+    type_3d = models.BooleanField(verbose_name='3D', default=False)
+    type_2d = models.BooleanField(verbose_name='2D', default=True)
+    type_imax = models.BooleanField(verbose_name='IMAX', default=False)
     gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL, verbose_name='Галерея картинок')
     seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL, verbose_name='SEO блок')
 
@@ -114,6 +114,7 @@ class Cinema(models.Model):
         verbose_name_plural = 'Кинотеатры'
 
 
+
 class Halls(models.Model):
     objects = None
     number = models.PositiveIntegerField(verbose_name='Номер зала')
@@ -124,7 +125,7 @@ class Halls(models.Model):
     banner = models.ImageField(upload_to='halls/banners',
                                verbose_name='Верхний баннер',
                                unique=True)
-    creation_date = models.DateField(auto_now_add=True, null=True, verbose_name='Дата создания')
+    creation_date = models.DateField(auto_now=True, null=True, verbose_name='Дата создания')
     gallery = models.ForeignKey(Gallery, null=True, on_delete=models.SET_NULL,
                                 verbose_name='Галерея картинок')
     seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL,

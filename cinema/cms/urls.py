@@ -3,19 +3,25 @@ from .views import *
 
 urlpatterns = [
     path('', statistics, name='cms'),
-    path('list_movie/', list_movie, name='list_movie'),
-    path('page_movie/', page_movie, name='page_movie'),
     path('banners/', banners, name='banners'),
 
+    # movies
+    path('movies/', CmsMoviesListView.as_view(), name='list_movie'),
+    path('movies/create/', CmsMoviesCreateView.as_view(), name='movies_add'),
+    path('movies/update/<int:pk>/', CmsMoviesUpdateView.as_view(), name='movies_edit'),
+    path('movies/delete/<int:pk>/', CmsMoviesDeleteView.as_view(), name='movies_delete'),
+
+    # movies end
 
 
     # cinemas
     path('cinemas/', CmsCinemasListView.as_view(), name='cinemas'),
     path('cinemas/create/', CmsCinemasCreateView.as_view(), name='cinemas_add'),
     path('cinemas/update/<int:pk>/', CmsCinemasUpdateView.as_view(), name='cinemas_edit'),
+    path('cinemas/delete/<int:pk>/', CmsCinemasDeleteView.as_view(), name='cinemas_delete'),
     path('cinemas/halls/create/<int:pk>/', CmsHallsCreateView.as_view(), name='halls_add'),
-    path('cinemas/halls/delete/<int:pk>/', CmsHallsDeleteView.as_view(), name='halls_delete'),
-    path('cinemas/halls/update/<int:pk>/', CmsHallsUpdateView.as_view(), name='halls_edit'),
+    path('cinemas/<int:cinemas_id>/halls/delete/<int:pk>/', CmsHallsDeleteView.as_view(), name='halls_delete'),
+    path('cinemas/<int:cinemas_id>/halls/update/<int:pk>/', CmsHallsUpdateView.as_view(), name='halls_edit'),
     # cinemas end
 
 
@@ -24,12 +30,12 @@ urlpatterns = [
     path('news/create/', CmsEventsCreateView.as_view(), name='news_add'),
     # news end
 
-    # promotions
+    # events
     path('promotions/', CmsPromotionListView.as_view(), name='promotions'),
     path('promotions/create/', CmsEventsCreateView.as_view(), name='promotions_add'),
     path('promotions/delete/<int:pk>/', CmsEventsDeleteView.as_view(), name='events_delete'),
     path('promotions/edit/<int:pk>/', CmsEventsUpdateView.as_view(), name='events_edit'),
-    # promotions end
+    # events end
 
     # pages
     path('pages/', CmsPagesListView.as_view(), name='pages'),

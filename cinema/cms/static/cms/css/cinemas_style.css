@@ -1,0 +1,11 @@
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img_cinemas:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+

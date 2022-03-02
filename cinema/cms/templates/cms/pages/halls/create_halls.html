@@ -7,13 +7,7 @@
 
 
 {% block style %}
-<style>
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'cms/css/cinemas_style.css' %}">
 {% endblock %}
 
 
@@ -23,28 +17,12 @@
         {% include 'cms/inc/_messages.html' %}
         <form method="post" enctype="multipart/form-data">
             <!--            language tabs-->
-            <div class="row mb-4">
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6" style="text-align: right;">
-                    <div class="btn-group">
-                        <button id="ru-{{form.prefix }}" value="{{ form.prefix }}"
-                                onclick="russian(event)" type="button" class="btn btn-default"
-                                style="background-color: #ddd">Русский
-                        </button>
-                        <button id="uk-{{form.prefix }}" value="{{ form.prefix }}"
-                                onclick="ukraine(event)" type="button" class="btn btn-default">
-                            Украинский
-                        </button>
-                    </div>
-
-                </div>
-            </div>
+            {% include 'cms/inc/_language_tabs.html' %}
             <!--            language tabs end-->
             {% csrf_token %}
             <div class="form-group row tab-content">
                 <label id="title" class="col-sm-2 col-form-label">Номер зала</label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form.number }}
                 </div>
             </div>
@@ -99,12 +77,16 @@
                 <div class="empty_form" style="display: none;">
                     <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ gallery_formset.empty_form.prefix }}">
                         <div class="text-right">
-                            <a onclick="delete_image(event)"
-                               id="{{ gallery_formset.empty_form.prefix }}"
-                               class="fas fa-minus-circle text-danger"></a>
+                            <img src="/static/cms/media/del.jpg"
+                                 class="img_cinemas"
+                                 alt="del" width="20px;"
+                                 height="20px;"
+                                 onclick="delete_image(event)"
+                                 id="{{ gallery_formset.empty_form.prefix }}">
                         </div>
                         <img class="{{ gallery_formset.empty_form.prefix }}"
                              src="/static/cms/media/not_image.png"
+                             style="padding-top: 2px;"
                              width=100%, height=150, alt="logo">
 
                         {{ gallery_formset.empty_form.id }}
@@ -163,7 +145,7 @@
 
             <div style="text-align:center">
                 <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
-                <a href="{% url 'cinemas' %}" class="btn btn-outline-dark">Назад</a>
+                <a href="{% url 'cinemas_edit' cinemas_id %}" class="btn btn-outline-dark">Назад</a>
             </div>
         </form>
     </div>
@@ -174,14 +156,7 @@
 {% block script %}
 
 <script src="{% static 'cms/js/dynamic_formset.js' %}"></script>
-<script src="{% static 'cms/js/language_tabs_other_page.js' %}"></script>
-<script>
-        $(document).ready(function () {
-        $('#id_form-TOTAL_FORMS').val(0);
-        $('#id_form-INITIAL_FORMS').val(0);
-    });
-</script>
-
+<script src="{% static 'cms/js/language_tabs_halls.js' %}"></script>
 
 
 {% endblock %}
