@@ -20,6 +20,9 @@ class GalleryAdmin(admin.ModelAdmin):
 class ImagesAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(CarouselBanner)
+class CarouselBannerAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(HomePageBanner)
 class HomePageBannerAdmin(admin.ModelAdmin):

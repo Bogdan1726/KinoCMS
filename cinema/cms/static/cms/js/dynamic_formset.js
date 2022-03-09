@@ -40,9 +40,9 @@ $("#add-image").on('click', function () {
 
 function delete_image(event) {
     const index = event.target.id;
+    document.getElementById('id_' + index + '-image').value = '';
     $("#" + index).css('display', 'none');
     $('.can-delete-list').append('<input type="hidden" value="on" name="' + index + '-DELETE" id="id_' + index + '-DELETE">');
-
 
     // validations_image if delete_image
     $("#errors-" + index).attr("value", 'disabled');

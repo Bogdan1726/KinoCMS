@@ -24,15 +24,9 @@
                 <h4 style="text-align:center;">Список страниц</h4>
             </div>
             <div class="col-sm-12 col-md-4" style="text-align:right;">
-                <a class="btn btn-outline-success dropdown-toggle dropdown-icon"
-                   data-toggle="dropdown" aria-expanded="false">
-                    <i style="padding-right: 5px;" class="fa fa-plus"></i>Создать новую
+                <a class="btn btn-outline-success" href="{% url 'pages_create' %}">
+                    <i style="padding-right: 5px;" class="fa fa-plus"></i>Создать Новую
                 </a>
-                <div class="dropdown-menu" role="menu" style="">
-                    <a class="dropdown-item" href="">Главная страница</a>
-                    <a class="dropdown-item" href="#">Контакты</a>
-                    <a class="dropdown-item" href="">Другие страницы</a>
-                </div>
             </div>
         </div>
         <table id="pages" class="table table-bordered">
@@ -46,24 +40,24 @@
             </thead>
             <tbody>
             <!-- home pages -->
-            {% for home_page in home_pages %}
+            {% for home in object_list.home_page %}
             <tr>
                 <td>Главная страница</td>
-                <td>{{ home_page.creation_date|date:"d.m.Y" }}</td>
-                {% if home_page.active == True %}
+                <td>{{ home.creation_date|date:"d.m.Y" }}</td>
+                {% if home.active == True %}
                 <td>ВКЛ</td>
                 {% else %}
                 <td>ВЫКЛ</td>
                 {% endif %}
-                <td style="width: 5%; text-align: center;">
-                    <a href="{% url 'home_page' home_page.id %}" class="fas fa-edit"></a>
+                <td width="100px;" class="text-center">
+                    <a href="{% url 'home_page' home.id %}" class="fas fa-edit"></a>
                 </td>
             </tr>
             {% endfor %}
             <!-- /.home pages -->
 
-            <!-- pages -->
-            {% for page in pages %}
+            <!-- base pages -->
+            {% for page in object_list.base_pages %}
             <tr>
                 <td>{{ page.title }}</td>
                 <td>{{ page.creation_date|date:"d.m.Y" }}</td>
@@ -72,28 +66,83 @@
                 {% else %}
                 <td>ВЫКЛ</td>
                 {% endif %}
-                <td style="width: 5%; text-align: center;">
+                <td width="100px;" class="text-center">
                     <a href="{% url 'page' page.id %}" class="fas fa-edit"></a>
                 </td>
             </tr>
             {% endfor %}
-            <!-- /.pages -->
+            <!-- /.base pages -->
 
             <!-- contacts pages -->
             <tr>
                 <td>Контакты</td>
-                <td>{{ contacts_pages.creation_date|date:"d.m.Y" }}</td>
-                {% if contacts_pages.active == True %}
+                <td>{{ object_list.contacts_pages.creation_date|date:"d.m.Y" }}</td>
+                {% if object_list.contacts_pages.active == True %}
                 <td>ВКЛ</td>
                 {% else %}
                 <td>ВЫКЛ</td>
                 {% endif %}
-                <td style="width: 5%; text-align: center;">
-                    <a href="{% url 'contact' contacts_pages.id %}" class="fas fa-edit"></a>
+                <td width="100px;" class="text-center">
+                    <a href="{% url 'contact' object_list.contacts_pages.id %}" class="fas fa-edit"></a>
                 </td>
             </tr>
             <!-- /.contacts pages -->
 
+            <!-- new pages -->
+            {% for page in object_list.pages %}
+            <tr>
+                <td>{{ page.title }}</td>
+                <td>{{ page.creation_date|date:"d.m.Y" }}</td>
+                {% if page.active == True %}
+                <td>ВКЛ</td>
+                {% else %}
+                <td>ВЫКЛ</td>
+                {% endif %}
+                <td width="100px;">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <a href="{% url 'page' page.id %}" class="fas fa-edit"></a>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <a href="" class="fas fa-trash text-danger"
+                               data-target="#deleteModal-{{ forloop.counter }}"
+                               data-toggle="modal">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Model for delete -->
+                    <div class="modal fade" id="deleteModal-{{ forloop.counter }}" tabindex="-1" role="dialog"
+                         aria-labelledby="deleteModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"
+                                        id="deleteModalLabel-{{ forloop.counter }}">Удаление страницы</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form method="post" action="{% url 'pages_delete' page.id %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        Ви уверены что хотите удалить страницу {{ page.title }}?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Удалить</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.model for delete -->
+                </td>
+            </tr>
+            {% endfor %}
+            <!-- /.new pages -->
             </tbody>
         </table>
     </div>
@@ -102,7 +151,6 @@
 
 
 {% block script %}
-
 <!-- DataTables  & Plugins -->
 <script src="{% static 'cms/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'cms/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
@@ -134,5 +182,6 @@
         })
     });
 </script>
+<!-- DataTables  & Plugins  end -->
 {% endblock %}
 

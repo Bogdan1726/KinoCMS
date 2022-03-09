@@ -22,30 +22,41 @@
                 <label id="title" class="col-sm-2 col-form-label">Название</label>
                 <div class="col-sm-3">
                     {{ form.title }}
+                    <span style="color: red;">
+                        {{ form.title.errors }}
+                    </span>
                 </div>
             </div>
             <div class="form-group row">
                 <label id="description" class="col-sm-2 col-form-label">Описание</label>
                 <div class="col-sm-10">
                     {{ form.description }}
+                    <span style="color: red;">
+                        {{ form.description.errors }}
+                    </span>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Главная картинка</label>
                 <div class="col-sm-4" style="margin-bottom: 10px;">
-                    <img id="logo" src="{{ form.instance.image.url }}" alt="logo" width="100%"
+                    <img id="logo" src="/static/cms/media/not_image.png" alt="logo" width="100%"
                          height="100%">
                 </div>
                 <div class="col-sm-4 center">
                     <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
                         {{ form.image }}
+                        <span style="color: red;">
+                        {{ form.image.errors }}
+                        </span>
                     </a>
-                    <button type="reset" class="btn btn-outline-danger"
-                            onclick="document.getElementById('logo').src = ('{{ form.instance.image.url }}')">Удалить
-                    </button>
+                    <a class="btn btn-outline-danger"
+                       onclick="document.getElementById('logo').src = ('/static/cms/media/not_image.png'),
+                        document.getElementById('id_image').value = '';">Удалить
+                    </a>
                 </div>
             </div>
 
+            <!--            gallary formset-->
             <label>
                 Галерея картинок
             </label>
@@ -59,38 +70,17 @@
                 </div>
                 {{ gallery_formset.management_form }}
                 <div class="can-delete-list"></div>
-                {% for form in gallery_formset %}
-                <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ form.prefix }}">
-                    <div class="text-right">
-                        <a onclick="delete_image(event)" id="{{ form.prefix }}"
-                           class="fas fa-minus-circle text-danger"></a>
-                    </div>
-                    <img class="{{ form.prefix }}" src="{{ form.instance.image.url }}" width=100%, height=150,
-                         alt="logo">
-                    {{ form.id }}
-                    <div style="padding-top: 10px; text-align:center;">
-                            <span onchange="validations_image(event, this)"
-                                  id="{{ form.prefix }}"
-                                  class="btn btn-outline-success btn-file">Загрузить
-                        {{ form.image }}
-                        </span>
-                    </div>
-                    <span style="color: red;">
-                            {{ form.image.errors }}
-                            <p id="errors-{{ form.prefix }}"
-                               value="disabled"
-                               style="display: none;">Размер изображения должен быть 1000x190</p>
-                    </span>
-                </div>
-                {% endfor %}
                 <div class="empty_form" style="display: none;">
                     <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ gallery_formset.empty_form.prefix }}">
                         <div class="text-right">
-                            <a onclick="delete_image(event)"
-                               id="{{ gallery_formset.empty_form.prefix }}"
-                               class="fas fa-minus-circle text-danger"></a>
+                            <img src="/static/cms/media/del.jpg"
+                                 alt="del" width="20px;" height="20px;"
+                                 class="img_page"
+                                 onclick="delete_image(event)"
+                                 id="{{ gallery_formset.empty_form.prefix }}">
                         </div>
                         <img class="{{ gallery_formset.empty_form.prefix }}"
+                             style="padding-top: 2px;"
                              src="/static/cms/media/not_image.png"
                              width=100%, height=150, alt="logo">
 
@@ -104,14 +94,15 @@
                         </div>
                         <span style="color: red;">
                             {{ gallery_formset.empty_form.errors }}
-                            <p id="errors-{{ gallery_formset.empty_form.prefix }}"
+                            <a id="errors-{{ gallery_formset.empty_form.prefix }}"
                                value="disabled"
-                               style="display: none;">Размер изображения должен быть 1000x190</p>
+                               style="display: none;">Размер изображения должен быть 1000x190</a>
                         </span>
-
                     </div>
                 </div>
             </div>
+            <!--            gallery formset end-->
+            <!--            seo block-->
             <div class="row">
                 <div class="col-md-3">
                     <label>
@@ -130,20 +121,30 @@
                     <div class="form-group row">
                         <div class="col-sm-8">
                             {{ seo_block_form.title_seo }}
+                            <span style="color: red;">
+                            {{ seo_block_form.title_seo.errors }}
+                            </span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-8">
                             {{ seo_block_form.keywords }}
+                            <span style="color: red;">
+                            {{ seo_block_form.keywords.errors }}
+                            </span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-8">
                             {{ seo_block_form.description_seo }}
+                            <span style="color: red;">
+                            {{ seo_block_form.description_seo.errors }}
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--            seo block end-->
             <div style="text-align:center">
                 <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
                 <a href="{% url 'pages' %}" class="btn btn-outline-dark">Назад</a>
@@ -155,9 +156,6 @@
 
 
 {% block script %}
-
 <script src="{% static 'cms/js/dynamic_formset.js' %}"></script>
 <script src="{% static 'cms/js/language_tabs_other_page.js' %}"></script>
-
-
 {% endblock %}

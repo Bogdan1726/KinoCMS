@@ -6,18 +6,7 @@
 {% endblock %}
 
 {% block style %}
-<style>
-    .custom-control-label {
-        transform: scale(1.6);
-        cursor: pointer;
-    }
-
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
+<link href="{% static 'cms/css/events_style.css' %}" rel="stylesheet">
 {% endblock %}
 
 
@@ -65,9 +54,10 @@
                     <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
                         {{ form.image }}
                     </a>
-                    <button type="reset" class="btn btn-outline-danger"
-                            onclick="document.getElementById('logo').src = ('{{ form.instance.image.url }}')">Удалить
-                    </button>
+                    <a class="btn btn-outline-danger"
+                       onclick="document.getElementById('logo').src = ('{{ form.instance.image.url }}') ,
+                        document.getElementById('id_image').value = '';">Удалить
+                    </a>
                 </div>
             </div>
             <!--            gallery formset-->
@@ -81,16 +71,21 @@
                 <div class="col-sm-2 center">
                     <a id="add-image" class="btn btn-outline-dark">Добавить</a>
                 </div>
-                {{ formset_gallery.management_form }}
+                {{ gallery_formset.management_form }}
                 <div class="can-delete-list"></div>
-                {% for form in formset_gallery %}
+                {% for form in gallery_formset %}
                 <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ form.prefix }}">
                     <div class="text-right">
-                        <a onclick="delete_image(event)" id="{{ form.prefix }}"
-                           class="fas fa-minus-circle text-danger"></a>
+                        <img src="/static/cms/media/del.jpg"
+                             alt="del" width="20px;" height="20px;"
+                             class="img_events"
+                             onclick="delete_image(event)"
+                             id="{{ form.prefix }}">
                     </div>
                     {% if form.instance.image %}
-                    <img class="{{ form.prefix }}" src="{{ form.instance.image.url }}" width=100%, height=150,
+                    <img class="{{ form.prefix }}"
+                         style="padding-top: 2px;"
+                         src="{{ form.instance.image.url }}" width=100%, height=150,
                          alt="logo">
                     {% else %}
                     <img class="{{ form.prefix }}" src="/static/cms/media/not_image.png" width=100%, height=150,
@@ -114,27 +109,30 @@
                 </div>
                 {% endfor %}
                 <div class="empty_form" style="display: none;">
-                    <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ formset_gallery.empty_form.prefix }}">
+                    <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ gallery_formset.empty_form.prefix }}">
                         <div class="text-right">
-                            <a onclick="delete_image(event)"
-                               id="{{ formset_gallery.empty_form.prefix }}"
-                               class="fas fa-minus-circle text-danger"></a>
+                            <img src="/static/cms/media/del.jpg"
+                                 alt="del" width="20px;" height="20px;"
+                                 class="img_events"
+                                 onclick="delete_image(event)"
+                                 id="{{ gallery_formset.empty_form.prefix }}">
                         </div>
-                        <img class="{{ formset_gallery.empty_form.prefix }}"
+                        <img class="{{ gallery_formset.empty_form.prefix }}"
+                             style="padding-top: 2px;"
                              src="/static/cms/media/not_image.png"
                              width=100%, height=150, alt="logo">
 
-                        {{ formset_gallery.empty_form.id }}
+                        {{ gallery_formset.empty_form.id }}
                         <div style="padding-top: 10px; text-align: center;">
                         <span onchange="validations_image(event, this)"
-                              id="{{ formset_gallery.empty_form.prefix }}"
+                              id="{{ gallery_formset.empty_form.prefix }}"
                               class="btn btn-outline-success btn-file">Загрузить
-                        {{ formset_gallery.empty_form.image }}
+                        {{ gallery_formset.empty_form.image }}
                         </span>
                         </div>
                         <span class="text-center" style="color: red;">
                             {{ formset_gallery.empty_form.errors }}
-                            <a id="errors-{{ formset_gallery.empty_form.prefix }}"
+                            <a id="errors-{{ gallery_formset.empty_form.prefix }}"
                                value="disabled"
                                style="display: none;">Размер изображения должен быть 1000x190</a>
                         </span>

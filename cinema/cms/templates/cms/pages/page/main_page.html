@@ -2,18 +2,12 @@
 {% load static %}
 
 {% block title %}
-{{ block.super }}|Добавить страницу
+{{ block.super }}|Главная страница
 {% endblock %}
 
 
 {% block style %}
-<style>
-    .custom-control-label {
-        transform: scale(1.6);
-        cursor: pointer;
-    }
-</style>
-
+<link href="{% static 'cms/css/other_page.css' %}" rel="stylesheet">
 {% endblock %}
 
 

@@ -1,10 +1,105 @@
-import re
 from django import forms
-from django.forms import modelformset_factory
 from django.core.files.images import get_image_dimensions
 
 from .models import *
 
+
+# banners
+
+class CmsCarouselBannerForm(forms.ModelForm):
+    class Meta:
+        model = CarouselBanner
+        exclude = ('value',)
+
+        widgets = {
+            'active': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
+            'interval': forms.Select(attrs={'class': 'form-control'})
+        }
+
+
+class CmsBackgroundBannerForm(forms.ModelForm):
+    error_messages = {
+        'error_banner': 'Размер изображения должен быть 2000x3000',
+    }
+
+    class Meta:
+        model = BackgroundBanner
+        exclude = ('value',)
+
+        widgets = {
+            'banner': forms.FileInput(attrs={'type': 'file',
+                                             'onchange': "banner_valid(event)"}),
+            'type': forms.RadioSelect()
+        }
+
+    def clean_banner(self):
+        banner = self.cleaned_data['banner']
+        if self.cleaned_data:
+            width, height = get_image_dimensions(banner)
+            if width != 3000 or height != 2000:
+                raise forms.ValidationError(
+                    self.error_messages['error_banner']
+                )
+        return banner
+
+
+class CmsHomePageBannerForm(forms.ModelForm):
+    error_messages = {
+        'error_image': 'Размер изображения должен быть 1000x190',
+    }
+
+    class Meta:
+        model = HomePageBanner
+        fields = '__all__'
+
+        widgets = {
+            'image': forms.FileInput(attrs={'type': 'file',
+                                            'onchange': "document.getElementById('banner').src = window.URL.createObjectURL(this.files[0])"}),
+            'url': forms.URLInput(attrs={'class': 'form-control',
+                                         'placeholder': 'Ссылка'}),
+            'text': forms.TextInput(attrs={'class': 'form-control',
+                                           'placeholder': 'текст'})
+        }
+
+    def clean_image(self):
+        images = self.cleaned_data['image']
+        if self.cleaned_data:
+            width, height = get_image_dimensions(images)
+            if width != 1000 or height != 190:
+                raise forms.ValidationError(
+                    self.error_messages['error_image']
+                )
+        return images
+
+
+class CmsPromotionsPageBannerForm(forms.ModelForm):
+    error_messages = {
+        'error_image': 'Размер изображения должен быть 1000x190',
+    }
+
+    class Meta:
+        model = PromotionsPageBanner
+        fields = '__all__'
+
+        widgets = {
+            'image': forms.FileInput(attrs={'type': 'file',
+                                            'onchange': "document.getElementById('banner').src = window.URL.createObjectURL(this.files[0])"}),
+            'url': forms.URLInput(attrs={'class': 'form-control',
+                                         'placeholder': 'Ссылка'})
+        }
+
+    def clean_image(self):
+        images = self.cleaned_data['image']
+        if self.cleaned_data:
+            width, height = get_image_dimensions(images)
+            if width != 1000 or height != 190:
+                raise forms.ValidationError(
+                    self.error_messages['error_image']
+                )
+        return images
+
+
+# banners end
 
 # movies
 
@@ -37,7 +132,6 @@ class CmsMoviesForm(forms.ModelForm):
                                                     'id': 'customCheckbox3'})
 
         }
-
 
 
 # movies end
@@ -145,7 +239,7 @@ class CmsPageUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Page
-        exclude = ['seo_block', 'gallery']
+        exclude = ['seo_block', 'gallery', 'is_base']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control',
@@ -206,7 +300,6 @@ class CmsEventsForm(forms.ModelForm):
             'link': forms.URLInput(attrs={'class': 'form-control',
                                           'placeholder': 'Ссылка на видео в youtube'}),
         }
-
 
 
 class CmsImageForm(forms.ModelForm):

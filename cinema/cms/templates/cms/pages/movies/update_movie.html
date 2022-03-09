@@ -59,9 +59,10 @@
                         {{ form.image.errors }}
                     </span>
                     </a>
-                    <button type="reset" class="btn btn-outline-danger"
-                            onclick="document.getElementById('logo').src = ('{{ form.instance.image.url }}')">Удалить
-                    </button>
+                    <a class="btn btn-outline-danger"
+                       onclick="document.getElementById('logo').src = ('{{ form.instance.image.url }}'),
+                        document.getElementById('id_image').value = '';">Удалить
+                    </a>
                 </div>
             </div>
             <!--            form end-->

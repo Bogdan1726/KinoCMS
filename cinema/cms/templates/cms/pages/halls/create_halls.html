@@ -42,9 +42,10 @@
                     <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
                         {{ form.layout }}
                     </a>
-                    <button type="reset" class="btn btn-outline-danger"
-                            onclick="document.getElementById('logo').src = ('/static/cms/media/not_image.png')">Удалить
-                    </button>
+                    <a class="btn btn-outline-danger"
+                       onclick="document.getElementById('logo').src = ('/static/cms/media/not_image.png'),
+                        document.getElementById('id_layout').value = '';">Удалить
+                    </a>
                 </div>
             </div>
             <div class="form-group row">
@@ -57,9 +58,10 @@
                     <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
                         {{ form.banner }}
                     </a>
-                    <button type="reset" class="btn btn-outline-danger"
-                            onclick="document.getElementById('photo').src = ('/static/cms/media/not_image.png')">Удалить
-                    </button>
+                    <a class="btn btn-outline-danger"
+                       onclick="document.getElementById('photo').src = ('/static/cms/media/not_image.png'),
+                        document.getElementById('id_banner').value = '';">Удалить
+                    </a>
                 </div>
             </div>
             <!--            gallery formset-->

@@ -4,14 +4,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.datetime_safe import datetime
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
-from django.views.generic.edit import ModelFormMixin, ProcessFormView
-
 from user.forms import UserUpdateForm
 from user.models import User
 from .forms import CmsHallsForm, CmsCinemasForm, CmsHomePageUpdateForm, \
-    CmsPageUpdateForm, CmsContactsPageUpdateForm, \
-    CmsEventsForm, CmsImageForm, CmsSeoBlockForm, CmsMoviesForm
-from .models import SeoBlock, Gallery, Images, HomePageBanner, PromotionsPageBanner, \
+    CmsPageUpdateForm, CmsContactsPageUpdateForm, CmsHomePageBannerForm, CmsCarouselBannerForm, \
+    CmsEventsForm, CmsImageForm, CmsSeoBlockForm, CmsMoviesForm, CmsBackgroundBannerForm, CmsPromotionsPageBannerForm
+from .models import SeoBlock, Gallery, Images, HomePageBanner, PromotionsPageBanner, CarouselBanner, \
     BackgroundBanner, Movies, Cinema, Halls, Seance, Ticket, Events, Page, HomePage, ContactsPage
 
 
@@ -65,7 +63,80 @@ class BaseCmsCreate(CreateView):
         messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
         return super().form_invalid(form)
 
+
 # Base class end
+
+
+# banners
+
+class CmsBannersCard(UpdateView):
+    model = BackgroundBanner
+    template_name = 'cms/pages/banners.html'
+    success_url = reverse_lazy('banners')
+    home_page_banner = modelformset_factory(HomePageBanner, form=CmsHomePageBannerForm,
+                                            extra=0, can_delete=True)
+    promotions_page_banner = modelformset_factory(PromotionsPageBanner, form=CmsPromotionsPageBannerForm,
+                                                  extra=0, can_delete=True)
+
+    def get_object(self, queryset=None):
+        obj, _ = self.model.objects.get_or_create(value='banner')
+        return obj
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            return CmsBackgroundBannerForm(self.request.POST or None,
+                                           self.request.FILES or None,
+                                           instance=self.object)
+
+    def get_context_data(self, *args, **kwargs):
+        home_page_banner_carousel, _ = CarouselBanner.objects.get_or_create(
+            value='home_page_banner')
+        promotions_page_banner_carousel, _ = CarouselBanner.objects.get_or_create(
+            value='promotions_page_banner')
+        context = super(CmsBannersCard, self).get_context_data()
+
+        context['home_page_banner_carousel'] = \
+            CmsCarouselBannerForm(self.request.POST or None,
+                                  prefix='home_page_banner_carousel',
+                                  instance=home_page_banner_carousel)
+        context['promotions_page_banner_carousel'] = \
+            CmsCarouselBannerForm(self.request.POST or None,
+                                  prefix='promotions_page_banner_carousel',
+                                  instance=promotions_page_banner_carousel)
+        context['home_page_banner'] = self.home_page_banner(self.request.POST or None,
+                                                            self.request.FILES or None,
+                                                            queryset=HomePageBanner.objects.all())
+
+        context['promotions_page_banner'] = self.promotions_page_banner(self.request.POST or None,
+                                                                        self.request.FILES or None,
+                                                                        prefix='promotions',
+                                                                        queryset=PromotionsPageBanner.objects.all())
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        banner = context['home_page_banner']
+        promotions_page_banner = context['promotions_page_banner']
+        home_page_banner_carousel = context['home_page_banner_carousel']
+        promotions_page_banner_carousel = context['promotions_page_banner_carousel']
+        if banner.is_valid() and home_page_banner_carousel.is_valid() and \
+                promotions_page_banner.is_valid() and promotions_page_banner_carousel.is_valid():
+            obj = form.save(commit=False)
+            banner.save()
+            promotions_page_banner.save()
+            home_page_banner_carousel.save()
+            promotions_page_banner_carousel.save()
+            obj.save()
+            messages.success(self.request, 'Данные обновлены')
+            return super().form_valid(form)
+        return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
+        return super().form_invalid(form)
+
+
+# banners end
 
 # movies
 
@@ -150,6 +221,7 @@ class CmsMoviesDeleteView(DeleteView):
     def get_success_url(self):
         messages.success(self.request, f'Фильм  {self.object.title} удалён!')
         return reverse_lazy('list_movie')
+
 
 # movies end
 
@@ -236,6 +308,7 @@ class CmsCinemasDeleteView(DeleteView):
         messages.error(request, 'Объект защищен от удаления!')
         return redirect('cinemas')
 
+
 # cinemas end
 
 # halls
@@ -320,6 +393,7 @@ class CmsHallsDeleteView(DeleteView):
         messages.error(request, 'Объект защищен от удаления!')
         return redirect('cinemas')
 
+
 # halls end
 
 # pages
@@ -330,14 +404,90 @@ class CmsPagesListView(ListView):
     list of pages
     """
     model = Page
-    context_object_name = 'pages'
     template_name = 'cms/pages/page/list_pages.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(CmsPagesListView, self).get_context_data()
-        context['home_pages'] = HomePage.objects.all()
-        context['contacts_pages'] = ContactsPage.objects.all()[0]
+    def get_queryset(self):
+        context = {
+            'base_pages': self.model.objects.filter(is_base=True),
+            'home_page': HomePage.objects.all(),
+            'contacts_pages': ContactsPage.objects.all()[0],
+            'pages': self.model.objects.filter(is_base=False)
+        }
         return context
+
+
+class CmsPageCreateView(BaseCmsCreate):
+    model = Page
+    template_name = 'cms/pages/page/create_page.html'
+    success_url = reverse_lazy('pages')
+    form_class = CmsPageUpdateForm
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CmsPageCreateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None)
+        context['gallery_formset'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None,
+                                                  queryset=Images.objects.none())
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        seo_block_form = context['seo_block_form']
+        gallery_formset = context['gallery_formset']
+        if seo_block_form.is_valid() and gallery_formset.is_valid():
+            seo_block_form.save()
+            page = form.save(commit=False)
+            page.seo_block = seo_block_form.instance
+            page.is_base = False
+            gallery = Gallery.objects.create(title=page.title)
+            page.gallery = get_object_or_404(Gallery, id=gallery.id)
+            for image in gallery_formset:
+                if image.cleaned_data:
+                    if image.is_valid():
+                        images = image.save(commit=False)
+                        images.gallery = page.gallery
+                        images.save()
+            gallery_formset.save()
+            page.save()
+            messages.success(self.request, 'Добавлена новая страница')
+            return super().form_valid(form)
+        return self.form_invalid(form)
+
+
+class CmsPageUpdateView(BaseCmsUpdate):
+    """
+    Update a CMS pages
+    """
+    model = Page
+    template_name = 'cms/pages/page/update_page.html'
+    success_url = reverse_lazy('pages')
+    form_class = CmsPageUpdateForm
+    formset = modelformset_factory(Images, form=CmsImageForm, extra=0, can_delete=True)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CmsPageUpdateView, self).get_context_data()
+        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
+                                                    instance=self.object.seo_block)
+        context['gallery_formset'] = self.formset(self.request.POST or None,
+                                                  self.request.FILES or None,
+                                                  queryset=Images.objects.filter(gallery=self.object.gallery))
+        return context
+
+
+class CmsPageDeleteView(DeleteView):
+    """
+    Delete new pages
+    """
+    model = Page
+
+    def get_success_url(self):
+        messages.success(self.request, f'{self.object.title} удалена!')
+        return reverse_lazy('pages')
+
+    def get(self, request, *args, **kwargs):
+        messages.error(request, 'Объект защищен от удаления!')
+        return redirect('pages')
 
 
 class CmsHomePageUpdateView(BaseCmsUpdate):
@@ -353,27 +503,6 @@ class CmsHomePageUpdateView(BaseCmsUpdate):
         context = super(CmsHomePageUpdateView, self).get_context_data()
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
                                                     instance=self.object.seo_block)
-        return context
-
-
-class CmsPageUpdateView(BaseCmsUpdate):
-    """
-    Update a CMS pages
-    """
-    model = Page
-    template_name = 'cms/pages/page/other_page.html'
-    success_url = reverse_lazy('pages')
-    form_class = CmsPageUpdateForm
-    formset = modelformset_factory(ContactsPage, form=CmsContactsPageUpdateForm, extra=0)
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(CmsPageUpdateView, self).get_context_data()
-        context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
-                                                    instance=self.object.seo_block)
-        context['gallery_formset'] = self.formset(self.request.POST or None,
-                                                  self.request.FILES or None,
-                                                  queryset=Images.objects.filter(gallery=self.object.gallery))
-
         return context
 
 
@@ -464,7 +593,7 @@ class CmsEventsCreateView(BaseCmsCreate):
         context = super(CmsEventsCreateView, self).get_context_data()
         context['get_path'] = self.request.get_full_path()
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None)
-        context['formset_gallery'] = self.formset(self.request.POST or None,
+        context['gallery_formset'] = self.formset(self.request.POST or None,
                                                   self.request.FILES or None,
                                                   queryset=Images.objects.none())
         return context
@@ -472,8 +601,8 @@ class CmsEventsCreateView(BaseCmsCreate):
     def form_valid(self, form):
         context = self.get_context_data()
         seo_block_form = context['seo_block_form']
-        formset_gallery = context['formset_gallery']
-        if seo_block_form.is_valid() and formset_gallery.is_valid():
+        gallery_formset = context['gallery_formset']
+        if seo_block_form.is_valid() and gallery_formset.is_valid():
             seo_block_form.save()
             promotion = form.save(commit=False)
             promotion.seo_block = seo_block_form.instance
@@ -483,13 +612,13 @@ class CmsEventsCreateView(BaseCmsCreate):
                 promotion.type = 'news'
             gallery = Gallery.objects.create(title=promotion.title)
             promotion.gallery = get_object_or_404(Gallery, id=gallery.id)
-            for image in formset_gallery:
+            for image in gallery_formset:
                 if image.cleaned_data:
                     if image.is_valid():
                         images = image.save(commit=False)
                         images.gallery = promotion.gallery
                         images.save()
-            formset_gallery.save()
+            gallery_formset.save()
             promotion.save()
 
             messages.success(self.request, 'Данные обновлены')
@@ -518,7 +647,7 @@ class CmsEventsUpdateView(BaseCmsUpdate):
         context['type_object'] = self.object.type
         context['seo_block_form'] = CmsSeoBlockForm(self.request.POST or None,
                                                     instance=self.object.seo_block)
-        context['formset_gallery'] = self.formset(self.request.POST or None,
+        context['gallery_formset'] = self.formset(self.request.POST or None,
                                                   self.request.FILES or None,
                                                   queryset=Images.objects.filter(gallery=self.object.gallery))
 
@@ -540,6 +669,7 @@ class CmsEventsDeleteView(DeleteView):
         else:
             messages.success(self.request, 'Новость удалена!')
             return reverse_lazy('news')
+
 
 # Events end
 

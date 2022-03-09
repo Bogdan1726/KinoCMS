@@ -44,10 +44,10 @@ class Images(models.Model):
 
 
 class HomePageBanner(models.Model):
-    banner = models.ImageField(upload_to='banners/home_page/', verbose_name='Баннер', unique=True)
+    objects = None
+    image = models.ImageField(upload_to='banners/home_page/', verbose_name='Баннер', unique=True)
     url = models.URLField(verbose_name='url')
     text = models.CharField(max_length=150, verbose_name='Текст')
-    activate = models.BooleanField(default=True, verbose_name='Активность')
 
     class Meta:
         verbose_name = 'Баннер главной верх'
@@ -55,19 +55,46 @@ class HomePageBanner(models.Model):
 
 
 class PromotionsPageBanner(models.Model):
-    banner = models.ImageField(upload_to='banners/promotions/', verbose_name='Баннер', unique=True)
+    objects = None
+    image = models.ImageField(upload_to='banners/promotions/', verbose_name='Баннер', unique=True)
     url = models.URLField(verbose_name='url')
-    activate = models.BooleanField(default=True, verbose_name='Активность')
 
     class Meta:
         verbose_name = 'Баннер акции'
         verbose_name_plural = 'Баненер акции'
 
+class CarouselBanner(models.Model):
+
+    INTERVAL = [
+        (5, '5сек'),
+        (10, '10сек'),
+        (30, '30сек')
+    ]
+
+    objects = None
+    value = models.CharField(max_length=25, unique=True, verbose_name='Баннер')
+    active = models.BooleanField(default=True, verbose_name='Активна')
+    interval = models.IntegerField(choices=INTERVAL, default=INTERVAL[0][0], verbose_name='Интервал')
+
+    class Meta:
+        verbose_name = 'Карусель'
+        verbose_name_plural = 'Карусель'
 
 class BackgroundBanner(models.Model):
+    BACKGROUND = 'BG'
+    BACKGROUND_IMAGE = 'BI'
+
+    TYPE = [
+        (BACKGROUND, 'Просто фон'),
+        (BACKGROUND_IMAGE, 'Фото на фон'),
+    ]
+
+    objects = None
     banner = models.ImageField(upload_to='banners/background/', verbose_name='Баннер', unique=True)
-    background = models.BooleanField(default=True, verbose_name='Фон')
-    background_image = models.BooleanField(default=False, verbose_name='Фото на фон')
+    type = models.CharField(max_length=2, choices=TYPE, verbose_name='Тип',
+                            default=BACKGROUND)
+    value = models.CharField(max_length=6, default='banner')
+
 
     class Meta:
         verbose_name = 'Баннер задний фон'
@@ -187,8 +214,10 @@ class Events(models.Model):
 
 
 class Page(models.Model):
+    objects = None
     title = models.CharField(max_length=100, verbose_name='Название')
     active = models.BooleanField(default=True, verbose_name='Активна')
+    is_base = models.BooleanField(default=True, verbose_name='Базовая страница')
     creation_date = models.DateField(auto_now_add=True, null=True, verbose_name='Дата создания')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='pages/', verbose_name='Главная картинка', unique=True)
@@ -224,7 +253,9 @@ class ContactsPage(models.Model):
     creation_date = models.DateField(auto_now_add=True, null=True, verbose_name='Дата создания')
     address = models.TextField(verbose_name='Адресс')
     coordinates = models.CharField(max_length=100, verbose_name='Координаты для карты')
-    logo = models.ImageField(upload_to='pages/contacts/', verbose_name='Логотип', unique=True)
+    logo = models.ImageField(upload_to='pages/contacts/',
+                             verbose_name='Логотип',
+                             unique=True)
     seo_block = models.ForeignKey(SeoBlock, null=True, on_delete=models.SET_NULL, verbose_name='SEO блок')
 
     def __str__(self):

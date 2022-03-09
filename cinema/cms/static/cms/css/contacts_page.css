@@ -4,10 +4,10 @@
 }
 
 .contacts_container {
-    border: 2px solid #1c1f23;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 25px;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
 }
 
 .center {
@@ -15,3 +15,4 @@
     justify-content: center;
     align-items: center;
 }
+

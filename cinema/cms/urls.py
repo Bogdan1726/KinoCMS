@@ -3,16 +3,16 @@ from .views import *
 
 urlpatterns = [
     path('', statistics, name='cms'),
-    path('banners/', banners, name='banners'),
+
+
+    path('banners/', CmsBannersCard.as_view(), name='banners'),
 
     # movies
     path('movies/', CmsMoviesListView.as_view(), name='list_movie'),
     path('movies/create/', CmsMoviesCreateView.as_view(), name='movies_add'),
     path('movies/update/<int:pk>/', CmsMoviesUpdateView.as_view(), name='movies_edit'),
     path('movies/delete/<int:pk>/', CmsMoviesDeleteView.as_view(), name='movies_delete'),
-
     # movies end
-
 
     # cinemas
     path('cinemas/', CmsCinemasListView.as_view(), name='cinemas'),
@@ -23,7 +23,6 @@ urlpatterns = [
     path('cinemas/<int:cinemas_id>/halls/delete/<int:pk>/', CmsHallsDeleteView.as_view(), name='halls_delete'),
     path('cinemas/<int:cinemas_id>/halls/update/<int:pk>/', CmsHallsUpdateView.as_view(), name='halls_edit'),
     # cinemas end
-
 
     # news
     path('news/', CmsNewsListView.as_view(), name='news'),
@@ -39,9 +38,11 @@ urlpatterns = [
 
     # pages
     path('pages/', CmsPagesListView.as_view(), name='pages'),
-    path('pages/home_page/<int:pk>/', CmsHomePageUpdateView.as_view(), name='home_page'),
+    path('pages/create/', CmsPageCreateView.as_view(), name='pages_create'),
+    path('pages/delete/<int:pk>/', CmsPageDeleteView.as_view(), name='pages_delete'),
+    path('pages/home-page/<int:pk>/', CmsHomePageUpdateView.as_view(), name='home_page'),
     path('pages/page/<int:pk>/', CmsPageUpdateView.as_view(), name='page'),
-    path('pages/contacts_page/<int:pk>/', CmsContactsUpdateView.as_view(), name='contact'),
+    path('pages/contacts-page/<int:pk>/', CmsContactsUpdateView.as_view(), name='contact'),
     # pages end
 
     # users

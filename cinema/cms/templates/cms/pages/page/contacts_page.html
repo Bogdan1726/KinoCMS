@@ -53,7 +53,6 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Лого</label>
-
                         <div class="col-sm-4" style="margin-bottom: 10px;">
                             {% if form.instance.logo %}
                             <img class="{{ form.prefix }}"
@@ -73,10 +72,19 @@
                                style="margin-right: 10px;">Загрузить
                                 {{ form.logo }}
                             </a>
+                            {% if form.instance.logo %}
                             <a class="btn btn-outline-danger"
                                id="{{ form.prefix }}"
-                               onclick="$('.' + '{{ form.prefix }}').attr('src', '{{ form.instance.logo.url }}')">Удалить
+                               onclick="$('.' + '{{ form.prefix }}').attr('src', '{{ form.instance.logo.url }}'),
+                                document.getElementById('id_' + '{{ form.prefix }}' + '-logo').value = '';">Удалить
                             </a>
+                            {% else %}
+                            <a class="btn btn-outline-danger"
+                               id="{{ form.prefix }}"
+                               onclick="$('.' + '{{ form.prefix }}').attr('src', '/static/cms/media/not_image.png'),
+                                document.getElementById('id_' + '{{ form.prefix }}' + '-logo').value = '';">Удалить
+                            </a>
+                            {% endif %}
                             <span style="color: red;">
                             {{ form.logo.errors }}
                             </span>
@@ -130,7 +138,8 @@
                             </a>
                             <a class="btn btn-outline-danger"
                                id="{{ form.prefix }}"
-                               onclick="$('.' + '{{ form.prefix }}').attr('src', '/static/cms/media/not_image.png')">Удалить
+                               onclick="$('.' + '{{ form.prefix }}').attr('src', '/static/cms/media/not_image.png'),
+                                document.getElementById('id_' + '{{ form.prefix }}' + '-logo').value = '';">Удалить
                             </a>
                         </div>
                     </div>
@@ -184,28 +193,12 @@
         </form>
     </div>
 </div>
-
 {% endblock %}
 
 
 {% block script %}
 <script src="{% static 'cms/js/language_tabs.js' %}"></script>
-
-<script>
-
-    $("#add-contacts").on("click", function () {
-        const form_idx = $('#id_form-TOTAL_FORMS').val();
-        $("#formset").append($('.empty_form').html().replace(/__prefix__/g, form_idx))
-        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-    })
-
-    function load_logo(event, obj) {
-        const index = obj.id;
-        const file = event.target.files[0];
-        $("." + index).attr("src", window.URL.createObjectURL(file));
-    }
-</script>
-
+<script src="{% static 'cms/js/contacts_dynamic_formset.js' %}"></script>
 {% endblock %}
 
 

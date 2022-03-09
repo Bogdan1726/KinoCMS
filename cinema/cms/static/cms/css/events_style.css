@@ -1,0 +1,15 @@
+.custom-control-label {
+    transform: scale(1.6);
+    cursor: pointer;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img_events:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
