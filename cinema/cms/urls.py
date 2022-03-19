@@ -2,7 +2,7 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('', statistics, name='cms'),
+    path('', CmsStatisticsView.as_view(), name='cms'),
 
 
     path('banners/', CmsBannersCard.as_view(), name='banners'),

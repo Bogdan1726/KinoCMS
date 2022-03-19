@@ -7,36 +7,7 @@
 
 
 {% block style %}
-<style>
-    .banner_card {
-        border-radius: 6px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
-
-    }
-
-    .img_events:hover {
-        cursor: pointer;
-        opacity: 0.7;
-    }
-
-    h4 {
-        text-align: center;
-    }
-
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .custom-control-label {
-        transform: scale(1.6);
-        cursor: pointer;
-    }
-
-</style>
+<link href="{% static 'cms/css/banners_style.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -226,7 +197,7 @@
                     </div>
                 </div>
                 <div style="text-align:center;">
-                    <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
+                    <button id="sub2" type="submit" class="btn btn-outline-dark">Сохранить</button>
                 </div>
             </div>
             <!--        background image end-->
@@ -254,9 +225,9 @@
 
                 <!--            formset-->
                 <label class="col-form-label">Размер 1000x190</label>
-                <div class="form-group row" id="formset2">
+                <div class="form-group row" id="formset_promotions">
                     <div class="col-sm-2 center">
-                        <a id="add-image2" class="btn btn-outline-dark">Добавить</a>
+                        <a id="add-image_promotions" class="btn btn-outline-dark">Добавить</a>
                     </div>
                     {{ promotions_page_banner.management_form }}
                     <div class="can-delete-list"></div>
@@ -302,7 +273,7 @@
                         </div>
                     </div>
                     {% endfor %}
-                    <div class="empty_form2" style="display: none;">
+                    <div class="empty_form_promotions" style="display: none;">
                         <div class="col-sm-2" style="padding-bottom: 10px;"
                              id="{{ promotions_page_banner.empty_form.prefix }}">
                             <div class="text-right">
@@ -350,7 +321,7 @@
                         </div>
                     </div>
                     <div class="col-sm-4 text-center">
-                        <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
+                        <button id="sub3" type="submit" class="btn btn-outline-dark">Сохранить</button>
                     </div>
                     <!--                banner promotions end -->
                 </div>
@@ -363,58 +334,14 @@
 
 {% block script %}
 <script>
-
-
-    $("#add-image2").on('click', function () {
+    $("#add-image_promotions").on('click', function () {
         const form_idx = $('#id_promotions-TOTAL_FORMS').val();
-        $("#formset2").append($('.empty_form2').html().replace(/__prefix__/g, form_idx))
+        $("#formset_promotions").append($('.empty_form_promotions').html().replace(/__prefix__/g, form_idx))
         $('#id_promotions-TOTAL_FORMS').val(parseInt(form_idx) + 1);
     })
 
-
-
-    // function delete_image(event) {
-    //     const index = event.target.id;
-    //     document.getElementById('id_' + index + '-image').value = '';
-    //     $("#" + index).css('display', 'none');
-    //     $('.can-delete-list').append('<input type="hidden" value="on" name="' + index + '-DELETE" id="id_' + index + '-DELETE">');
-    //
-    //     // validations_image if delete_image
-    //     $("#errors-" + index).attr("value", 'disabled');
-    //     clean_errors();
-    // }
-
-
 </script>
-<script>
-    function banner_valid(event) {
-        const file = event.target.files[0];
-        var img = new Image();
-        img.src = window.URL.createObjectURL(file);
-        $("#background").attr("src", window.URL.createObjectURL(file));
-
-        // check width and height
-        img.onload = function () {
-            if (this.width != 3000 && this.height != 2000) {
-                $(".errorlist").css('display', 'block').attr("value", 'enabled');
-                clean_errors();
-                return false;
-
-            } else {
-                $(".errorlist").css('display', 'none').attr("value", 'disabled');
-                clean_errors();
-            }
-        }
-    }
-
-
-    // banner_valid if delete_banner
-    function delete_banner() {
-        $(".errorlist").css('display', 'none').attr("value", 'disabled');
-        clean_errors();
-    }
-
-</script>
+<script src="{% static 'cms/js/banners_valid.js' %}"></script>
 <script src="{% static 'cms/js/dynamic_formset.js' %}"></script>
 {% endblock %}
 

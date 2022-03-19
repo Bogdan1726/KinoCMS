@@ -1,12 +1,16 @@
-from django import forms
+from .models import CarouselBanner, BackgroundBanner, HomePageBanner, PromotionsPageBanner, \
+    Movies, Halls, Cinema, Events, ContactsPage, Page, HomePage, Images, SeoBlock
 from django.core.files.images import get_image_dimensions
+from django import forms
 
-from .models import *
 
-
-# banners
+# Forms for Banners
 
 class CmsCarouselBannerForm(forms.ModelForm):
+    """
+    Form of carousel on HomePageBanner and PromotionsPageBanner
+    """
+
     class Meta:
         model = CarouselBanner
         exclude = ('value',)
@@ -53,8 +57,7 @@ class CmsHomePageBannerForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'image': forms.FileInput(attrs={'type': 'file',
-                                            'onchange': "document.getElementById('banner').src = window.URL.createObjectURL(this.files[0])"}),
+            'image': forms.FileInput(attrs={'type': 'file'}),
             'url': forms.URLInput(attrs={'class': 'form-control',
                                          'placeholder': 'Ссылка'}),
             'text': forms.TextInput(attrs={'class': 'form-control',
@@ -82,8 +85,7 @@ class CmsPromotionsPageBannerForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'image': forms.FileInput(attrs={'type': 'file',
-                                            'onchange': "document.getElementById('banner').src = window.URL.createObjectURL(this.files[0])"}),
+            'image': forms.FileInput(attrs={'type': 'file'}),
             'url': forms.URLInput(attrs={'class': 'form-control',
                                          'placeholder': 'Ссылка'})
         }
@@ -99,16 +101,12 @@ class CmsPromotionsPageBannerForm(forms.ModelForm):
         return images
 
 
-# banners end
+# Forms for Banners end
 
-# movies
 
+# Forms for Movies
 
 class CmsMoviesForm(forms.ModelForm):
-    """
-    Movies form
-    """
-
     class Meta:
         model = Movies
         exclude = ('gallery', 'seo_block')
@@ -134,16 +132,12 @@ class CmsMoviesForm(forms.ModelForm):
         }
 
 
-# movies end
+# Forms for Movies end
 
-# halls
 
+# Forms for Halls
 
 class CmsHallsForm(forms.ModelForm):
-    """
-    Form to Halls
-    """
-
     class Meta:
         model = Halls
         exclude = ('gallery', 'seo_block', 'cinemas')
@@ -160,17 +154,12 @@ class CmsHallsForm(forms.ModelForm):
         }
 
 
-# halls end
+# Forms for Halls end
 
 
-# cinemas
-
+# Forms for Cinemas
 
 class CmsCinemasForm(forms.ModelForm):
-    """
-    Form to Cinemas
-    """
-
     class Meta:
         model = Cinema
         exclude = ('gallery', 'seo_block', 'halls')
@@ -189,14 +178,44 @@ class CmsCinemasForm(forms.ModelForm):
         }
 
 
-# cinemas end
+# Forms for Cinemas end
 
-# pages
+
+# Forms for Events
+
+class CmsEventsForm(forms.ModelForm):
+    """
+        Events Form for News and Promotions
+    """
+
+    class Meta:
+        model = Events
+        exclude = ('gallery', 'seo_block', 'type')
+
+        widgets = {
+            'is_published': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
+            'title': forms.TextInput(attrs={'class': 'form-control',
+                                            'placeholder': 'Название'}),
+            'date_published': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                 'placeholder': 'Описание'}),
+            'image': forms.FileInput(attrs={'type': 'file',
+                                            'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"}),
+
+            'link': forms.URLInput(attrs={'class': 'form-control',
+                                          'placeholder': 'Ссылка на видео в youtube'}),
+        }
+
+
+# Forms for Events end
+
+
+# Forms for Pages
 
 
 class CmsHomePageUpdateForm(forms.ModelForm):
     """
-    Form Home Page
+    Home Page Form
     """
     error_messages = {
         'error_phone_number': 'Неверный формат номера телефона',
@@ -234,7 +253,7 @@ class CmsHomePageUpdateForm(forms.ModelForm):
 
 class CmsPageUpdateForm(forms.ModelForm):
     """
-    Form Pages
+    Form for Pages
     """
 
     class Meta:
@@ -255,7 +274,7 @@ class CmsPageUpdateForm(forms.ModelForm):
 
 class CmsContactsPageUpdateForm(forms.ModelForm):
     """
-    Form Contacts Page
+    Contacts Page Form
     """
 
     class Meta:
@@ -275,36 +294,14 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
         }
 
 
-# pages end
+# Forms for Pages end
 
 
-class CmsEventsForm(forms.ModelForm):
-    """
-    Form Promotions
-    """
-
-    class Meta:
-        model = Events
-        exclude = ('gallery', 'seo_block', 'type')
-
-        widgets = {
-            'is_published': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
-            'title': forms.TextInput(attrs={'class': 'form-control',
-                                            'placeholder': 'Название'}),
-            'date_published': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
-                                                 'placeholder': 'Описание'}),
-            'image': forms.FileInput(attrs={'type': 'file',
-                                            'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"}),
-
-            'link': forms.URLInput(attrs={'class': 'form-control',
-                                          'placeholder': 'Ссылка на видео в youtube'}),
-        }
-
+# Forms related
 
 class CmsImageForm(forms.ModelForm):
     """
-    Form Image
+    Image Form
     """
     error_messages = {
         'error_image': 'Размер изображения должен быть 1000x190'
@@ -331,7 +328,7 @@ class CmsImageForm(forms.ModelForm):
 
 class CmsSeoBlockForm(forms.ModelForm):
     """
-    Form Seo Block
+    Seo Block Form
     """
     error_messages = {
         'keywords': 'error_messages'
@@ -352,3 +349,5 @@ class CmsSeoBlockForm(forms.ModelForm):
                                                      'rows': 3,
                                                      'placeholder': 'description'})
         }
+
+# Forms related end

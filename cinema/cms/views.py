@@ -1,28 +1,42 @@
+import json
+from datetime import timedelta
+from babel.dates import format_date
 from django.contrib import messages
+from django.contrib.auth.mixins import AccessMixin
+from django.db.models import Count
 from django.forms import modelformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.datetime_safe import datetime
+from django.views import View
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from user.forms import UserUpdateForm
 from user.models import User
 from .forms import CmsHallsForm, CmsCinemasForm, CmsHomePageUpdateForm, \
     CmsPageUpdateForm, CmsContactsPageUpdateForm, CmsHomePageBannerForm, CmsCarouselBannerForm, \
     CmsEventsForm, CmsImageForm, CmsSeoBlockForm, CmsMoviesForm, CmsBackgroundBannerForm, CmsPromotionsPageBannerForm
-from .models import SeoBlock, Gallery, Images, HomePageBanner, PromotionsPageBanner, CarouselBanner, \
-    BackgroundBanner, Movies, Cinema, Halls, Seance, Ticket, Events, Page, HomePage, ContactsPage
+from .models import Gallery, Images, HomePageBanner, PromotionsPageBanner, CarouselBanner, \
+    BackgroundBanner, Movies, Cinema, Halls, Seance, Events, Page, HomePage, ContactsPage, Client
 
-
-# Create your views here.
 
 # Base class
-class BaseCmsUpdate(UpdateView):
-    """
-    Base view for updating an existing object.
 
-    Using this base class requires subclassing to provide a response mixin.
+class BaseCmsView(View, AccessMixin):
+    """Check user is staff."""
 
-    """
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_anonymous:
+            return redirect('login')
+        else:
+            if not request.user.is_staff:
+                messages.error(request, f'Вы вошли в систему как {request.user.email}, '
+                                        f'однако у вас недостаточно прав для просмотра данной страницы')
+                return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class BaseCmsUpdate(UpdateView, BaseCmsView):
+    """Base view for updating an existing object."""
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -57,8 +71,7 @@ class BaseCmsUpdate(UpdateView):
         return super().form_invalid(form)
 
 
-class BaseCmsCreate(CreateView):
-
+class BaseCmsCreate(CreateView, BaseCmsView):
     def form_invalid(self, form):
         messages.warning(self.request, 'Исправьте ошибки и попробуйте снова')
         return super().form_invalid(form)
@@ -67,9 +80,69 @@ class BaseCmsCreate(CreateView):
 # Base class end
 
 
+# Statistics
+
+class CmsStatisticsView(BaseCmsView):
+
+    @staticmethod
+    def get(request):
+        users = User.objects.filter(is_staff=False)
+        date = datetime.now()
+        days = 7
+        date_range = [date, date + timedelta(days=days)]
+        client = Client.objects.filter(date__range=[date - timedelta(days=days), date])
+        seance = Seance.objects.values('date').filter(date__range=date_range)
+        seance_list = []
+        mobile = []
+        pc = []
+        every = []
+        for i in range(days):
+            date_for_seance = datetime.now() + timedelta(days=i)
+            date_for_client = datetime.now() - timedelta(days=i)
+            every.append({'is_every_count': client.filter(date=date_for_client).count()})
+            mobile.append(
+                {'is_mobile_count': client.values('is_mobile').exclude(is_mobile=False).filter(
+                    date=date_for_client).count()}
+            )
+            pc.append(
+                {'is_pc_count': client.values('is_pc').exclude(is_pc=False).filter(
+                    date=date_for_client).count()}
+            )
+            seance_list.append(
+                {'seance_count': seance.filter(date=date_for_seance).count()}
+            )
+
+        context = {
+            'date_range': json.dumps(
+                [format_date((datetime.today() - timedelta(days=day)), "d MMM", locale='ru') for day in range(days)]
+            ),
+            'is_mobile': json.dumps(mobile),
+            'is_pc': json.dumps(pc),
+            'is_every': json.dumps(every),
+            'users_count': users.count(),
+            'count_seance': json.dumps(seance_list),
+            'seance': json.dumps(
+                [{'date': date} for date in [format_date((datetime.today() + timedelta(days=day)),
+                                                         "d MMM", locale='ru') for day in range(days)]]
+            ),
+            'gender': json.dumps([
+                {'women': users.filter(gender='f').count(),
+                 'men': users.filter(gender='m').count()}
+            ]),
+            'top_movies': json.dumps(list(
+                Seance.objects.values('movies__title').annotate(top=Count('movies__title')).order_by('movies')[:5]
+            )),
+        }
+
+        return render(request, 'cms/pages/statistics.html', context)
+
+
+# Statistics end
+
+
 # banners
 
-class CmsBannersCard(UpdateView):
+class CmsBannersCard(UpdateView, BaseCmsView):
     model = BackgroundBanner
     template_name = 'cms/pages/banners.html'
     success_url = reverse_lazy('banners')
@@ -140,8 +213,7 @@ class CmsBannersCard(UpdateView):
 
 # movies
 
-
-class CmsMoviesListView(ListView):
+class CmsMoviesListView(ListView, BaseCmsView):
     model = Movies
     template_name = 'cms/pages/movies/list_movie.html'
 
@@ -228,7 +300,7 @@ class CmsMoviesDeleteView(DeleteView):
 # cinemas
 
 
-class CmsCinemasListView(ListView):
+class CmsCinemasListView(ListView, BaseCmsView):
     model = Cinema
     context_object_name = 'cinemas'
     template_name = 'cms/pages/cinemas/list_cinemas.html'
@@ -399,7 +471,7 @@ class CmsHallsDeleteView(DeleteView):
 # pages
 
 
-class CmsPagesListView(ListView):
+class CmsPagesListView(ListView, BaseCmsView):
     """
     list of pages
     """
@@ -555,7 +627,7 @@ class CmsContactsUpdateView(UpdateView):
 # Events
 
 
-class CmsPromotionListView(ListView):
+class CmsPromotionListView(ListView, BaseCmsView):
     """
     list of promotion
     """
@@ -676,7 +748,7 @@ class CmsEventsDeleteView(DeleteView):
 # users
 
 
-class CmsUserListView(ListView):
+class CmsUserListView(ListView, BaseCmsView):
     """
     List Users
     """
@@ -725,18 +797,6 @@ class CmsUserDeleteView(DeleteView):
 
 
 # users end
-
-
-def index(request):
-    return render(request, 'cms/elements/base.html')
-
-
-def statistics(request):
-    return render(request, 'cms/pages/statistics.html')
-
-
-def banners(request):
-    return render(request, 'cms/pages/banners.html')
 
 
 def mailing(request):

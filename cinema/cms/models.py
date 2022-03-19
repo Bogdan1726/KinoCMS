@@ -6,6 +6,19 @@ from django.core.validators import validate_image_file_extension
 
 # Create your models here.
 
+class Client(models.Model):
+    objects = None
+    date = models.DateField(null=True)
+    is_mobile = models.BooleanField(default=False)
+    is_tablet = models.BooleanField(default=False)
+    is_pc = models.BooleanField(default=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.date}-{self.user.email}"
+
+
+
 class SeoBlock(models.Model):
     objects = None
     url = models.URLField(verbose_name='url')
@@ -164,8 +177,12 @@ class Halls(models.Model):
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
 
+    def __str__(self):
+        return f"Зал №{self.number}"
+
 
 class Seance(models.Model):
+    objects = None
     date = models.DateField(verbose_name='Дата')
     time = models.TimeField(verbose_name='Время')
     ticket_price = models.PositiveIntegerField(verbose_name='Цена билета')
@@ -175,6 +192,9 @@ class Seance(models.Model):
     class Meta:
         verbose_name = 'Сеанс'
         verbose_name_plural = 'Сеансы'
+
+    def __str__(self):
+        return f"Сеанс от {self.date}-{self.time}"
 
 
 class Ticket(models.Model):

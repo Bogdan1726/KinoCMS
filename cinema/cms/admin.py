@@ -5,6 +5,9 @@ from modeltranslation.admin import TranslationAdmin
 
 # Register your models here.
 
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(SeoBlock)
 class SeoBlockAdmin(admin.ModelAdmin):

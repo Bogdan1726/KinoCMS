@@ -25,8 +25,15 @@ function clean_errors() {
     var element = $("[value=enabled]");
     if (element.length) {
         $("#sub").attr("disabled", "disabled");
+        $("#sub2").attr("disabled", "disabled");
+        $("#sub3").attr("disabled", "disabled");
+
     } else {
         $("#sub").removeAttr("disabled");
+        $("#sub2").removeAttr("disabled");
+        $("#sub3").removeAttr("disabled");
+
+
     }
 }
 
