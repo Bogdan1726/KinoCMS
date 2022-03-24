@@ -17,7 +17,7 @@ class UserLoginView(LoginView):
     template_name = 'user/pages/login.html'
 
     def get_success_url(self):
-        date = datetime.today()
+        date = datetime.now()
         """
         Create an entry in the Client table for client device statistics
         """

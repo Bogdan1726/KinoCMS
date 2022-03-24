@@ -18,6 +18,14 @@ class Client(models.Model):
         return f"{self.date}-{self.user.email}"
 
 
+class TemplatesMailing(models.Model):
+    created_date = models.DateField(auto_now_add=True)
+    file = models.FileField(upload_to='mailing/')
+
+    def __str__(self):
+        return self.file.name
+
+
 
 class SeoBlock(models.Model):
     objects = None

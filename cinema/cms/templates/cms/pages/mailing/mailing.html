@@ -1,10 +1,280 @@
 {% extends 'cms/elements/base.html'%}
+{% load static %}
 
 {% block title %}
 {{ block.super }}|Рассылка
 {% endblock %}
 
+{% block style %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'cms/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'cms/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'cms/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+<!--/.dataTables-->
+<style>
+    h4 {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    .col-lg-3 {
+        text-align: center;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-Рассылка
+<div class="card">
+    <div class="card-body">
+        <div class="callout callout-danger" style="display: none;">
+            <p>Нет выбранных пользователей для начала рассылки</p>
+        </div>
+        {% include 'cms/inc/_messages.html' %}
+        <div class="text-center" style="font-size: 14px">
+            <div id="progress-bar-message">
+            </div>
+        </div>
+        <div class='progress-wrapper' style="padding-top: 10px;">
+            <div id='progress-bar' class='progress-bar progress-bar-striped' role='progressbar'
+                 style="height:30px; width: 0%; border-radius: 5px">&nbsp;
+            </div>
+        </div>
+        <div id="celery-result">
+        </div>
+        <div class="container">
+            <h4>E-mail</h4>
+            <form method="post" style="text-align:center;">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-3">
+                        <label>Выбрать email кому слать</label>
+                    </div>
+                    <div class="col-lg-6">
+                        {% for type in form.type_mailing %}
+                        <div class="form-check form-check-inline">
+                            {{ type }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-3">
+                        <button id="add_users"
+                                type="button"
+                                data-target="#usersModal"
+                                data-toggle="modal"
+                                disabled
+                                class="btn btn-outline-dark">Выбор пользователя
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <label>Кол-во писем:
+                            <a id="count_mailing">0</a>
+                        </label>
+                    </div>
+                </div>
+                <button type="button"
+                        id="sub"
+                        class="btn btn-outline-dark">Начать рассылку
+                </button>
+            </form>
+            <!-- Model users -->
+            <div class="modal fade" id="usersModal"
+                 tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" style="text-align:center;">Выбор пользователя</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {% include 'cms/pages/mailing/list_users.html' %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                    id="save_choice"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal">Сохранить выбор
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.model users -->
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+
+{% block script %}
+<script>
+
+    $(document).ready(function () {
+        // Default settings
+        $("#id_type_mailing_0").prop('checked', true);
+        var data = $("#users_list").DataTable().data().pluck(4).toArray();
+        $('#count_mailing').html(data.length);
+        // end
+
+
+        // If checkbox choice is checked
+        $("#id_type_mailing_1").on("change", function () {
+            if ($(this).is(":checked")) {
+                $("#add_users").prop("disabled", false);
+                $("#sub").prop('disabled', true);
+                $('#count_mailing').html(0);
+                usersChoices()
+            }
+        })
+
+        function usersChoices() {
+            $('#save_choice').on('click', function () {
+                data = []
+                data = $("#users_list").DataTable()
+                    .rows(function (idx, data, node) {
+                        return $(node).find('input[type="checkbox"]').prop('checked');
+                    })
+                    .data().pluck(4).toArray();
+                $('#count_mailing').html(data.length);
+                checkDatalist(data)
+            })
+        }
+
+        // end
+
+        // If checkbox all is checked
+        $("#id_type_mailing_0").on("change", function () {
+            if ($(this).is(":checked")) {
+                $("#add_users").prop("disabled", true);
+                usersAll()
+            }
+        })
+
+        function usersAll() {
+            data = []
+            data = $("#users_list").DataTable().data().pluck(4).toArray();
+            $('#count_mailing').html(data.length);
+            checkDatalist(data)
+        }
+
+        // end
+
+        // Check out for length in data list
+        function checkDatalist(data) {
+            if (data.length > 0) {
+                $("#sub").prop('disabled', false);
+                $(".callout").css('display', 'none');
+
+            } else {
+                $("#sub").prop('disabled', true);
+                $(".callout").css('display', 'block');
+            }
+        }
+
+        // end
+
+
+        $("#sub").on("click", function () {
+            if (data.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "mailing" %}',
+                    data: {
+                        'users': data,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.task_id) {
+                            console.log(data.task_id);
+
+                            var progressUrl = "/celery-progress/" + data.task_id+ "/";
+                            CeleryProgressBar.initProgressBar(progressUrl, {})
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data.message)
+                    }
+                })
+
+                setInterval(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '{% url "mailing" %}',
+                        data: {},
+                        success: function (data) {
+                            console.log(data.task_id);
+                            console.log(data.state);
+                            console.log(data.details);
+                        },
+                        error: function (data) {
+                            console.log(data.message)
+                        }
+                    })
+                }, 1000)
+
+
+            } else {
+
+            }
+        })
+    })
+
+
+</script>
+<script src="{% static 'cms/js/celery_progress.js' %}"></script>
+<!--{% if task_id %}-->
+<!--<script>-->
+<!--    // JQuery-->
+<!--    $(function () {-->
+<!--        var progressUrl = "{% url 'celery_progress:task_status' task_id %}";-->
+<!--        alert(progressUrl)-->
+<!--        CeleryProgressBar.initProgressBar(progressUrl, {})-->
+<!--    });-->
+<!--</script>-->
+<!--{% endif %}-->
+
+<!-- DataTables  & Plugins -->
+<script src="{% static 'cms/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'cms/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'cms/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'cms/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+
+<script>
+
+    // Responsive dataTable for model
+    $("#usersModal").on("shown.bs.modal", function () {
+        var table = $('#users_list').DataTable();
+        table.columns.adjust().responsive.recalc();
+    })
+
+    $("#users_list").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "language": {
+            "infoFiltered": "(Отфильтровано _MAX_ записей)",
+            "zeroRecords": "Записей не найдено",
+            "info": "Показано с _START_ по _END_ записей из _TOTAL_",
+            "infoEmpty": "Нет записей.",
+            "search": "Поиск:",
+            "paginate": {
+                "previous": "Предыдущая",
+                "last": "Последняя",
+                "next": "Следующая"
+            }
+        }
+    })
+    // end
+
+</script>
+
+<!--/datatable-->
+{% endblock %}
+

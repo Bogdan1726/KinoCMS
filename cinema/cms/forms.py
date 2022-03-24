@@ -1,5 +1,5 @@
 from .models import CarouselBanner, BackgroundBanner, HomePageBanner, PromotionsPageBanner, \
-    Movies, Halls, Cinema, Events, ContactsPage, Page, HomePage, Images, SeoBlock
+    Movies, Halls, Cinema, Events, ContactsPage, Page, HomePage, Images, SeoBlock, TemplatesMailing
 from django.core.files.images import get_image_dimensions
 from django import forms
 
@@ -295,6 +295,29 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
 
 
 # Forms for Pages end
+
+# Forms for mailing
+
+class CmsTemplatesMailingForm(forms.ModelForm):
+    TYPE_MAILING = [
+        ('all', 'Все пользователи'),
+        ('choice', 'Выборочно')
+    ]
+    type_mailing = forms.ChoiceField(
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        choices=TYPE_MAILING,
+    )
+
+    class Meta:
+        model = TemplatesMailing
+        fields = ['file']
+
+        widgets = {
+            'file': forms.FileInput(attrs={'type': 'file'})
+        }
+
+
+# Forms for mailing end
 
 
 # Forms related

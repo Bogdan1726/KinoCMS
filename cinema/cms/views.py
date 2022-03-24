@@ -1,10 +1,12 @@
 import json
 from datetime import timedelta
 from babel.dates import format_date
+from celery.result import AsyncResult
 from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin
 from django.db.models import Count
 from django.forms import modelformset_factory
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.datetime_safe import datetime
@@ -12,11 +14,13 @@ from django.views import View
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from user.forms import UserUpdateForm
 from user.models import User
-from .forms import CmsHallsForm, CmsCinemasForm, CmsHomePageUpdateForm, \
+from django.core.mail import send_mail
+from .task import *
+from .forms import CmsHallsForm, CmsCinemasForm, CmsHomePageUpdateForm, CmsTemplatesMailingForm, \
     CmsPageUpdateForm, CmsContactsPageUpdateForm, CmsHomePageBannerForm, CmsCarouselBannerForm, \
     CmsEventsForm, CmsImageForm, CmsSeoBlockForm, CmsMoviesForm, CmsBackgroundBannerForm, CmsPromotionsPageBannerForm
 from .models import Gallery, Images, HomePageBanner, PromotionsPageBanner, CarouselBanner, \
-    BackgroundBanner, Movies, Cinema, Halls, Seance, Events, Page, HomePage, ContactsPage, Client
+    BackgroundBanner, Movies, Cinema, Halls, Seance, Events, Page, HomePage, ContactsPage, Client, TemplatesMailing
 
 
 # Base class
@@ -800,4 +804,29 @@ class CmsUserDeleteView(DeleteView):
 
 
 def mailing(request):
-    return render(request, 'cms/pages/mailing/mailing.html')
+    if request.is_ajax():
+        users_list = request.POST.getlist('users[]')
+        print(users_list)
+        download_task = process_download.delay(users_list)
+
+        # my_task.delay(users_list)
+        # return render(request, 'cms/pages/mailing/mailing.html', {'task_id': download_task.task_id})
+        return JsonResponse(
+            {
+                'task_id': download_task.task_id,
+                'state': download_task.state,
+                'details': download_task.info,
+
+             }
+        )
+
+    context = {
+        'users': User.objects.all(),
+        'form': CmsTemplatesMailingForm(request.POST or None,
+                                        request.FILES or None,
+                                        initial={'type_mailing': 'all'})
+    }
+    return render(request, 'cms/pages/mailing/mailing.html', context)
+
+
+

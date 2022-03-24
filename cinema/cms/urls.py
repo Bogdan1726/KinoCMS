@@ -2,10 +2,13 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    # statics/home cms
     path('', CmsStatisticsView.as_view(), name='cms'),
+    # statics/home cms end
 
-
+    # banners
     path('banners/', CmsBannersCard.as_view(), name='banners'),
+    # banners end
 
     # movies
     path('movies/', CmsMoviesListView.as_view(), name='list_movie'),
@@ -51,6 +54,8 @@ urlpatterns = [
     path('users/delete/<int:pk>/', CmsUserDeleteView.as_view(), name='user_delete'),
     # users end
 
-    path('mailing/', mailing, name='mailing')
+    # mailing
+    path('mailing/', mailing, name='mailing'),
+    # mailing end
 
 ]

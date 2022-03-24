@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'cms.apps.CmsConfig',
     'debug_toolbar',
-    'django_user_agents'
+    'django_user_agents',
+    'celery_progress'
 
 ]
 
@@ -100,6 +101,18 @@ DATABASES = {
         'PASSWORD': os.getenv('DATABASE_PASS'),
         'HOST': 'localhost',
         'PORT': '5432'
+    }
+}
+
+# Redis cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
 
@@ -171,4 +184,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 
+# Celery
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+
+
+# SMTP gmail
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSl = True
 
