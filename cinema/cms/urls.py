@@ -56,6 +56,8 @@ urlpatterns = [
 
     # mailing
     path('mailing/', mailing, name='mailing'),
+    path('mailing/task-status/<str:task_id>/', task_status, name='task_status'),
+
     # mailing end
 
 ]

@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin
 from django.db.models import Count
 from django.forms import modelformset_factory
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.datetime_safe import datetime
@@ -14,7 +14,6 @@ from django.views import View
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from user.forms import UserUpdateForm
 from user.models import User
-from django.core.mail import send_mail
 from .task import *
 from .forms import CmsHallsForm, CmsCinemasForm, CmsHomePageUpdateForm, CmsTemplatesMailingForm, \
     CmsPageUpdateForm, CmsContactsPageUpdateForm, CmsHomePageBannerForm, CmsCarouselBannerForm, \
@@ -805,23 +804,19 @@ class CmsUserDeleteView(DeleteView):
 
 def mailing(request):
     if request.is_ajax():
-        users_list = request.POST.getlist('users[]')
-        print(users_list)
-        download_task = process_download.delay(users_list)
-
-        # my_task.delay(users_list)
-        # return render(request, 'cms/pages/mailing/mailing.html', {'task_id': download_task.task_id})
-        return JsonResponse(
-            {
-                'task_id': download_task.task_id,
-                'state': download_task.state,
-                'details': download_task.info,
-
-             }
-        )
-
+        users_list = [request.POST['users']]
+        template_id = request.POST['template_id']
+        file = request.POST['file_template']
+        if file:
+            print('file')
+        else:
+            print('not file ')
+        template = get_object_or_404(TemplatesMailing, id=template_id).file.read().decode()
+        task = send_mailing.delay(users_list, template)
+        return JsonResponse({'task_id': task.task_id}, status=202)
     context = {
         'users': User.objects.all(),
+        'templates': TemplatesMailing.objects.all().order_by('created_date')[:5],
         'form': CmsTemplatesMailingForm(request.POST or None,
                                         request.FILES or None,
                                         initial={'type_mailing': 'all'})
@@ -829,4 +824,21 @@ def mailing(request):
     return render(request, 'cms/pages/mailing/mailing.html', context)
 
 
-
+def task_status(request, task_id):
+    task = AsyncResult(task_id)
+    if task.state == 'FAILURE' or task.state == 'PENDING':
+        response = {
+            'task_id': task_id,
+            'state': task.state,
+            'progression': '0',
+        }
+        return JsonResponse(response, status=200)
+    current = task.info.get('current', 0)
+    total = task.info.get('total', 1)
+    progression = floor((int(current) / int(total)) * 100)
+    response = {
+        'task_id': task_id,
+        'state': task.state,
+        'progression': progression,
+    }
+    return JsonResponse(response, status=200)

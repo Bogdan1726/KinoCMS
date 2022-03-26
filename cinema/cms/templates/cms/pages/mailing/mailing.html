@@ -12,14 +12,24 @@
 <link rel="stylesheet" href="{% static 'cms/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 <!--/.dataTables-->
 <style>
+    .card {
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
+
+    }
+
     h4 {
         text-align: center;
         padding-bottom: 20px;
     }
 
-    .col-lg-3 {
-        text-align: center;
+    .row {
+        padding: 10px;
     }
+
+
 </style>
 {% endblock %}
 
@@ -30,84 +40,122 @@
             <p>Нет выбранных пользователей для начала рассылки</p>
         </div>
         {% include 'cms/inc/_messages.html' %}
-        <div class="text-center" style="font-size: 14px">
-            <div id="progress-bar-message">
+        <h4>E-mail</h4>
+        <div class="row text-center">
+            <div class="col-lg-3">
+                <label>Выбрать email кому слать</label>
+            </div>
+            <div class="col-lg-6">
+                {% for type in form.type_mailing %}
+                <div class="form-check form-check-inline">
+                    {{ type }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-lg-3">
+                <button id="add_users"
+                        type="button"
+                        data-target="#usersModal"
+                        data-toggle="modal"
+                        disabled
+                        class="btn btn-outline-dark">Выбор пользователя
+                </button>
             </div>
         </div>
-        <div class='progress-wrapper' style="padding-top: 10px;">
-            <div id='progress-bar' class='progress-bar progress-bar-striped' role='progressbar'
-                 style="height:30px; width: 0%; border-radius: 5px">&nbsp;
-            </div>
-        </div>
-        <div id="celery-result">
-        </div>
-        <div class="container">
-            <h4>E-mail</h4>
-            <form method="post" style="text-align:center;">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-lg-3">
-                        <label>Выбрать email кому слать</label>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group row">
+                    <label class="form-label">Загрузить HTML-письмо: </label>
+                    <div class="col-sm-4">
+                        <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
+                            {{ form.file }}
+                        </a>
                     </div>
-                    <div class="col-lg-6">
-                        {% for type in form.type_mailing %}
-                        <div class="form-check form-check-inline">
-                            {{ type }}
-                        </div>
+                </div>
+                <div>
+                    <label>Загруженный файл:
+                        <a id="loaded_template" style="color: red">Не загружен</a>
+                    </label>
+                </div>
+                <div>
+                    <label>Шаблон используемый в текущей рассылке:
+                        <a id="templates" style="color: red">Не выбран</a>
+                    </label>
+                </div>
+                <div>
+                    <label style="padding: 10px;">Кол-во писем:
+                        <a id="count_mailing">0</a>
+                    </label>
+                    <label style="padding: 10px;">Рассылка выполнена на:
+                        <a id="progress_mailing">0</a><a>%</a>
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="container" style="border: 1px solid black; padding: 20px;">
+                    <h6 class="text-center">Список последних загруженных шаблонов</h6>
+                    <table class="table table-sm text-center">
+                        <tbody>
+                        {% for template in templates %}
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                       class="templates-checkbox"
+                                       value="{{ template.file.url }}"
+                                       name="{{ template }}"
+                                       id="{{ template.id }}"/>
+                            </td>
+                            <td>{{ template }}</td>
+                            <td>
+                                <a href="" class="fas fa-trash text-danger">
+                                </a>
+                            </td>
+                        </tr>
                         {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="button"
+                    id="sub"
+                    class="btn btn-outline-dark">Начать рассылку
+            </button>
+        </div>
+        <!-- Model users -->
+        <div class="modal fade" id="usersModal"
+             tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="text-align:center;">Выбор пользователя</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="col-lg-3">
-                        <button id="add_users"
-                                type="button"
-                                data-target="#usersModal"
-                                data-toggle="modal"
-                                disabled
-                                class="btn btn-outline-dark">Выбор пользователя
+                    <div class="modal-body">
+                        {% include 'cms/pages/mailing/list_users.html' %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                id="save_choice"
+                                class="btn btn-secondary"
+                                data-dismiss="modal">Сохранить выбор
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
                         </button>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <label>Кол-во писем:
-                            <a id="count_mailing">0</a>
-                        </label>
-                    </div>
-                </div>
-                <button type="button"
-                        id="sub"
-                        class="btn btn-outline-dark">Начать рассылку
-                </button>
-            </form>
-            <!-- Model users -->
-            <div class="modal fade" id="usersModal"
-                 tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" style="text-align:center;">Выбор пользователя</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            {% include 'cms/pages/mailing/list_users.html' %}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button"
-                                    id="save_choice"
-                                    class="btn btn-secondary"
-                                    data-dismiss="modal">Сохранить выбор
-                            </button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <!-- /.model users -->
         </div>
+        <!-- /.model users -->
     </div>
 </div>
 {% endblock %}
@@ -115,13 +163,49 @@
 
 {% block script %}
 <script>
+    var load_file = [];
+
+    function load_templates(file) {
+        var fileFormat = 'html';
+        var parts = []
+        if (file) {
+            $('#loaded_template').css('color', '').html(file.name).attr('href', window.URL.createObjectURL(file));
+            parts = file.name.split('.');
+            if (parts.includes(fileFormat)) {
+                load_file.push(file)
+                $("#sub").prop('disabled', false);
+                $(".templates-checkbox").prop('checked', false);
+                $("#templates").css('color', '').html(file.name).attr('href', window.URL.createObjectURL(file));
+
+            } else {
+                $("#sub").prop('disabled', true);
+            }
+        }
+    }
+
 
     $(document).ready(function () {
         // Default settings
         $("#id_type_mailing_0").prop('checked', true);
         var data = $("#users_list").DataTable().data().pluck(4).toArray();
+        var template_id = ''
         $('#count_mailing').html(data.length);
+
         // end
+
+
+        // templates groups
+        $(".templates-checkbox").change(function () {
+            $('input[type=checkbox]').prop('checked', false);
+            $(this).prop('checked', true);
+            if ($(this).prop('checked')) {
+                alert(this.value);
+                $("#templates").css('color', '').html(this.name).attr('href', this.value);
+                template_id = this.id;
+                $("#id_file").attr('value', '');
+                $("#loaded_template").css('color', '').html('Используется из списка шаблонов')
+            }
+        })
 
 
         // If checkbox choice is checked
@@ -180,50 +264,64 @@
 
         // end
 
-
         $("#sub").on("click", function () {
-            if (data.length > 0) {
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "mailing" %}',
-                    data: {
-                        'users': data,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (data) {
-                        if (data.task_id) {
-                            console.log(data.task_id);
-
-                            var progressUrl = "/celery-progress/" + data.task_id+ "/";
-                            CeleryProgressBar.initProgressBar(progressUrl, {})
-                        }
-                    },
-                    error: function (data) {
-                        console.log(data.message)
+            let format_date = new FormData()
+            format_date.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+            format_date.append('file_template', load_file)
+            format_date.append('template_id', template_id)
+            format_date.append('users', data)
+            $.ajax({
+                type: 'POST',
+                url: '{% url "mailing" %}',
+                enctype: 'multipart/form-data',
+                data: format_date,
+                success: function (data) {
+                    if (data.task_id) {
+                        updateState(data.task_id);
                     }
-                })
+                },
+                error: function (data) {
+                    console.log(data.message)
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        });
 
-                setInterval(function () {
-                    $.ajax({
-                        type: "GET",
-                        url: '{% url "mailing" %}',
-                        data: {},
-                        success: function (data) {
-                            console.log(data.task_id);
-                            console.log(data.state);
-                            console.log(data.details);
-                        },
-                        error: function (data) {
-                            console.log(data.message)
-                        }
-                    })
-                }, 1000)
-
-
-            } else {
-
-            }
-        })
+        function updateState(taskID) {
+            $.ajax({
+                url: 'task-status/' + taskID + '/',
+                type: 'GET',
+                success: function (response) {
+                    $('#progress_mailing').html(response.progression);
+                    console.log(response.state);
+                    if (response.state == 'PROGRESS') {
+                        $("#sub").prop('disabled', true);
+                    }
+                    ;
+                    if (response.state == "SUCCESS") {
+                        $('#progress_mailing').css('color', 'green');
+                        $("#sub").prop('disabled', false);
+                        return false;
+                    }
+                    ;
+                    if (response.state == "FAILURE") {
+                        console.log(response.state);
+                        $('#progress_mailing').css('color', 'red');
+                        $("#sub").prop('disabled', false);
+                        return false;
+                    }
+                    ;
+                    setTimeout(function () {
+                        updateState(response.task_id)
+                    }, 1000)
+                },
+                error: function (response) {
+                    console.log(response.error);
+                }
+            })
+        }
     })
 
 

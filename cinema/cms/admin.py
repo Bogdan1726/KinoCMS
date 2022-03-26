@@ -9,6 +9,10 @@ from modeltranslation.admin import TranslationAdmin
 class ClientAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(TemplatesMailing)
+class TemplatesMailingAdmin(admin.ModelAdmin):
+    pass
+
 @admin.register(SeoBlock)
 class SeoBlockAdmin(admin.ModelAdmin):
     pass

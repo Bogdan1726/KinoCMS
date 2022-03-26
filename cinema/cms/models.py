@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 import datetime
 from django.core.validators import validate_image_file_extension
-
+import os
 
 # Create your models here.
 
@@ -19,11 +19,12 @@ class Client(models.Model):
 
 
 class TemplatesMailing(models.Model):
+    objects = None
     created_date = models.DateField(auto_now_add=True)
     file = models.FileField(upload_to='mailing/')
 
     def __str__(self):
-        return self.file.name
+        return os.path.basename(self.file.name)
 
 
 

@@ -313,7 +313,10 @@ class CmsTemplatesMailingForm(forms.ModelForm):
         fields = ['file']
 
         widgets = {
-            'file': forms.FileInput(attrs={'type': 'file'})
+            'file': forms.FileInput(attrs={
+                'type': 'file',
+                'onchange': 'load_templates(this.files[0])'
+            })
         }
 
 
