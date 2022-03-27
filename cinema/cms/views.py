@@ -804,19 +804,21 @@ class CmsUserDeleteView(DeleteView):
 
 def mailing(request):
     if request.is_ajax():
-        users_list = [request.POST['users']]
+        users_list = request.POST.get('users').split(',')
         template_id = request.POST['template_id']
-        file = request.POST['file_template']
+        file = request.FILES.get('file_template')
         if file:
-            print('file')
+            task = send_mailing.delay(users_list, file.read().decode())
+            template = TemplatesMailing(file=file)
+            template.save()
+            return JsonResponse({'task_id': task.task_id}, status=202)
         else:
-            print('not file ')
-        template = get_object_or_404(TemplatesMailing, id=template_id).file.read().decode()
-        task = send_mailing.delay(users_list, template)
-        return JsonResponse({'task_id': task.task_id}, status=202)
+            template = get_object_or_404(TemplatesMailing, id=template_id).file.read().decode()
+            task = send_mailing.delay(users_list, template)
+            return JsonResponse({'task_id': task.task_id}, status=202)
     context = {
         'users': User.objects.all(),
-        'templates': TemplatesMailing.objects.all().order_by('created_date')[:5],
+        'templates': TemplatesMailing.objects.all().order_by('-created_date')[:5],
         'form': CmsTemplatesMailingForm(request.POST or None,
                                         request.FILES or None,
                                         initial={'type_mailing': 'all'})
@@ -842,3 +844,10 @@ def task_status(request, task_id):
         'progression': progression,
     }
     return JsonResponse(response, status=200)
+
+
+class TemplatesMailingDelete(DeleteView):
+    model = TemplatesMailing
+    success_url = reverse_lazy('mailing')
+    template_name = 'cms/pages/mailing/mailing.html'
+

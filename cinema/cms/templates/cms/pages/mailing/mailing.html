@@ -12,13 +12,6 @@
 <link rel="stylesheet" href="{% static 'cms/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 <!--/.dataTables-->
 <style>
-    .card {
-        border-radius: 6px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
-
-    }
 
     h4 {
         text-align: center;
@@ -29,16 +22,28 @@
         padding: 10px;
     }
 
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .mailing_email {
+        border-radius: 6px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
+    }
 
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-body">
-        <div class="callout callout-danger" style="display: none;">
-            <p>Нет выбранных пользователей для начала рассылки</p>
-        </div>
+<div class="card-body">
+    <div class="callout callout-danger" style="display: none;">
+        <p>Для начала рассылки необходимо(загрузить или выбрать шаблон из списка, отметить получателей)</p>
+    </div>
+    <div class="mailing_email">
         {% include 'cms/inc/_messages.html' %}
         <h4>E-mail</h4>
         <div class="row text-center">
@@ -62,64 +67,83 @@
                 </button>
             </div>
         </div>
-
+        <!--        info-->
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group row">
-                    <label class="form-label">Загрузить HTML-письмо: </label>
-                    <div class="col-sm-4">
+                    <label class="col-auto control-label center">Загрузить HTML-письмо: </label>
+                    <div class="col-auto center">
                         <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
                             {{ form.file }}
                         </a>
                     </div>
                 </div>
-                <div>
-                    <label>Загруженный файл:
+                <div class="form-group row">
+                    <label class="col-auto control-label center">Загруженный файл:</label>
+                    <div class="col-auto">
                         <a id="loaded_template" style="color: red">Не загружен</a>
-                    </label>
+                    </div>
                 </div>
-                <div>
-                    <label>Шаблон используемый в текущей рассылке:
+                <div class="form-group row">
+                    <label
+                            class="col-auto control-label center">Шаблон используемый в текущей рассылке:
+                    </label>
+                    <div class="col-auto">
                         <a id="templates" style="color: red">Не выбран</a>
-                    </label>
+
+                    </div>
                 </div>
-                <div>
-                    <label style="padding: 10px;">Кол-во писем:
+                <div class="form-group row">
+                    <label class="col-auto control-label center">Кол-во писем:
                         <a id="count_mailing">0</a>
                     </label>
-                    <label style="padding: 10px;">Рассылка выполнена на:
-                        <a id="progress_mailing">0</a><a>%</a>
+                    <label class="col-auto control-label center">Рассылка выполнена на:
+                        <a id="progress_mailing">0</a>
+                        <a>%</a>
+                        <a id="fail" style="color: red;"></a>
                     </label>
                 </div>
-
             </div>
-
+            <!--            info end -->
+            <!--            list templates -->
             <div class="col-lg-4">
-                <div class="container" style="border: 1px solid black; padding: 20px;">
-                    <h6 class="text-center">Список последних загруженных шаблонов</h6>
-                    <table class="table table-sm text-center">
-                        <tbody>
-                        {% for template in templates %}
-                        <tr>
-                            <td>
+
+                <table class="table table-sm table-bordered text-center">
+                    <tbody>
+                    <tr>
+                        <td colspan="3">
+                            <h6 class="text-center">Список последних загруженных шаблонов</h6>
+                        </td>
+                    </tr>
+                    {% for template in templates %}
+                    <tr>
+                        <td>
+                            <label>
                                 <input type="checkbox"
                                        class="templates-checkbox"
                                        value="{{ template.file.url }}"
                                        name="{{ template }}"
                                        id="{{ template.id }}"/>
-                            </td>
-                            <td>{{ template }}</td>
-                            <td>
-                                <a href="" class="fas fa-trash text-danger">
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                            </label>
+
+                        </td>
+                        <td>{{ template }}</td>
+                        <td>
+                            <form method="post" action="{% url 'delete_template' template.id %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="btn">
+                                    <i class="button fas fa-trash text-danger"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
             </div>
+            <!--            list templates end -->
         </div>
         <div class="text-center">
             <button type="button"
@@ -163,56 +187,58 @@
 
 {% block script %}
 <script>
-    var load_file = [];
+    var load_file = null;
+    var template_id = null;
 
+    // Load a file and check its format (.html)
     function load_templates(file) {
         var fileFormat = 'html';
         var parts = []
         if (file) {
             $('#loaded_template').css('color', '').html(file.name).attr('href', window.URL.createObjectURL(file));
+            $(".templates-checkbox").prop('checked', false);
+            $("#templates").css('color', '').html('Не выбран').removeAttr('href');
             parts = file.name.split('.');
             if (parts.includes(fileFormat)) {
-                load_file.push(file)
+                load_file = new File([file], file.name);
+                template_id = null;
                 $("#sub").prop('disabled', false);
-                $(".templates-checkbox").prop('checked', false);
                 $("#templates").css('color', '').html(file.name).attr('href', window.URL.createObjectURL(file));
-
             } else {
                 $("#sub").prop('disabled', true);
+                $('#loaded_template').css('color', 'red').html(file.name + '(Не доступный формат)').removeAttr('href');
             }
         }
     }
 
+    // end
 
     $(document).ready(function () {
         // Default settings
         $("#id_type_mailing_0").prop('checked', true);
         var data = $("#users_list").DataTable().data().pluck(4).toArray();
-        var template_id = ''
         $('#count_mailing').html(data.length);
-
         // end
 
-
-        // templates groups
+        // Templates groups
         $(".templates-checkbox").change(function () {
             $('input[type=checkbox]').prop('checked', false);
             $(this).prop('checked', true);
             if ($(this).prop('checked')) {
-                alert(this.value);
-                $("#templates").css('color', '').html(this.name).attr('href', this.value);
+                load_file = null;
                 template_id = this.id;
+                $("#sub").prop('disabled', false);
+                $("#templates").css('color', '').html(this.name).attr('href', this.value);
                 $("#id_file").attr('value', '');
-                $("#loaded_template").css('color', '').html('Используется из списка шаблонов')
+                $("#loaded_template").css('color', '').html('Выбран шаблон').removeAttr('href')
             }
         })
+        // end
 
-
-        // If checkbox choice is checked
+        // If checkbox checked (users choice)
         $("#id_type_mailing_1").on("change", function () {
             if ($(this).is(":checked")) {
                 $("#add_users").prop("disabled", false);
-                $("#sub").prop('disabled', true);
                 $('#count_mailing').html(0);
                 usersChoices()
             }
@@ -227,13 +253,12 @@
                     })
                     .data().pluck(4).toArray();
                 $('#count_mailing').html(data.length);
-                checkDatalist(data)
             })
         }
 
         // end
 
-        // If checkbox all is checked
+        // If checkbox checked (users all)
         $("#id_type_mailing_0").on("change", function () {
             if ($(this).is(":checked")) {
                 $("#add_users").prop("disabled", true);
@@ -245,50 +270,46 @@
             data = []
             data = $("#users_list").DataTable().data().pluck(4).toArray();
             $('#count_mailing').html(data.length);
-            checkDatalist(data)
         }
 
         // end
 
-        // Check out for length in data list
-        function checkDatalist(data) {
-            if (data.length > 0) {
-                $("#sub").prop('disabled', false);
-                $(".callout").css('display', 'none');
-
-            } else {
-                $("#sub").prop('disabled', true);
-                $(".callout").css('display', 'block');
-            }
-        }
-
-        // end
-
+        // Start mailing
         $("#sub").on("click", function () {
-            let format_date = new FormData()
-            format_date.append('csrfmiddlewaretoken', '{{ csrf_token }}')
-            format_date.append('file_template', load_file)
-            format_date.append('template_id', template_id)
-            format_date.append('users', data)
-            $.ajax({
-                type: 'POST',
-                url: '{% url "mailing" %}',
-                enctype: 'multipart/form-data',
-                data: format_date,
-                success: function (data) {
-                    if (data.task_id) {
-                        updateState(data.task_id);
-                    }
-                },
-                error: function (data) {
-                    console.log(data.message)
-                },
-                cache: false,
-                contentType: false,
-                processData: false,
-            })
+            if (template_id && data.length > 0 || load_file && data.length > 0) {
+                let format_data = new FormData()
+                format_data.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+                format_data.append('file_template', load_file)
+                format_data.append('template_id', template_id)
+                format_data.append('users', data)
+                console.log(format_data.get('users'))
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "mailing" %}',
+                    enctype: 'multipart/form-data',
+                    data: format_data,
+                    success: function (data) {
+                        if (data.task_id) {
+                            updateState(data.task_id);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data.message)
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                })
+            } else {
+                $(".callout").css('display', 'block');
+                setTimeout(function () {
+                    $(".callout").css('display', 'none');
+                }, 4000)
+            }
         });
+        // end
 
+        // Progress celery task
         function updateState(taskID) {
             $.ajax({
                 url: 'task-status/' + taskID + '/',
@@ -310,6 +331,7 @@
                         console.log(response.state);
                         $('#progress_mailing').css('color', 'red');
                         $("#sub").prop('disabled', false);
+                        $("#fail").html('Ошибка отправки')
                         return false;
                     }
                     ;
@@ -322,6 +344,8 @@
                 }
             })
         }
+
+        // end
     })
 
 

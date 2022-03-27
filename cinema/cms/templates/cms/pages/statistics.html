@@ -16,96 +16,23 @@
 
 
 {% block content %}
-<div class="card">
-    <div class="card-body">
-        {% include 'cms/inc/_messages.html' %}
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Лучшие фильмы</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body" style="display: block;">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div class=""></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div class=""></div>
-                            </div>
-                        </div>
-                        <canvas id="pieChart"
-                                style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 539px;"
-                                width="539" height="250" class="chartjs-render-monitor"></canvas>
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Сеансы</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body" style="display: block;">
-                        <div class="chart">
-                            <div class="chartjs-size-monitor">
-                                <div class="chartjs-size-monitor-expand">
-                                    <div class=""></div>
-                                </div>
-                                <div class="chartjs-size-monitor-shrink">
-                                    <div class=""></div>
-                                </div>
-                            </div>
-                            <canvas id="lineChart"
-                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 390px;"
-                                    width="390" height="250" class="chartjs-render-monitor"></canvas>
-                        </div>
+<div class="card-body">
+    {% include 'cms/inc/_messages.html' %}
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card card-success card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Лучшие фильмы</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{ users_count }}</h3>
-                        <p>Количество пользователей</p>
-                    </div>
-                    <a href="{% url 'register' %}">
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="card card-warning card-outline">
-            <div class="card-header">
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body" style="display: block;">
-                <div class="chart">
+                <div class="card-body" style="display: block;">
                     <div class="chartjs-size-monitor">
                         <div class="chartjs-size-monitor-expand">
                             <div class=""></div>
@@ -114,28 +41,28 @@
                             <div class=""></div>
                         </div>
                     </div>
-                    <canvas id="lineChartClient"
-                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 390px;"
-                            width="390" height="250" class="chartjs-render-monitor"></canvas>
+                    <canvas id="pieChart"
+                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 539px;"
+                            width="539" height="250" class="chartjs-render-monitor"></canvas>
                 </div>
-            </div>
 
+            </div>
         </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Пол</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
+        <div class="col-lg-4">
+            <div class="card card-info card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Сеансы</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
-                    <div class="card-body" style="display: block;">
+                </div>
+                <div class="card-body" style="display: block;">
+                    <div class="chart">
                         <div class="chartjs-size-monitor">
                             <div class="chartjs-size-monitor-expand">
                                 <div class=""></div>
@@ -144,16 +71,87 @@
                                 <div class=""></div>
                             </div>
                         </div>
-                        <canvas id="pieChartGender"
-                                style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 539px;"
-                                width="539" height="250" class="chartjs-render-monitor"></canvas>
+                        <canvas id="lineChart"
+                                style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 390px;"
+                                width="390" height="250" class="chartjs-render-monitor"></canvas>
                     </div>
                 </div>
-
             </div>
         </div>
-        {{ movies }}
+        <div class="col-lg-4">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ users_count }}</h3>
+                    <p>Количество пользователей</p>
+                </div>
+                <a href="{% url 'register' %}">
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
+    <div class="card card-warning card-outline">
+        <div class="card-header">
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body" style="display: block;">
+            <div class="chart">
+                <div class="chartjs-size-monitor">
+                    <div class="chartjs-size-monitor-expand">
+                        <div class=""></div>
+                    </div>
+                    <div class="chartjs-size-monitor-shrink">
+                        <div class=""></div>
+                    </div>
+                </div>
+                <canvas id="lineChartClient"
+                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 390px;"
+                        width="390" height="250" class="chartjs-render-monitor"></canvas>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Пол</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="display: block;">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class=""></div>
+                        </div>
+                    </div>
+                    <canvas id="pieChartGender"
+                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 539px;"
+                            width="539" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {{ movies }}
 </div>
 {% endblock %}
 
