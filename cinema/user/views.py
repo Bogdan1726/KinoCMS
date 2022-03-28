@@ -6,14 +6,29 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView, CreateView
 from django.contrib.auth import logout
 from .models import User
+from cms.models import Client
 from .forms import UserUpdateForm, UserLoginForm, CustomUserCreationForm
-
+from django.utils.datetime_safe import datetime
 
 # Create your views here.
 
 class UserLoginView(LoginView):
     form_class = UserLoginForm
     template_name = 'user/pages/login.html'
+
+    def get_success_url(self):
+        date = datetime.now()
+        """
+        Create an entry in the Client table for client device statistics
+        """
+        Client.objects.get_or_create(
+            date=date,
+            user=self.request.user,
+            is_mobile = self.request.user_agent.is_mobile,
+            is_tablet = self.request.user_agent.is_tablet,
+            is_pc = self.request.user_agent.is_pc
+        )
+        return reverse_lazy('main')
 
 
 class UserCreateView(CreateView):
@@ -31,7 +46,6 @@ class UserCreateView(CreateView):
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
-
     login_url = 'login'
     form_class = UserUpdateForm
     model = User

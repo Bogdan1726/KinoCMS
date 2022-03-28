@@ -14,7 +14,7 @@ class CustomUserAdmin(UserAdmin):
         ('Персональная информация', {'fields': ('first_name', 'last_name', 'address',
                                                 'language', 'gender', 'phone_number',
                                                 'date_of_birth', 'number_card', 'town')}),
-        ('Разрешения', {'fields': ('is_staff', 'is_active')})
+        ('Разрешения', {'fields': ('is_staff', 'is_active', 'is_superuser')})
     )
     add_fieldsets = (
         (None, {
