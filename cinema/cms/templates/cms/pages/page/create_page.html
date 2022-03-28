@@ -12,9 +12,9 @@
 
 
 {% block content %}
+{% include 'cms/inc/_messages.html' %}
 <div class="card">
     <div class="card-body">
-        {% include 'cms/inc/_messages.html' %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% include 'cms/inc/_active_and_language_tabs.html' %}

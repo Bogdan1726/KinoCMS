@@ -6,25 +6,22 @@
 {% endblock %}
 
 {% block style %}
-<!-- daterange picker -->
-<link rel="stylesheet" href="{% static 'cms/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
-<link rel="stylesheet"
-      href="{% static 'cms/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/select2/css/select2.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/bs-stepper/css/bs-stepper.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/dropzone/min/dropzone.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/daterangepicker/daterangepicker.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/fontawesome-free/css/all.min.css' %}">
+<style>
+    .card {
+        border-radius: 6px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
+
+    }
+</style>
 
 {% endblock %}
 
 {% block content %}
+{% include 'cms/inc/_messages.html' %}
 <div class="card">
     <div class="card-body">
-        {% include 'cms/inc/_messages.html' %}
         <h5 style="text-align:center; padding-bottom: 20px;">Редактирование пользователя</h5>
         <form class="form-horizontal" method="post">
             {% csrf_token %}

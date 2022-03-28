@@ -77,12 +77,12 @@ class EventsAdmin(admin.ModelAdmin):
 
 
 @admin.register(Page)
-class PageAdmin(TranslationAdmin):
+class PageAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(HomePage)
-class HomePageAdmin(TranslationAdmin):
+class HomePageAdmin(admin.ModelAdmin):
     pass
 
 

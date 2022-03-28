@@ -9,14 +9,22 @@
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'cms/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'cms/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
-<link rel="stylesheet" href="{% static 'cms/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 <!--/.dataTables-->
+<style>
+    .card {
+        border-radius: 6px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
+
+    }
+</style>
 {% endblock %}
 
 {% block content %}
+{% include 'cms/inc/_messages.html' %}
 <div class="card">
     <div class="card-body">
-        {% include 'cms/inc/_messages.html' %}
         <div class="row">
             <div class="col-sm-12 col-md-4">
             </div>
@@ -155,7 +163,6 @@
 <script src="{% static 'cms/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'cms/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'cms/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
-<script src="{% static 'cms/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
 
 <script>
     $(function () {

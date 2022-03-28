@@ -4,9 +4,13 @@ import datetime
 from django.core.validators import validate_image_file_extension
 import os
 
+
 # Create your models here.
 
 class Client(models.Model):
+    """
+    Model for UI Statistics
+    """
     objects = None
     date = models.DateField(null=True)
     is_mobile = models.BooleanField(default=False)
@@ -19,6 +23,9 @@ class Client(models.Model):
 
 
 class TemplatesMailing(models.Model):
+    """
+    Templates mailing  model
+    """
     objects = None
     created_date = models.DateField(auto_now_add=True)
     file = models.FileField(upload_to='mailing/')
@@ -27,8 +34,10 @@ class TemplatesMailing(models.Model):
         return os.path.basename(self.file.name)
 
 
-
 class SeoBlock(models.Model):
+    """
+    Seo block model
+    """
     objects = None
     url = models.URLField(verbose_name='url')
     title_seo = models.CharField(max_length=30, verbose_name='Заголовок')
@@ -44,6 +53,9 @@ class SeoBlock(models.Model):
 
 
 class Gallery(models.Model):
+    """
+    Gallery model
+    """
     objects = None
     title = models.CharField(max_length=30, verbose_name='Заголовок')
 
@@ -56,6 +68,9 @@ class Gallery(models.Model):
 
 
 class Images(models.Model):
+    """
+    Images model
+    """
     objects = None
     image = models.ImageField(upload_to='gallery/', verbose_name='Картинка', unique=True)
     gallery = models.ForeignKey('Gallery', on_delete=models.CASCADE, verbose_name='Галерея')
@@ -85,8 +100,8 @@ class PromotionsPageBanner(models.Model):
         verbose_name = 'Баннер акции'
         verbose_name_plural = 'Баненер акции'
 
-class CarouselBanner(models.Model):
 
+class CarouselBanner(models.Model):
     INTERVAL = [
         (5, '5сек'),
         (10, '10сек'),
@@ -101,6 +116,7 @@ class CarouselBanner(models.Model):
     class Meta:
         verbose_name = 'Карусель'
         verbose_name_plural = 'Карусель'
+
 
 class BackgroundBanner(models.Model):
     BACKGROUND = 'BG'
@@ -117,14 +133,12 @@ class BackgroundBanner(models.Model):
                             default=BACKGROUND)
     value = models.CharField(max_length=6, default='banner')
 
-
     class Meta:
         verbose_name = 'Баннер задний фон'
         verbose_name_plural = 'Баннер задний фон'
 
 
 class Movies(models.Model):
-
     objects = None
     title = models.CharField(max_length=100, verbose_name='Название фильма')
     description = models.TextField(verbose_name='Описание')
@@ -161,7 +175,6 @@ class Cinema(models.Model):
     class Meta:
         verbose_name = 'Кинотеатр'
         verbose_name_plural = 'Кинотеатры'
-
 
 
 class Halls(models.Model):

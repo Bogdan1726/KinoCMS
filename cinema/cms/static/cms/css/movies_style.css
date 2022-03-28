@@ -22,3 +22,11 @@
     transform: translate(-50%, -50%);
     color: red;
 }
+
+.card {
+    border-radius: 6px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 4px 4px 33px 11px rgba(34, 60, 80, 0.2);
+
+}

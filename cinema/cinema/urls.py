@@ -1,16 +1,15 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 import debug_toolbar
-from django.urls import re_path, include
+from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
     path('user/', include('user.urls')),
     path('cms/', include('cms.urls')),
-    path('celery-progress/', include('celery_progress.urls'))
 ]
 
 if settings.DEBUG:

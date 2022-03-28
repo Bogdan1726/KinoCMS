@@ -58,7 +58,6 @@ urlpatterns = [
     path('mailing/', mailing, name='mailing'),
     path('mailing/delete/<int:pk>/', TemplatesMailingDelete.as_view(), name='delete_template'),
     path('mailing/task-status/<str:task_id>/', task_status, name='task_status'),
-
     # mailing end
 
 ]
