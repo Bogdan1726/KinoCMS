@@ -1,7 +1,5 @@
 from django.conf import settings
 from django.db import models
-import datetime
-from django.core.validators import validate_image_file_extension
 import os
 
 
@@ -19,7 +17,7 @@ class Client(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.date}-{self.user.email}"
+        return f"{self.date}"
 
 
 class TemplatesMailing(models.Model):
