@@ -2,9 +2,13 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('', index, name='main'),
-    path('poster/', get_poster, name='poster'),
-    path('soon/', get_soon, name='soon'),
+    # home page
+    path('', HomePageView.as_view(), name='main'),
+    # end
+    path('poster/', PosterPageView.as_view(), name='poster'),
+
+    path('soon/', SoonPageView.as_view(), name='soon'),
+
     path('movie_card/', get_movie_card, name='movie_card'),
     path('about_cinema/', get_about_cinema, name='about_cinema'),
     path('contacts/', get_contacts, name='contacts'),

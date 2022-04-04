@@ -148,7 +148,7 @@ USE_L10N = False
 
 USE_TZ = True
 
-DATE_FORMAT = 'yyyy-MM-dd'
+DATE_FORMAT = 'y-m-d'
 
 
 # Static files (CSS, JavaScript, Images)

@@ -101,9 +101,9 @@ class PromotionsPageBanner(models.Model):
 
 class CarouselBanner(models.Model):
     INTERVAL = [
-        (5, '5сек'),
-        (10, '10сек'),
-        (30, '30сек')
+        (5000, '5сек'),
+        (10000, '10сек'),
+        (30000, '30сек')
     ]
 
     objects = None

@@ -1,13 +1,16 @@
+{% load static %}
 <div class="row">
     <div class="col-md-3">
-        <a class="navbar-brand" href="{% url 'main' %}">
-            <img src="/static/main/media/logo.png" alt="gnn" width="210" height="140">
+        <a href="{% url 'main' %}">
+            <img src="{% static 'cms/media/kino.svg' %}"
+                 class="d-inline-block align-text-top"
+                 alt="logo" width="230" height="170">
         </a>
     </div>
     <div class="col-md-9">
         <div class="navbar">
             <div class="container">
-                <form>
+                <form style="padding-bottom: 10px;">
                     <input class="form-control" type="search" placeholder="Поиск" aria-label="Search">
                 </form>
                 {% if request.user.is_authenticated %}
@@ -34,7 +37,7 @@
                 </div>
                 {% endif %}
 
-                <div class="list-inline">
+                <div class="list-inline" style="margin-top: 10px;">
                     <a href="#"><img src="/static/main/media/Facebook.png" width="30"
                                      height="30"
                                      alt="Facebook"></a>
@@ -51,23 +54,15 @@
                                      alt="Facebook"></a>
                 </div>
 
-                <div class="nav flex-column" style="color: white;">
-                    {% if number1 %}
-                    <h3>{{ number1 }}</h3>
-                    {% else %}
-                    <h3>(048) 777-77-77</h3>
-                    {% endif %}
-                    {% if number2 %}
-                    <h3>{{ number2 }}</h3>
-                    {% else %}
-                    <h3>(097) 777-77-77</h3>
-                    {% endif %}
+                <div class="nav flex-column" style="color: white; padding-top: 10px;">
+                    <h3>(056) {{ home_page_data.phone_number1 }}</h3>
+                    <h3>(056) {{ home_page_data.phone_number2 }}</h3>
                 </div>
             </div>
         </div>
         <div class="row py-3">
-            <div class="col-md-10">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border border-dark">
+            <div class="col-md-10" style="padding-bottom: 10px;">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container">
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false"
