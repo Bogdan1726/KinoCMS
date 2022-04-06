@@ -1,28 +1,30 @@
+{% load i18n %}
+
 <footer class="py-5" style="border-top: 2px solid black;">
     <div class="row">
         <div class="col-6">
-            <h5>Мобильное приложения</h5>
+            <h5>{% trans "Мобильное приложение" %}</h5>
             <img src="/static/main/media/android.png" width="150" height="50" alt="google">
             <img src="/static/main//media/apple.png" width="150" height="50" alt="apple">
-            <p class="text-muted" style="padding-top: 20px">Разработка сайтов: AVADA-MEDIA</p>
+            <p class="text-muted" style="padding-top: 20px">{% trans "Разработка сайтов" %}: AVADA-MEDIA</p>
         </div>
 
         <div class="col-12 col-md">
-            <h5>Афиша</h5>
+            <h5>{% trans "Афиша" %}</h5>
             <ul class="nav flex-column">
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Расписание</a></li>
-                <li class="nav-item mb-2"><a href="{% url 'soon' %}" class="nav-link p-0 text-muted">Скоро в прокате</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Кинотеатры</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Акции</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">{% trans "Расписание" %}</a></li>
+                <li class="nav-item mb-2"><a href="{% url 'soon' %}" class="nav-link p-0 text-muted">{% trans "Скоро в прокате" %}</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">{% trans "Кинотеатры" %}</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">{% trans "Акции" %}</a></li>
             </ul>
         </div>
         <div class="col-12 col-md">
-            <h5>О кинотеатре</h5>
+            <h5>{% trans "О кинотеатре" %}</h5>
             <ul class="nav flex-column">
-                <li class="nav-item mb-2"><a href="{% url 'news' %}" class="nav-link p-0 text-muted">Новости</a></li>
-                <li class="nav-item mb-2"><a href="{% url 'advertising' %}" class="nav-link p-0 text-muted">Реклама</a></li>
-                <li class="nav-item mb-2"><a href="{% url 'cafe_bar' %}" class="nav-link p-0 text-muted">Кафе-Бар</a></li>
-                <li class="nav-item mb-2"><a href="{% url 'contacts' %}" class="nav-link p-0 text-muted">Контакты</a></li>
+                <li class="nav-item mb-2"><a href="{% url 'news' %}" class="nav-link p-0 text-muted">{% trans "Новости" %}</a></li>
+                <li class="nav-item mb-2"><a href="{% url 'advertising' %}" class="nav-link p-0 text-muted">{% trans "Реклама" %}</a></li>
+                <li class="nav-item mb-2"><a href="{% url 'cafe_bar' %}" class="nav-link p-0 text-muted">{% trans "Кафе-Бар" %}</a></li>
+                <li class="nav-item mb-2"><a href="{% url 'contacts' %}" class="nav-link p-0 text-muted">{% trans "Контакты" %}</a></li>
             </ul>
         </div>
 

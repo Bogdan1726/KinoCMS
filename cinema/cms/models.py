@@ -159,6 +159,7 @@ class Movies(models.Model):
 
 
 class Cinema(models.Model):
+    objects = None
     title = models.CharField(max_length=100, verbose_name='Название кинотеатра')
     description = models.TextField(verbose_name='Описание')
     conditions = models.TextField(verbose_name='Условия')

@@ -3,10 +3,12 @@ from datetime import timedelta
 
 from babel.dates import format_date
 from django.db.models import Count
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.utils.datetime_safe import datetime
-from django.views.generic import ListView
-from cms.models import HomePageBanner, CarouselBanner, PromotionsPageBanner, BackgroundBanner, Movies, HomePage, Seance
+from django.views.generic import ListView, DetailView
+from cms.models import HomePageBanner, CarouselBanner, PromotionsPageBanner, BackgroundBanner, Movies, HomePage, Seance, \
+    Cinema
 
 
 # Create your views here.
@@ -21,7 +23,7 @@ class HomePageView(ListView):
         tomorrow = datetime.now() + timedelta(days=1)
         movies = Movies.objects.all()
         context = {
-            'today': format_date(today, "d MMMM", locale='ru'),
+            'today': today,
             'list_movie_today':
                 Seance.objects.filter(date=today).select_related('movies').distinct('movies'),
             'list_movie_premier': movies.filter(date_premier__range=[today, today + timedelta(days=7)]),
@@ -74,10 +76,36 @@ class SoonPageView(ListView):
 
 # Soon page end
 
-def get_movie_card(request):
-    return render(request, 'main/pages/poster/movie_card.html')
+
+# Movie card
+
+class MovieCard(DetailView):
+    model = Movies
+    template_name = 'main/pages/movie_card.html'
+    context_object_name = 'movie'
+
+    def get_context_data(self, **kwargs):
+        context = super(MovieCard, self).get_context_data()
+        context['week'] = [datetime.now() + timedelta(days=day) for day in range(7)]
+        context['cinemas'] = Cinema.objects.all()
+        return context
 
 
+def card_movie_ajax(request):
+    if request.is_ajax():
+        date = request.GET.get('day')
+        type_seance = request.GET.get('type')
+        list_seance = list(Seance.objects.filter(date=date).
+                           values('time', 'ticket_price', 'halls__number', 'movies'))
+        print(list_seance)
+        response = {
+            'list_seance': list_seance
+        }
+        return JsonResponse(response, status=200)
+    return HttpResponse(request)
+
+
+# Movie car end
 
 
 

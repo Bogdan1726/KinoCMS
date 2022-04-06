@@ -1,3 +1,4 @@
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
@@ -7,10 +8,15 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('main.urls')),
     path('user/', include('user.urls')),
     path('cms/', include('cms.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
+
+urlpatterns += i18n_patterns(
+    path('', include('main.urls')),
+
+)
 
 if settings.DEBUG:
     urlpatterns = [

@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', '192.168.1.106']
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -140,6 +141,7 @@ AUTH_USER_MODEL = 'user.User'
 
 LANGUAGE_CODE = 'ru'
 
+
 TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
@@ -149,6 +151,19 @@ USE_L10N = False
 USE_TZ = True
 
 DATE_FORMAT = 'y-m-d'
+# Language
+
+gettext = lambda s: s
+LANGUAGES = (
+    ('ru', gettext('Russia')),
+    ('uk', gettext('Ukrainian')),
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
+
+# Language end
 
 
 # Static files (CSS, JavaScript, Images)

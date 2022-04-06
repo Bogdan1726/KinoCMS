@@ -1,5 +1,6 @@
+{% load i18n %}
 <div class="container-fluid">
-    <h4 class="text-center py-3">Новости и Акции</h4>
+    <h4 class="text-center py-3">{% trans "Новости и Акции" %}</h4>
     <div id="carouselNewsPromotions"
          class="carousel slide"
          value="{{ promotion_carousel.interval }}"

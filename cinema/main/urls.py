@@ -9,7 +9,9 @@ urlpatterns = [
 
     path('soon/', SoonPageView.as_view(), name='soon'),
 
-    path('movie_card/', get_movie_card, name='movie_card'),
+    path('movie_card/<int:pk>/', MovieCard.as_view(), name='movie_card'),
+    path('movie_card/seance_filter/', card_movie_ajax, name='seance_filter'),
+
     path('about_cinema/', get_about_cinema, name='about_cinema'),
     path('contacts/', get_contacts, name='contacts'),
     path('cafe_bar/', get_cafe_bar, name='cafe_bar'),

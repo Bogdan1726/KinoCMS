@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% load i18n %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -94,6 +95,10 @@
         cursor: pointer;
     }
 
+    .card img {
+        width: 100%
+    }
+
     .card {
         overflow: hidden;
     }
@@ -101,6 +106,7 @@
     img {
         transition: transform 0.25s;
     }
+
 
 </style>
 
@@ -129,26 +135,30 @@
     <!--        carousel movies premier end -->
     <!--        movies today -->
     <div class="container-fluid">
-        <h4 class="text-center py-3">Смотрите сегодня, <a style="font-size:15pt">{{ today }}</a></h4>
+        <h4 class="text-center py-3">{% trans "Смотрите сегодня," %}
+            <a style="font-size:15pt">{{ today|date:"j E" }}</a>
+        </h4>
         <div class="album bg-light py-3 border">
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3">
                     {% for movie in list_movie_today %}
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="{{ movie.movies.image.url }}" height="350" alt="movie_image">
+                            <a href="{% url 'movie_card' movie.movies.id %}">
+                                <img src="{{ movie.movies.image.url }}" height="350" alt="movie_image">
+                            </a>
                             <div class="card-body text-center">
                                 <h5 class="card-title">{{ movie.movies.title }}</h5>
                                 <div class="btn-group">
                                     <a type="button"
                                        id="{{ movie.movies.id }}"
-                                       class="btn btn-sm btn-success">Купить билет</a>
+                                       class="btn btn-sm btn-success">{% trans "Купить билет" %}</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {% empty %}
-                    <h5 class="text-center">Нет сеансов</h5>
+                    <h5 class="text-center">{% trans "Нет сеансов" %}</h5>
                     {% endfor %}
                 </div>
             </div>
@@ -157,7 +167,7 @@
     <!--    movies today end -->
     <!--        movies soon -->
     <div class="container-fluid">
-        <h4 class="text-center py-3">Смотрите скоро</h4>
+        <h4 class="text-center py-3">{% trans "Смотрите скоро" %}</h4>
         <div class="album bg-light py-3 border">
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3">
@@ -171,13 +181,13 @@
                                     <p style="color: green;"
                                        id="date_premier"
                                        value="{{ movie.date_premier }}">
-                                        C {{ movie.date_premier|date:"j E" }}</p>
+                                        {% trans "C" %} {{ movie.date_premier|date:"j E" }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {% empty %}
-                    <h5 class="text-center">Нет фильмов</h5>
+                    <h5 class="text-center">{% trans "Нет фильмов" %}</h5>
                     {% endfor %}
                 </div>
             </div>
@@ -193,7 +203,7 @@
     <!-- context  ad-->
     <div class="container-fluid" style="padding: 50px;">
         <div class="container bg-light py-5 border text-center">
-            <h5>Контекстная реклама</h5>
+            <h5>{% trans "Контекстная реклама" %}</h5>
         </div>
     </div>
     <!-- context  ad end -->
@@ -221,19 +231,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 
+    $(".form-select").on('change', function () {
+        this.form.submit();
+    })
+
 
     var myCarouselTop = $('#carouselTopBanner');
     var intervalTop = Number(myCarouselTop.attr('value'));
-    var carouselTop = new bootstrap.Carousel(myCarouselTop, {
-        interval: intervalTop
-    })
+    if (intervalTop) {
+        var carouselTop = new bootstrap.Carousel(myCarouselTop, {
+            interval: intervalTop
+        })
+    }
 
 
     var myCarousel = $('#carouselNewsPromotions');
     var interval = Number(myCarousel.attr('value'));
-    var carousel = new bootstrap.Carousel(myCarousel, {
-        interval: interval
-    })
+    if (interval) {
+        var carousel = new bootstrap.Carousel(myCarousel, {
+            interval: interval
+        })
+    }
+
 
 </script>
 {% endblock %}

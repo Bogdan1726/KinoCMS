@@ -1,0 +1,244 @@
+{% extends 'main/elements/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}
+{{ block.super }}| {{ movie.title }}
+{% endblock %}
+
+{% block style %}
+<style>
+    nav {
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+
+
+    /*week card */
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid #0a0e14;
+        border-radius: 6px;
+    }
+
+    .day_week {
+        transition: transform 0.25s;
+    }
+
+    .day_week:hover {
+        transform: scale(1.1);
+        cursor: pointer;
+    }
+
+
+    .card-body {
+        flex: 1 1 auto;
+        padding: 2px;
+    }
+
+    .row-cols-7 > * {
+        flex: 0 0 auto;
+        width: 14.2857142857%
+    }
+
+    @media (min-width: 1200px) {
+        .row-cols-xl-7 > * {
+            flex: 0 0 auto;
+            width: 14.2857142857%
+        }
+    }
+
+    /*week card  end */
+
+    .vl {
+        border-left: 1px solid black;
+        position: relative;
+    }
+
+</style>
+{% endblock %}
+
+
+{% block navbar %}
+<div class="container">
+    {{ block.super }}
+</div>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+        <iframe width="100%" height="600"
+                src="{{ movie.link }}?&autoplay=1" title="YouTube video player"
+                frameborder="1"
+                allow="accelerometer; autoplay; clipboard-write;
+                    encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
+        </iframe>
+    <div class="container text-center">
+        <div class="row" style="padding-bottom: 15px;">
+            <div class="col-md-4 col-sm-6">
+                <h5>{% trans "Расписание сеансов кинотеатра" %}</h5>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <select id="cinemas" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                    {% for cinema in cinemas %}
+                    <option value="{{ cinema.title }}">{{ cinema.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="btn-group btn-group-lg" role="group" aria-label="First group">
+                    <button type="button"
+                            class="btn btn-outline-secondary type_object"
+                            id="all">
+                        ВСЕ
+                    </button>
+                    <button type="button"
+                            class="btn btn-outline-secondary type_object"
+                            id="3d">
+                        3D
+                    </button>
+                    <button type="button"
+                            class="btn btn-outline-secondary type_object"
+                            id="2d">
+                        2D
+                    </button>
+                    <button type="button"
+                            class="btn btn-outline-secondary type_object"
+                            id="imax">
+                        IMAX
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="width: 80%">
+            <div class="row row row-cols-3 row-cols-sm-4 row-cols-lg-4 row-cols-xl-7 g-3">
+                {% for date in week %}
+                <div class="col">
+                    <div class="card day_week" id="{{ date|date:'Y-m-d' }}">
+                        <div class="card-header bg-transparent">
+                            <strong>{{ date|date:"j D" }}</strong>
+                        </div>
+                        <div class="card-footer border-dark bg-transparent">
+                            <a>{{ date|date:"E"|title }}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="container" style="padding-top: 20px;">
+            <div class="row">
+                <div class="col-md-2 col-sm-6">
+                    <h5 id="cinema_title"></h5>
+                </div>
+                <div class="col-md-10 col-sm-6">
+                    <div id="result" class="row row row-cols-3 row-cols-sm-4 row-cols-lg-4 row-cols-xl-6 g-3">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="container">
+    {% include 'main/inc/_footer.html' %}
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        var filter = new Map();
+
+        $(".type_object").on('click', function () {
+            filter.set('type', this.id);
+        })
+
+        $(".day_week").on('click', function () {
+            filter.set('day', this.id);
+            // ajax
+            $.ajax({
+                type: 'GET',
+                url: '{% url "seance_filter" %}',
+                data: {
+                    'type': filter.get('type'),
+                    'day': filter.get('day')
+                },
+                success: function (response) {
+                    listSeance(response.list_seance);
+                },
+                error: function (response) {
+                    alert('not ajax');
+                },
+            })
+            // ajax end
+        })
+
+
+        function listSeance(list) {
+            console.log(list[0]);
+            for (seance in list) {
+                console.log(list[seance])
+                $("#cinema_title").html($("#cinemas").find('option:selected').text())
+                $("#result").append(
+                    " <div class=\"col\">\n" +
+                    "                    <div class=\"card day_week\">\n" +
+                    "                        <div class=\"card-header bg-transparent\">\n" +
+                    "                            <div class=\"row\">\n" +
+                    "                                <div class=\"col-md-6\">\n" +
+                    "                                    <strong>" + list[seance].time + "</strong>\n" +
+                    "                                </div>\n" +
+                    "                                <div class=\"col-md-6 vl\">\n" +
+                    "                                    <p>3D</p>\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                        <div class=\"card-footer border-dark bg-transparent\">\n" +
+                    "                            <div class=\"row\">\n" +
+                    "                                <div class=\"col-md-6\">\n" +
+                    "                                    <p>Зал-" + list[seance].halls__number + "</p>\n" +
+                    "                                </div>\n" +
+                    "\n" +
+                    "                                <div class=\"col-md-6 vl\">\n" +
+                    "                                    <p>" + list[seance].ticket_price + "</p>\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                        </div>\n" +
+                    "                    </div>\n" +
+                    "                </div>"
+                )
+            }
+
+
+        }
+    })
+</script>
+{% endblock %}
+
+
+
