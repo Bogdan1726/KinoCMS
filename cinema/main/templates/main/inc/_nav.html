@@ -34,7 +34,8 @@
                 </div>
                 {% else %}
                 <div class="text-end">
-                    <a href="{% url 'login' %}" type="button" class="btn btn-outline-light me-2">{% trans "Авторизоваться" %}</a>
+                    <a href="{% url 'login' %}" type="button" class="btn btn-outline-light me-2">{% trans
+                        "Авторизоваться" %}</a>
                     <a href="{% url 'register' %}" type="button" class="btn btn-warning">{% trans "Регистрация" %}</a>
                 </div>
                 {% endif %}
@@ -95,13 +96,39 @@
                                         {% trans "О кинотеатре" %}
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                        <li><a class="dropdown-item" href="{% url 'news' %}">{% trans "Новости" %}</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'advertising' %}">{% trans "Реклама" %}</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'cafe_bar' %}">{% trans "Кафе" %}</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'mobile' %}">{% trans "Мобильное приложение" %}</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'contacts' %}">{% trans "Контакты" %}</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'vip' %}">{% trans "VIP-зал" %}</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'children_room' %}">{% trans "Детская комната" %}</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'news' %}">
+                                            {% trans "Новости" %}
+                                        </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'advertising' %}">
+                                                {% trans "Реклама" %}
+                                            </a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="{% url 'cafe_bar' %}">
+                                            {% trans "Кафе" %}
+                                        </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'mobile' %}">
+                                                {% trans "Мобильное приложение" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'contacts' %}">
+                                                {% trans "Контакты" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'vip' %}">
+                                                {% trans "VIP-зал" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'children_room' %}">
+                                                {% trans "Детская комната" %}
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -110,22 +137,25 @@
                 </nav>
             </div>
             <div class="col-md-2">
-                <form method="post" action="{% url 'set_language' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ redirect_to }}">
-                    <select class="form-select" name="language">
-                        {% get_current_language as LANGUAGE_CODE %}
-                        {% get_available_languages as LANGUAGES %}
-                        {% get_language_info_list for LANGUAGES as languages %}
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-outline-dark dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ LANGUAGE_CODE }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                         {% for language in languages %}
-                        <option value="{{ language.code }}"
-                        {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
-                            {{ language.name.local }}
-                            {{ language.name_translated }}
-                        </option>
+                        <li>
+                            <a href="/{{ language.code }}/"
+                               class="dropdown-item">
+                                {{ language.name_translated }}
+                            </a>
+                        </li>
                         {% endfor %}
-                    </select>
-                </form>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

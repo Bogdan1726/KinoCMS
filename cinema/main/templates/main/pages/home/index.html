@@ -227,31 +227,30 @@
 
 
 {% block script %}
-<script src="{% static 'main/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="{% static 'main/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 
-    $(".form-select").on('change', function () {
-        this.form.submit();
-    })
 
 
-    var myCarouselTop = $('#carouselTopBanner');
-    var intervalTop = Number(myCarouselTop.attr('value'));
-    if (intervalTop) {
-        var carouselTop = new bootstrap.Carousel(myCarouselTop, {
-            interval: intervalTop
-        })
-    }
 
-
-    var myCarousel = $('#carouselNewsPromotions');
-    var interval = Number(myCarousel.attr('value'));
-    if (interval) {
-        var carousel = new bootstrap.Carousel(myCarousel, {
-            interval: interval
-        })
-    }
+    // var myCarouselTop = $('#carouselTopBanner');
+    // var intervalTop = Number(myCarouselTop.attr('value'));
+    // if (intervalTop) {
+    //     var carouselTop = new bootstrap.Carousel(myCarouselTop, {
+    //         interval: intervalTop
+    //     })
+    // }
+    //
+    //
+    // var myCarousel = $('#carouselNewsPromotions');
+    // var interval = Number(myCarousel.attr('value'));
+    // if (interval) {
+    //     var carousel = new bootstrap.Carousel(myCarousel, {
+    //         interval: interval
+    //     })
+    // }
 
 
 </script>

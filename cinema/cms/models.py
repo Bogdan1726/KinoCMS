@@ -199,7 +199,7 @@ class Halls(models.Model):
         verbose_name_plural = 'Залы'
 
     def __str__(self):
-        return f"Зал №{self.number}"
+        return f"Зал №{self.number}-{self.cinemas}"
 
 
 class Seance(models.Model):
@@ -219,6 +219,7 @@ class Seance(models.Model):
 
 
 class Ticket(models.Model):
+    objects = None
     row = models.PositiveIntegerField(verbose_name='Ряд')
     place = models.PositiveIntegerField(verbose_name='Место')
     type = models.BooleanField(default=True, verbose_name='Тип(покупка или бронь)')

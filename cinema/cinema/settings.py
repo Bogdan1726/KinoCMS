@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,6 +54,9 @@ INSTALLED_APPS = [
 
 ]
 
+from django.middleware.locale import LocaleMiddleware
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.utils.translation import LANGUAGE_SESSION_KEY
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -153,15 +158,17 @@ USE_TZ = True
 DATE_FORMAT = 'y-m-d'
 # Language
 
-gettext = lambda s: s
-LANGUAGES = (
-    ('ru', gettext('Russia')),
-    ('uk', gettext('Ukrainian')),
-)
+LANGUAGES = [
+    ('ru', _('Russian')),
+    ('uk', _('Ukrainian')),
+]
+
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
+
+
 
 # Language end
 

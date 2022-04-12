@@ -10,13 +10,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('cms/', include('cms.urls')),
+] + i18n_patterns(
     path('i18n/', include('django.conf.urls.i18n')),
-]
-
-urlpatterns += i18n_patterns(
     path('', include('main.urls')),
-
 )
+
 
 if settings.DEBUG:
     urlpatterns = [

@@ -114,9 +114,9 @@ class CmsMoviesForm(forms.ModelForm):
         widgets = {
             'active': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
             'title': forms.TextInput(attrs={'class': 'form-control',
-                                            'placeholder': 'Название фильма'}),
+                                               'placeholder': 'Название фильма'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
-                                                 'placeholder': 'Описание'}),
+                                                    'placeholder': 'Описание'}),
             'title_uk': forms.TextInput(attrs={'class': 'form-control',
                                                'placeholder': 'Назва фильму'}),
             'description_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
