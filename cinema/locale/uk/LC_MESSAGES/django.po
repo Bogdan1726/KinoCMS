@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-05 11:42+0300\n"
+"POT-Creation-Date: 2022-04-14 17:54+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,13 +21,11 @@ msgstr ""
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: main/templates/main/inc/_footer.html:6 main/templates/main/inc/_nav.html:101
+#: main/templates/main/inc/_footer.html:6 main/templates/main/inc/_nav.html:113
 msgid "Мобильное приложение"
 msgstr "Мобільний додаток"
 
 #: main/templates/main/inc/_footer.html:9
-#, fuzzy
-#| msgid "Розробка сайтів"
 msgid "Разработка сайтов"
 msgstr "Розробка сайтів"
 
@@ -55,11 +53,12 @@ msgstr "Акції"
 msgid "О кинотеатре"
 msgstr "Про кінотеатр"
 
-#: main/templates/main/inc/_footer.html:24 main/templates/main/inc/_nav.html:98
+#: main/templates/main/inc/_footer.html:24 main/templates/main/inc/_nav.html:99
 msgid "Новости"
 msgstr "Новини"
 
-#: main/templates/main/inc/_footer.html:25 main/templates/main/inc/_nav.html:99
+#: main/templates/main/inc/_footer.html:25
+#: main/templates/main/inc/_nav.html:104
 msgid "Реклама"
 msgstr "Реклама"
 
@@ -68,7 +67,7 @@ msgid "Кафе-Бар"
 msgstr "Кафе-бар"
 
 #: main/templates/main/inc/_footer.html:27
-#: main/templates/main/inc/_nav.html:102
+#: main/templates/main/inc/_nav.html:118
 msgid "Контакты"
 msgstr "Контакти"
 
@@ -89,8 +88,8 @@ msgid "Выйти"
 msgstr "Вийти"
 
 #: main/templates/main/inc/_nav.html:37
-msgid "Авторизоваться"
-msgstr "Авторизуватися"
+msgid "Логин"
+msgstr "Логін"
 
 #: main/templates/main/inc/_nav.html:38
 msgid "Регистрация"
@@ -100,15 +99,15 @@ msgstr "Реєстрація"
 msgid "Скоро"
 msgstr "Скоро"
 
-#: main/templates/main/inc/_nav.html:100
+#: main/templates/main/inc/_nav.html:108
 msgid "Кафе"
 msgstr "Кафе"
 
-#: main/templates/main/inc/_nav.html:103
+#: main/templates/main/inc/_nav.html:123
 msgid "VIP-зал"
 msgstr "VIP-зал"
 
-#: main/templates/main/inc/_nav.html:104
+#: main/templates/main/inc/_nav.html:128
 msgid "Детская комната"
 msgstr "Дитяча кімната"
 
@@ -116,30 +115,127 @@ msgstr "Дитяча кімната"
 msgid "Новости и Акции"
 msgstr "Новини і Акції"
 
-#: main/templates/main/pages/home/index.html:133
+#: main/templates/main/pages/home/index.html:57
 msgid "Смотрите сегодня,"
 msgstr "Дивіться сьогодні,"
 
-#: main/templates/main/pages/home/index.html:146
+#: main/templates/main/pages/home/index.html:74
 msgid "Купить билет"
 msgstr "Купити квиток"
 
-#: main/templates/main/pages/home/index.html:152
+#: main/templates/main/pages/home/index.html:80
+#: main/templates/main/pages/movie_card.html:88
 msgid "Нет сеансов"
 msgstr "Немає сеансів"
 
-#: main/templates/main/pages/home/index.html:161
+#: main/templates/main/pages/home/index.html:89
 msgid "Смотрите скоро"
 msgstr "Дивіться незабаром"
 
-#: main/templates/main/pages/home/index.html:175
+#: main/templates/main/pages/home/index.html:105
 msgid "C"
 msgstr "З"
 
-#: main/templates/main/pages/home/index.html:181
+#: main/templates/main/pages/home/index.html:111
 msgid "Нет фильмов"
 msgstr "Немає фільмів"
 
-#: main/templates/main/pages/home/index.html:197
-msgid "Контекстная реклама"
-msgstr "Контекстна реклама"
+#: main/templates/main/pages/movie_card.html:37
+msgid "Расписание сеансов кинотеатра"
+msgstr "Розклад сеансів кінотеатру"
+
+#: main/templates/main/pages/movie_card.html:51
+msgid "ВСЕ"
+msgstr "ВСІ"
+
+#: main/templates/main/pages/movie_card.html:101
+msgid "Сбросить фильтр"
+msgstr "Скинути фільтр"
+
+#: main/templates/main/pages/movie_card.html:114
+msgid "премьера"
+msgstr "прем'єра"
+
+#: main/templates/main/pages/movie_card.html:118
+msgid "страна"
+msgstr "країна"
+
+#: main/templates/main/pages/movie_card.html:122
+msgid "продюсер"
+msgstr "продюсер"
+
+#: main/templates/main/pages/movie_card.html:126
+msgid "режисер"
+msgstr "режисер"
+
+#: main/templates/main/pages/movie_card.html:130
+msgid "сценарист"
+msgstr "сценарист"
+
+#: main/templates/main/pages/movie_card.html:135
+msgid "триллер, ужасы, комедия"
+msgstr "трилер, жахи, комедія"
+
+#: main/templates/main/pages/movie_card.html:142
+msgid "время"
+msgstr "час"
+
+#: main/templates/main/pages/movie_card.html:143
+msgid "117 мин."
+msgstr "117 хв."
+
+#: main/templates/main/pages/movie_card.html:154
+msgid "Кадры и постеры"
+msgstr "Кадри та постери"
+
+#: main/templates/main/pages/ticket_booking.html:162
+msgid "ЗАЛ"
+msgstr "ЗАЛА"
+
+#: main/templates/main/pages/ticket_booking.html:165
+msgid "ЦЕНА В ГРН."
+msgstr "ЦІНА У ГРН."
+
+#: main/templates/main/pages/ticket_booking.html:168
+msgid "ЗАБРОНИРОВАНО"
+msgstr "ЗАБРОНЬОВАНО"
+
+#: main/templates/main/pages/ticket_booking.html:176
+msgid "ВАШ ЗАКАЗ"
+msgstr "ВАШЕ ЗАМОВЛЕННЯ"
+
+#: main/templates/main/pages/ticket_booking.html:178
+msgid "БИЛЕТОВ"
+msgstr "КВИТКІВ"
+
+#: main/templates/main/pages/ticket_booking.html:179
+msgid "СУММА"
+msgstr "СУМА"
+
+#: main/templates/main/pages/ticket_booking.html:490
+msgid "Стоимость услуги бронирования - 3 грн. за каждое место."
+msgstr "Вартість послуги бронювання – 3 грн. за кожне місце."
+
+#: main/templates/main/pages/ticket_booking.html:491
+msgid ""
+"ЗАБРОНИРОВАННЫЕ БИЛЕТЫ НУЖНО ВЫКУПАТЬ В КАССЕ КИНОТЕАТРА НЕ ПОЗДНЕЕ ЧЕМ ЗА "
+"ПОЛЧАСА ДО НАЧАЛА СЕАНСА"
+msgstr ""
+"ЗАБРОНЬОВАНІ КВИТКИ ПОТРІБНО ВИКУПАТИ У КАСІ КІНОТЕАТРУ НЕ ПІЗНІШЕ НІЖ ЗА "
+"ПІВГОДИНИ ДО ПОЧАТКУ СЕАНСУ"
+
+#: main/templates/main/pages/ticket_booking.html:493
+
+msgid "Забронировать"
+msgstr "Забронювати"
+
+#: main/templates/main/pages/ticket_booking.html:494
+msgid "Купить"
+msgstr "Купити"
+
+#: main/templates/main/pages/ticket_booking.html:496
+msgid "Спасибо за покупку!"
+msgstr "Дякую за покупку!"
+
+#~ msgid "Контекстная реклама"
+#~ msgstr "Контекстна реклама"

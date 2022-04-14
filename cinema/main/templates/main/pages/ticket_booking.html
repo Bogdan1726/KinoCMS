@@ -14,6 +14,10 @@
         border-radius: 5px;
     }
 
+    .flex-column h3 {
+        color: black;
+    }
+
     .movie_title {
         background-color: #c3291a;
         color: #fff;
@@ -100,19 +104,20 @@
 
     /*style hall end */
 
-    /*block*/
-    .info_place {
-        position: absolute;
+    .callout {
+        border-radius: 0.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
         background-color: #fff;
+        border-left: 5px solid #e9ecef;
+        padding: 5px;
         display: none;
-        z-index: 1000;
-        padding: 15px;
-
-
     }
 
-
-    /*block end */
+    .callout.callout-success {
+        border-left-color: #f8d200;
+        background-color: #f8d200;
+        color: #fff;
+    }
 </style>
 {% endblock %}
 
@@ -141,12 +146,12 @@
                      width="100%"
                      alt="movie">
             </a>
-            <a href="#">
-                <img src="{% static 'main/media/reklama1.png' %}"
-                     width="80%"
-                     height="45%"
-                     alt="ads">
-            </a>
+            <div class="container text-center" style="padding-top: 50px;">
+                <a href="https://avada-media.ua/">
+                    <img src="{% static 'main/media/logo-Avada.png' %}"
+                         alt="rejlama" width="100%" style="border: 2px solid #1c1f23;">
+                </a>
+            </div>
             <img src="{% static 'main/media/pay.png' %}" alt="pay">
         </div>
         <!--        movie banner end -->
@@ -154,13 +159,13 @@
         <div class="col-md-9">
             <h5 class="movie_title" id="{{ seance.id }}">{{ seance.movies|upper }}</h5>
             <p>{{ seance.date|date:"j E"|upper }}, {{ seance.time|time:"H:i" }},
-                ЗАЛ №{{ hall.number }}</p>
+                {% trans "ЗАЛ" %} №{{ hall.number }}</p>
             <div class="row" style="padding-bottom: 20px;">
                 <div class="col-lg-3">
-                    <p>ЦЕНА В ГРН.: <strong class="price">{{ seance.ticket_price }}</strong></p>
+                    <p>{% trans "ЦЕНА В ГРН." %}: <strong class="price">{{ seance.ticket_price }}</strong></p>
                 </div>
                 <div class="col-lg-3">
-                    <p>ЗАБРОНИРОВАНО:
+                    <p>{% trans "ЗАБРОНИРОВАНО" %}:
                         <img src="{% static 'main/media/user.png' %}"
                              width="40px;"
                              height="35px"
@@ -168,15 +173,14 @@
                     </p>
                 </div>
                 <div class="col-lg-6">
-                    <a>ВАШ ЗАКАЗ: </a>
+                    <a>{% trans "ВАШ ЗАКАЗ" %}: </a>
                     <a style="border: 2px solid #f8d200; padding: 10px;">
-                        <strong style="padding-right: 10px;">БИЛЕТОВ: <b id="count_tickets">0</b></strong>
-                        <strong>СУММА: <b id="count_tickets_price">0</b></strong> грн.</strong>
+                        <strong style="padding-right: 10px;">{% trans "БИЛЕТОВ" %}: <b id="count_tickets">0</b></strong>
+                        <strong>{% trans "СУММА" %}: <b id="count_tickets_price">0</b> грн.</strong>
                     </a>
 
                 </div>
             </div>
-            <div class="info_place">Hello</div>
             <div class="container">
                 <div class="hall">
                     <svg viewBox="0 0 892 517">
@@ -486,8 +490,11 @@
                 <p>{% trans "Стоимость услуги бронирования - 3 грн. за каждое место." %}</p>
                 <p>{% trans "ЗАБРОНИРОВАННЫЕ БИЛЕТЫ НУЖНО ВЫКУПАТЬ В КАССЕ КИНОТЕАТРА НЕ ПОЗДНЕЕ ЧЕМ ЗА ПОЛЧАСА ДО НАЧАЛА СЕАНСА" %}</p>
                 <div class="text-center" style="margin-bottom: 20px;">
-                    <a id="booking" class="btn btn-outline-dark" style="margin: 10px;">Забронировать</a>
-                    <a id="buy" class="btn btn-outline-success">Купить</a>
+                    <a id="booking" class="btn btn-outline-dark" style="margin: 10px;">{% trans "Забронировать" %}</a>
+                    <a id="buy" class="btn btn-outline-success">{% trans "Купить" %}</a>
+                    <div class="callout callout-success">
+                        <h5>{% trans "Спасибо за покупку!" %}</h5>
+                    </div>
                 </div>
             </div>
         </div>
@@ -506,21 +513,6 @@
 <script>
     // select place
     $(document).ready(function () {
-
-        // $("path").mouseover(function (e) {
-        //     var top = e.pageY + 10 + "px";
-        //     var left = e.pageX + 10 + "px";
-        //     $(".info_place").css({
-        //         'display': 'block',
-        //         'top': top,
-        //         'left': left
-        //     });
-        // })
-        //
-        // $("path").mouseout(function () {
-        //     $(".info_place").css('display', 'none');
-        // })
-
         var count_ticket = 0
         var ticket_price = Number($(".price").html())
         var count_tickets_price = 0
@@ -557,6 +549,12 @@
                     var place = ticket.split("-")[1]
                     ajax_request(row, place, type)
                 }
+                list_selected_tickets.clear()
+                $(".callout").css('display', 'block');
+                setTimeout(function () {
+                    $(".callout").css('display', 'none');
+                }, 3000)
+
             } else {
                 console.log('not selected tickets')
             }
@@ -570,6 +568,11 @@
                     var place = ticket.split("-")[1]
                     ajax_request(row, place, type)
                 }
+                list_selected_tickets.clear()
+                $(".callout").css('display', 'block');
+                setTimeout(function () {
+                    $(".callout").css('display', 'none');
+                }, 3000)
             } else {
                 console.log('not selected tickets')
             }
@@ -614,8 +617,8 @@
                     ticketBooked(response.tickets);
 
                 },
-                error: function () {
-                    console.log('not ajax');
+                error: function (response) {
+                    console.log(response.error);
                 },
             })
         }

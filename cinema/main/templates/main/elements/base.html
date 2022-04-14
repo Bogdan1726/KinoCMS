@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<!--    <meta name="description" content="{{ seo_block.description_seo }}">-->
+<!--    <meta name="keywords" content="{{ seo_block.keywords }}">-->
+<!--    <meta name="url" content="{{ seo_block.url }}">-->
     <link href="{% static 'main/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'main/css/home_page_style.css' %}">
     <link rel="shortcut icon" href="{%  static 'main/media/fav.png' %}">
@@ -33,13 +35,14 @@ CONTENT
 {% endblock %}
 
 
-
-
-
 <!-- Bootstrap js -->
 <script src="{% static 'main/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+<script>
+    $("#languages").on('change', function () {
+        this.form.submit();
+    })
+</script>
 {% block script %}
 {% endblock %}
 </body>

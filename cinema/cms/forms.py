@@ -114,9 +114,9 @@ class CmsMoviesForm(forms.ModelForm):
         widgets = {
             'active': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
             'title': forms.TextInput(attrs={'class': 'form-control',
-                                               'placeholder': 'Название фильма'}),
+                                            'placeholder': 'Название фильма'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
-                                                    'placeholder': 'Описание'}),
+                                                 'placeholder': 'Описание'}),
             'title_uk': forms.TextInput(attrs={'class': 'form-control',
                                                'placeholder': 'Назва фильму'}),
             'description_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
@@ -151,6 +151,8 @@ class CmsHallsForm(forms.ModelForm):
                                                'placeholder': 'Номер зала'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
                                                  'placeholder': 'Описание'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                    'placeholder': 'Опис'}),
             'banner': forms.FileInput(attrs={'type': 'file',
                                              'onchange': "document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])"}),
             'layout': forms.FileInput(attrs={'type': 'file',
@@ -175,6 +177,12 @@ class CmsCinemasForm(forms.ModelForm):
                                                  'placeholder': 'Описание'}),
             'conditions': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
                                                 'placeholder': 'Условия'}),
+            'title_uk': forms.TextInput(attrs={'class': 'form-control',
+                                               'placeholder': 'Назва кінотеатру'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                    'placeholder': 'Опис'}),
+            'conditions_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                   'placeholder': 'Умови'}),
             'photo': forms.FileInput(attrs={'type': 'file',
                                             'onchange': "document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])"}),
             'logo': forms.FileInput(attrs={'type': 'file',
@@ -227,7 +235,7 @@ class CmsHomePageUpdateForm(forms.ModelForm):
 
     class Meta:
         model = HomePage
-        fields = ['phone_number1', 'phone_number2', 'active', 'seo_text']
+        fields = ['phone_number1', 'phone_number2', 'active', 'seo_text', 'seo_text_uk']
 
         widgets = {
             'phone_number1': forms.TextInput(attrs={'class': 'form-control',
@@ -235,6 +243,8 @@ class CmsHomePageUpdateForm(forms.ModelForm):
             'phone_number2': forms.TextInput(attrs={'class': 'form-control',
                                                     'data-mask': '000-00-00'}),
             'seo_text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'seo_text_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+
             'active': forms.CheckboxInput(attrs={'class': 'custom-control-input'})
         }
 

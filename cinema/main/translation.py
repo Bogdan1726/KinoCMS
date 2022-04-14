@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from cms.models import Movies, HomePageBanner, Cinema, Halls, Events, Page, ContactsPage
+from cms.models import Movies, HomePageBanner, Cinema, Halls, Events, Page, ContactsPage, HomePage
 
 
 @register(HomePageBanner)
@@ -36,3 +36,7 @@ class PageTranslationOptions(TranslationOptions):
 class ContactsPageTranslationOptions(TranslationOptions):
     fields = ('title', 'address')
 
+
+@register(HomePage)
+class HomePageTranslationOptions(TranslationOptions):
+    fields = ('seo_text',)

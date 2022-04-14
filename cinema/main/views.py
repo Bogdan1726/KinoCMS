@@ -1,14 +1,10 @@
-import json
 from datetime import timedelta
-
-from babel.dates import format_date
-from django.db.models import Count
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.datetime_safe import datetime
 from django.views.generic import ListView, DetailView
 from cms.models import HomePageBanner, CarouselBanner, PromotionsPageBanner, BackgroundBanner, Movies, HomePage, Seance, \
-    Cinema, Halls, Images, Ticket
+    Cinema, Halls, Images, Ticket, SeoBlock
 
 
 # Create your views here.
@@ -17,62 +13,57 @@ from cms.models import HomePageBanner, CarouselBanner, PromotionsPageBanner, Bac
 
 
 class HomePageView(ListView):
+    model = HomePage
+    template_name = 'main/pages/home/index.html'
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         today = datetime.now()
-        tomorrow = datetime.now() + timedelta(days=1)
         movies = Movies.objects.all()
-        context = {
-            'today': today,
-            'list_movie_today':
-                Seance.objects.filter(date=today).select_related('movies').distinct('movies'),
-            'list_movie_premier': movies.filter(date_premier__range=[today, today + timedelta(days=7)]),
-            'list_movie_soon': movies.filter(date_premier__gt=today).order_by('date_premier'),
-            'home_page_data': HomePage.objects.all().first(),
-
-            'promotion_banner': PromotionsPageBanner.objects.all(),
-            'background': BackgroundBanner.objects.all().first(),
-            'header_banner': HomePageBanner.objects.all(),
-            'banner_carousel': CarouselBanner.objects.filter(value='home_page_banner').first(),
-            'promotion_carousel': CarouselBanner.objects.filter(value='promotions_page_banner').first()
-        }
-        return render(request, 'main/pages/home/index.html', context)
-
-
+        context = super(HomePageView, self).get_context_data()
+        context['today'] = today
+        context['list_movie_today'] = Seance.objects.filter(date=today).select_related('movies').distinct('movies')
+        context['list_movie_premier'] = movies.filter(date_premier__range=[today, today + timedelta(days=7)])
+        context['list_movie_soon'] = movies.filter(date_premier__gt=today).order_by('date_premier')
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['promotion_banner'] = PromotionsPageBanner.objects.all()
+        context['background'] = BackgroundBanner.objects.all().first()
+        context['header_banner'] = HomePageBanner.objects.all()
+        context['banner_carousel'] = CarouselBanner.objects.filter(value='home_page_banner').first()
+        context['promotion_carousel'] = CarouselBanner.objects.filter(value='promotions_page_banner').first()
+        context['seo_block'] = SeoBlock.objects.filter(id=context['home_page_data'].seo_block_id).first()
+        return context
 # Home page end
 
 
 # Poster page
 
 class PosterPageView(ListView):
+    model = Seance
+    template_name = 'main/pages/poster/poster.html'
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         today = datetime.now()
-
-        context = {
-            'list_movies':
-                Seance.objects.filter(date=today).select_related('movies').distinct('movies'),
-            'home_page_data': HomePage.objects.all().first(),
-
-        }
-        return render(request, 'main/pages/poster/poster.html', context)
+        context = super(PosterPageView, self).get_context_data()
+        context['list_movies'] = self.model.objects.filter(date=today).select_related('movies').distinct('movies')
+        context['home_page_data'] = HomePage.objects.all().first()
+        return context
 
 
 # Poster page end
 
+
 # Soon page
 
 class SoonPageView(ListView):
+    model = Movies
+    template_name = 'main/pages/poster/soon.html'
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         today = datetime.now()
-
-        context = {
-            'list_movie_soon': Movies.objects.filter(date_premier__gt=today).order_by('date_premier'),
-            'home_page_data': HomePage.objects.all().first(),
-
-        }
-        return render(request, 'main/pages/poster/soon.html', context)
+        context = super(SoonPageView, self).get_context_data()
+        context['list_movie_soon'] = self.model.objects.filter(date_premier__gt=today).order_by('date_premier')
+        context['home_page_data'] = HomePage.objects.all().first()
+        return context
 
 
 # Soon page end
@@ -89,40 +80,41 @@ class MovieCard(DetailView):
         context['week'] = [datetime.now() + timedelta(days=day) for day in range(7)]
         context['cinemas'] = Cinema.objects.all()
         context['images'] = Images.objects.filter(gallery_id=self.object.gallery_id)
+        context['home_page_data'] = HomePage.objects.all().first()
         return context
 
 
+# ajax
 def card_movie_ajax(request):
     if request.is_ajax():
+        seance = Seance.objects.all()
+        time = datetime.now().time()
         date = request.GET.get('day')
         cinema_id = request.GET.get('cinema_id')
         type_seance = request.GET.get('type')
         movie_id = request.GET.get('movie_id')
         halls = get_object_or_404(Halls, cinemas_id=cinema_id)
-        list_seance = list(Seance.objects.filter(movies_id=movie_id, date=date, halls_id=halls.id).
-                           values('id', 'time', 'ticket_price', 'halls__number', 'movies', 'halls__id', ))
+        if date == str(datetime.now().date()):
+            seance = seance.filter(date=date, time__gt=time)
+        list_seance = list(seance.filter(movies_id=movie_id, date=date, halls_id=halls.id).
+                           values('id', 'time', 'ticket_price', 'halls__number', 'movies', 'halls__id'))
         if type_seance == 'imax':
-            list_seance = list(
-                Seance.objects.filter(movies_id=movie_id, date=date, halls_id=halls.id, movies__type_imax=True).
-                    values('id', 'time', 'ticket_price', 'halls__number',
-                           'movies__type_imax', 'halls__id'))
+            list_seance = list(seance.filter(movies_id=movie_id, date=date, halls_id=halls.id, movies__type_imax=True).
+                               values('id', 'time', 'ticket_price', 'halls__number', 'movies__type_imax', 'halls__id'))
         if type_seance == '2d':
-            list_seance = list(
-                Seance.objects.filter(movies_id=movie_id, date=date, halls_id=halls.id, movies__type_2d=True).
-                    values('id', 'time', 'ticket_price', 'halls__number',
-                           'movies__type_2d', 'halls__id'))
+            list_seance = list(seance.filter(movies_id=movie_id, date=date, halls_id=halls.id, movies__type_2d=True).
+                               values('id', 'time', 'ticket_price', 'halls__number', 'movies__type_2d', 'halls__id'))
         if type_seance == '3d':
-            list_seance = list(
-                Seance.objects.filter(movies_id=movie_id, date=date, halls_id=halls.id, movies__type_3d=True).
-                    values('id', 'time', 'ticket_price', 'halls__number',
-                           'movies__type_3d', 'halls__id'))
+            list_seance = list(seance.filter(movies_id=movie_id, date=date, halls_id=halls.id, movies__type_3d=True).
+                               values('id', 'time', 'ticket_price', 'halls__number', 'movies__type_3d', 'halls__id'))
         response = {
             'list_seance': list_seance
         }
         return JsonResponse(response, status=200)
-    return HttpResponse(request)
+    return HttpResponse()
 
 
+# ajax end
 # Movie car end
 
 
@@ -136,6 +128,7 @@ class TicketBookingView(DetailView):
         context = super(TicketBookingView, self).get_context_data()
         context['seance'] = Seance.objects.filter(id=self.kwargs.get('seance_id')).first()
         context['movie_image'] = Movies.objects.get(id=context['seance'].movies_id)
+        context['home_page_data'] = HomePage.objects.all().first()
         return context
 
 
@@ -154,10 +147,9 @@ def ticket_buy_booking(request):
                 row=row, place=place, type=False, seance_id=seance_id, user_id=request.user.id
             )
         response = {
-
         }
         return JsonResponse(response, status=200)
-    return HttpResponse(request)
+    return HttpResponse()
 
 
 def ticket_selected(request):
@@ -168,7 +160,7 @@ def ticket_selected(request):
             'tickets': tickets
         }
         return JsonResponse(response, status=200)
-    return HttpResponse(request)
+    return HttpResponse()
 
 
 # Ticket Booking end

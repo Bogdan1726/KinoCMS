@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 from django.middleware.locale import LocaleMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.utils.translation import LANGUAGE_SESSION_KEY
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

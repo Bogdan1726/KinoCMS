@@ -34,8 +34,7 @@
                 </div>
                 {% else %}
                 <div class="text-end">
-                    <a href="{% url 'login' %}" type="button" class="btn btn-outline-light me-2">{% trans
-                        "Авторизоваться" %}</a>
+                    <a href="{% url 'login' %}" type="button" class="btn btn-outline-light me-2">{% trans "Логин" %}</a>
                     <a href="{% url 'register' %}" type="button" class="btn btn-warning">{% trans "Регистрация" %}</a>
                 </div>
                 {% endif %}
@@ -137,25 +136,24 @@
                 </nav>
             </div>
             <div class="col-md-2">
-                {% get_current_language as LANGUAGE_CODE %}
-                {% get_available_languages as LANGUAGES %}
-                {% get_language_info_list for LANGUAGES as languages %}
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-outline-dark dropdown-toggle"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ LANGUAGE_CODE }}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <form method="post" action="{% url 'set_language' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ redirect_to }}">
+                    <select id="languages" class="form-select" name="language">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
                         {% for language in languages %}
-                        <li>
-                            <a href="/{{ language.code }}/"
-                               class="dropdown-item">
-                                {{ language.name_translated }}
-                            </a>
-                        </li>
+                        <option value="{{ language.code }}"
+                        {% if language.code == LANGUAGE_CODE %}
+                                selected
+                                {% endif %}>
+                            {{ language.name.local }}
+                            {{ language.name_translated }}
+                        </option>
                         {% endfor %}
-                    </ul>
-                </div>
+                    </select>
+                </form>
             </div>
         </div>
     </div>

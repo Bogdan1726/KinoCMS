@@ -1,20 +1,26 @@
+$("#id_title_uk").css('display', 'none');
+$("#id_description_uk").css('display', 'none');
+
+
 function russian() {
     $("#ru").removeAttr().css('background-color', '#ddd');
     $('#uk').css('background-color', 'white');
+    $("#id_title_uk").css('display', 'none');
+    $("#id_title").css('display', 'block');
+    $("#id_description_uk").css('display', 'none');
+    $("#id_description").css('display', 'block');
     $('#title').text('Название фильма');
-    $("#id_title").attr('placeholder', 'Название фильма');
     $('#description').text('Описание');
-    $("#id_description").attr('placeholder', 'Описание');
-
 }
 
 function ukraine() {
     $('#ru').css('background-color', 'white');
     $('#uk').css('background-color', '#ddd');
+    $("#id_title").css('display', 'none');
+    $("#id_title_uk").css('display', 'block');
+    $("#id_description_uk").css('display', 'block');
+    $("#id_description").css('display', 'none');
     $('#title').text('Назва фильму');
-    $("#id_title").attr('placeholder', 'Назва фильму');
     $('#description').text('Опис');
-    $("#id_description").attr('placeholder', 'Опис');
-
 
 }

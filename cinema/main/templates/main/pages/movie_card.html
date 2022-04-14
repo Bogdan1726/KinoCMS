@@ -8,66 +8,7 @@
 {% endblock %}
 
 {% block style %}
-<style>
-    nav {
-        border: 1px solid black;
-        border-radius: 5px;
-    }
-
-
-    /*week card */
-    .card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        word-wrap: break-word;
-        background-color: #fff;
-        background-clip: border-box;
-        border: 1px solid #6c757d;
-        color: #6c757d;
-        border-radius: 6px;
-        font-size: 18px;
-    }
-
-
-    .day_week {
-        transition: transform 0.25s;
-    }
-
-    .day_week:hover {
-        /*transform: scale(1.1);*/
-        background-color: #6c757d;
-        cursor: pointer;
-        color: white;
-    }
-
-
-    .card-body {
-        flex: 1 1 auto;
-        padding: 2px;
-    }
-
-    .row-cols-7 > * {
-        flex: 0 0 auto;
-        width: 14.2857142857%
-    }
-
-    @media (min-width: 1200px) {
-        .row-cols-xl-7 > * {
-            flex: 0 0 auto;
-            width: 14.2857142857%
-        }
-    }
-
-    /*week card  end */
-
-    .vl {
-        border-left: 1px solid black;
-        position: relative;
-    }
-
-</style>
+<link href="{% static 'main/css/movie_card_style.css' %}" rel="stylesheet">
 {% endblock %}
 
 
@@ -82,12 +23,12 @@
 
 <div class="container-fluid">
     <!--    video-->
-    <!--    <iframe width="100%" height="600"-->
-    <!--            src="{{ movie.link }}?&autoplay=1" title="YouTube video player"-->
-    <!--            frameborder="1"-->
-    <!--            allow="accelerometer; autoplay; clipboard-write;-->
-    <!--                            encrypted-media; gyroscope; picture-in-picture" allowFullScreen>-->
-    <!--    </iframe>-->
+    <iframe width="100%" height="600"
+            src="{{ movie.link }}?&autoplay=1" title="YouTube video player"
+            frameborder="1"
+            allow="accelerometer; autoplay; clipboard-write;
+                                encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
+    </iframe>
     <!--    video end -->
     <!--    filter -->
     <div class="container text-center" style="padding-top: 20px;">
@@ -107,7 +48,7 @@
                     <button type="button"
                             class="btn btn-outline-secondary type_object"
                             id="3d/2d/imax">
-                        ВСЕ
+                        {% trans "ВСЕ" %}
                     </button>
                     <button type="button"
                             class="btn btn-outline-secondary type_object"
@@ -128,7 +69,7 @@
             </div>
         </div>
         <div id="week" class="container" style="width: 80%; display: none;">
-            <div class="row row row-cols-3 row-cols-sm-4 row-cols-lg-4 row-cols-xl-7 g-3">
+            <div class="row row row-cols-2 row-cols-sm-4 row-cols-lg-4 row-cols-xl-7 g-3">
                 {% for date in week %}
                 <div class="col">
                     <div class="card day_week" id="{{ date|date:'Y-m-d' }}">
@@ -150,7 +91,7 @@
                     <h5 id="cinema_title"></h5>
                 </div>
                 <div class="col-md-10 col-sm-6">
-                    <div id="result" class="row row row-cols-3 row-cols-sm-4 row-cols-lg-4 row-cols-xl-6 g-3">
+                    <div id="result" class="row row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-5 g-3">
                     </div>
                 </div>
             </div>
@@ -170,36 +111,36 @@
             <table class="table table-dark table-striped" id="{{ movie.id }}">
                 <tbody>
                 <tr>
-                    <td>премьера</td>
+                    <td>{% trans "премьера" %}</td>
                     <td>{{ movie.date_premier|date:"d.m.Y" }}</td>
                 </tr>
                 <tr>
-                    <td>страна</td>
-                    <td>США, Франция, Дания</td>
+                    <td>{% trans "страна" %}</td>
+                    <td>USA</td>
                 </tr>
                 <tr>
-                    <td>продюсер</td>
+                    <td>{% trans "продюсер" %}</td>
                     <td style="color: royalblue">Сидони Дюма</td>
                 </tr>
                 <tr>
-                    <td>режисер</td>
+                    <td>{% trans "режисер" %}</td>
                     <td style="color: royalblue">Николас Виндинг Рефн</td>
                 </tr>
                 <tr>
-                    <td>сценарист</td>
+                    <td>{% trans "сценарист" %}</td>
                     <td style="color: royalblue">Полли Стэнэм</td>
                 </tr>
                 <tr>
                     <td>жанр</td>
-                    <td>триллер, ужасы, комедия</td>
+                    <td>{% trans "триллер, ужасы, комедия" %}</td>
                 </tr>
                 <tr>
                     <td>бюджет</td>
                     <td>7.00 млн USD</td>
                 </tr>
                 <tr>
-                    <td>время</td>
-                    <td>117 мин. / 1:57</td>
+                    <td>{% trans "время" %}</td>
+                    <td>{% trans "117 мин." %} / 1:57</td>
                 </tr>
                 </tbody>
             </table>
@@ -259,8 +200,14 @@
             </div>
         </div>
     </div>
+    <div class="container text-center" style="padding-top: 20px;">
+        <a href="https://avada-media.ua/">
+            <img src="{% static 'main/media/logo-Avada.png' %}"
+                 alt="reklama" width="50%" style="border: 2px solid #1c1f23;">
+        </a>
+    </div>
 </div>
-<div class="container">
+<div class="container" style="padding-top: 20px;">
     {% include 'main/inc/_footer.html' %}
 </div>
 {% endblock %}
@@ -321,7 +268,6 @@
         }
 
         function listSeance(list) {
-            console.log(list)
             $("#reset-container").css('display', 'block');
             $("#reset").on('click', function () {
                 $("#week").css('display', 'none');
@@ -338,7 +284,6 @@
                 $("#result").html("");
                 $("#result_filter").css('display', 'none');
                 for (seance in list) {
-                    console.log(list[seance].id)
                     $("#cinema_title").html($("#cinemas").find('option:selected').text())
                     $("#result").append(
                         " <div id=\"" + list[seance].id + "\" href=\"" + list[seance].halls__id + "\" class=\"ticket col\">\n" +
@@ -382,7 +327,6 @@
             }
         }
     })
-
 </script>
 {% endblock %}
 
