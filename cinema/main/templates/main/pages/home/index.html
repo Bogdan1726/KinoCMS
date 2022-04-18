@@ -17,7 +17,17 @@
     </title>
 </head>
 <style>
-    {% if background.type == 'BI' %}
+    {
+    %
+    if
+    background
+    .
+    type
+    =
+    =
+    'BI'
+    %
+    }
     body {
         background-image: url('{{ background.banner.url }}');
         background-position: center;
@@ -27,7 +37,11 @@
         position: relative;
     }
 
-    {% endif %}
+    {
+    %
+    endif
+    %
+    }
 </style>
 
 {% block header %}
@@ -70,7 +84,9 @@
                                 <h5 class="card-title">{{ movie.movies.title }}</h5>
                                 <div class="btn-group">
                                     <a type="button"
+                                       href="{% url 'schedule' %}"
                                        id="{{ movie.movies.id }}"
+                                       onclick="setCacheMoviesId(this.id)"
                                        class="btn btn-sm btn-success">{% trans "Купить билет" %}</a>
                                 </div>
                             </div>
@@ -136,7 +152,6 @@
     </div>
     <!--    seo text end -->
 
-
 </div>
 {% endblock %}
 
@@ -149,6 +164,11 @@
 
 
 {% block script %}
+<script>
+    function setCacheMoviesId(id) {
+        localStorage.setItem("movie_id", id)
+    }
+</script>
 <script src="{% static 'main/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{% static 'main/js/home_page.js' %}"></script>

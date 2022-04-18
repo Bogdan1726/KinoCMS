@@ -5,10 +5,10 @@ urlpatterns = [
     # home page
     path('', HomePageView.as_view(), name='main'),
     # end
-    path('poster/', PosterPageView.as_view(), name='poster'),
-    path('soon/', SoonPageView.as_view(), name='soon'),
 
     # movies
+    path('poster/', PosterPageView.as_view(), name='poster'),
+    path('soon/', SoonPageView.as_view(), name='soon'),
     path('movie_card/<int:pk>/', MovieCard.as_view(), name='movie_card'),
     path('movie_card/seance_filter/', card_movie_ajax, name='seance_filter'),
     # movies end
@@ -18,6 +18,14 @@ urlpatterns = [
     path('ticket/', ticket_selected, name='ticket_selected'),
     path('ticket_buy/', ticket_buy_booking, name='ticket_buy_booking'),
     # ticket end
+
+    path('schedule/', ScheduleView.as_view(), name='schedule'),
+    path('schedule_filter/', filter_seances, name='filter_seances'),
+
+    # cinemas
+    path('cinemas/', CinemasPageView.as_view(), name='list_cinemas'),
+    path('cinemas/<int:pk>/', CinemasPageDetailView.as_view(), name='cinema_card'),
+    # cinemas end
 
     path('about_cinema/', get_about_cinema, name='about_cinema'),
     path('contacts/', get_contacts, name='contacts'),

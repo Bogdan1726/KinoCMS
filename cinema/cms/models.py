@@ -199,7 +199,8 @@ class Halls(models.Model):
         verbose_name_plural = 'Залы'
 
     def __str__(self):
-        return f"Зал №{self.number}-{self.cinemas}"
+        return f"{self.number}"
+        # return f"Зал №{self.number}-{self.cinemas}"
 
 
 class Seance(models.Model):

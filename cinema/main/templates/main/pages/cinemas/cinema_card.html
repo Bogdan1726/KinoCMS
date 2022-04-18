@@ -1,0 +1,81 @@
+{% extends 'main/elements/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load index %}
+
+
+{% block title %}
+{{ block.super }}|
+{% endblock %}
+
+
+{% block style %}
+<style>
+    nav {
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+
+    .flex-column h3 {
+        color: black;
+    }
+
+    .seances {
+        background-color: #1e2125;
+        padding: 10px;
+        margin: 20px 0 20px 0;
+    }
+</style>
+{% endblock %}
+
+
+{% block navbar %}
+<div class="container">
+    {{ block.super }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!--    photo cinema-->
+    <img src="{{ cinema.photo.url }}" alt="logo" width="100%">
+    <!--    photo cinema end -->
+    <div class="row">
+        <div class="col-md-2" style="padding-top: 40px;">
+            <a href="https://avada-media.ua/">
+                <img src="{% static 'main/media/reklama3.jpg' %}"
+                     alt="reklama" width="100%" style="border: 2px solid #1c1f23;">
+            </a>
+        </div>
+        <div class="col-md-10" style="padding-top: 40px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>{{ cinema.title }}</h4>
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ cinema.logo.url }}" alt="logo" width="100%">
+                </div>
+                <div class="col-md-3">
+                    <div class="seances">
+                        <span class="badge rounded-pill bg-warning">3D</span>
+                        <span class="badge rounded-pill bg-primary">D-BOX</span>
+                        <span class="badge rounded-pill bg-info">DOLBY ATMOS</span>
+                        <span class="badge rounded-pill bg-success">VIP</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-top: 20px;">
+    {% include 'main/inc/_footer.html' %}
+</div>
+{% endblock %}
+
+
+{% block script %}
+{% endblock %}
+
+
+

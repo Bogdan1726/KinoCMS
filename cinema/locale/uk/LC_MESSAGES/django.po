@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-14 17:54+0300\n"
+"POT-Creation-Date: 2022-04-18 20:51+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +30,8 @@ msgid "Разработка сайтов"
 msgstr "Розробка сайтів"
 
 #: main/templates/main/inc/_footer.html:13 main/templates/main/inc/_nav.html:78
+#: main/templates/main/pages/poster/poster.html:28
+#: main/templates/main/pages/poster/soon.html:28
 msgid "Афиша"
 msgstr "Афіша"
 
@@ -96,6 +98,8 @@ msgid "Регистрация"
 msgstr "Реєстрація"
 
 #: main/templates/main/inc/_nav.html:84
+#: main/templates/main/pages/poster/poster.html:33
+#: main/templates/main/pages/poster/soon.html:33
 msgid "Скоро"
 msgstr "Скоро"
 
@@ -115,28 +119,31 @@ msgstr "Дитяча кімната"
 msgid "Новости и Акции"
 msgstr "Новини і Акції"
 
-#: main/templates/main/pages/home/index.html:57
+#: main/templates/main/pages/home/index.html:71
 msgid "Смотрите сегодня,"
 msgstr "Дивіться сьогодні,"
 
-#: main/templates/main/pages/home/index.html:74
+#: main/templates/main/pages/home/index.html:90
 msgid "Купить билет"
 msgstr "Купити квиток"
 
-#: main/templates/main/pages/home/index.html:80
+#: main/templates/main/pages/home/index.html:96
 #: main/templates/main/pages/movie_card.html:88
+#: main/templates/main/pages/schedule.html:146
 msgid "Нет сеансов"
 msgstr "Немає сеансів"
 
-#: main/templates/main/pages/home/index.html:89
+#: main/templates/main/pages/home/index.html:105
 msgid "Смотрите скоро"
 msgstr "Дивіться незабаром"
 
-#: main/templates/main/pages/home/index.html:105
+#: main/templates/main/pages/home/index.html:121
 msgid "C"
 msgstr "З"
 
-#: main/templates/main/pages/home/index.html:111
+#: main/templates/main/pages/home/index.html:127
+#: main/templates/main/pages/poster/poster.html:100
+#: main/templates/main/pages/poster/soon.html:100
 msgid "Нет фильмов"
 msgstr "Немає фільмів"
 
@@ -188,13 +195,53 @@ msgstr "117 хв."
 msgid "Кадры и постеры"
 msgstr "Кадри та постери"
 
+#: main/templates/main/pages/poster/poster.html:54
+msgid "Сейчас в кино"
+msgstr "Зараз у кіно"
+
+#: main/templates/main/pages/poster/poster.html:93
+#: main/templates/main/pages/poster/soon.html:93
+#: main/templates/main/pages/ticket_booking.html:494
+msgid "Купить"
+msgstr "Купити"
+
+#: main/templates/main/pages/schedule.html:73
+msgid "Кинотеатр"
+msgstr "Кінотеатри"
+
+#: main/templates/main/pages/schedule.html:83
+msgid "Дата"
+msgstr "Дата"
+
+#: main/templates/main/pages/schedule.html:95
+msgid "Фильм: все"
+msgstr "Фільм: всі"
+
+#: main/templates/main/pages/schedule.html:105
+msgid "Зал: все"
+msgstr "Зала: всі"
+
+#: main/templates/main/pages/schedule.html:118
+msgid "ВРЕМЯ"
+msgstr "ЧАС"
+
+#: main/templates/main/pages/schedule.html:119
+msgid "ФИЛЬМ"
+msgstr "ФІЛЬМ"
+
+#: main/templates/main/pages/schedule.html:120
 #: main/templates/main/pages/ticket_booking.html:162
 msgid "ЗАЛ"
 msgstr "ЗАЛА"
 
+#: main/templates/main/pages/schedule.html:121
 #: main/templates/main/pages/ticket_booking.html:165
 msgid "ЦЕНА В ГРН."
 msgstr "ЦІНА У ГРН."
+
+#: main/templates/main/pages/schedule.html:122
+msgid "БРОНИРОВАТЬ"
+msgstr "БРОНЮВАТИ"
 
 #: main/templates/main/pages/ticket_booking.html:168
 msgid "ЗАБРОНИРОВАНО"
@@ -225,13 +272,8 @@ msgstr ""
 "ПІВГОДИНИ ДО ПОЧАТКУ СЕАНСУ"
 
 #: main/templates/main/pages/ticket_booking.html:493
-
 msgid "Забронировать"
 msgstr "Забронювати"
-
-#: main/templates/main/pages/ticket_booking.html:494
-msgid "Купить"
-msgstr "Купити"
 
 #: main/templates/main/pages/ticket_booking.html:496
 msgid "Спасибо за покупку!"

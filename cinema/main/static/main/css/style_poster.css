@@ -1,4 +1,3 @@
-
 nav {
     border: 1px solid black;
     border-radius: 5px;
@@ -20,61 +19,38 @@ nav {
     border-color: #1e2125
 }
 
-/*card style */
-.card {
-    background-color: #1e2125;
-}
-
-.card img {
+/*type movie */
+.img-movies {
+    width: 100%;
     border-radius: 6px;
     transition: transform 0.25s;
 }
 
-
-.card:hover img {
+.img-movies:hover {
     transform: scale(1.1);
     cursor: pointer;
-}
-
-/*card style end */
-
-/*type movie */
-.image-container img {
-    width: 100%;
 }
 
 .image-container {
     width: 100%;
     position: relative;
     text-align: right;
+    padding-top: 10px;
 }
 
 .right-position {
     position: absolute;
-    top: 1%;
+    top: 5%;
     right: -5%;
 }
 
-.badge-warning {
-    color: #1f2d3d;
-    background-color: #ffc107
-}
-
-.badge-danger {
-    color: #fff;
-    background-color: #dc3545
-}
-
-.badge-info {
-    color: #fff;
-    background-color: #17a2b8;
-}
 
 .badge-pill {
-    padding-right: .6em;
-    padding-left: .6em;
-    border-radius: 10rem
+    padding-right: 0.6em;
+    padding-left: 0.6em;
+    border-radius: 10rem;
 }
+
 
 /*type movie end */
 
