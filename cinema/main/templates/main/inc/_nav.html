@@ -34,8 +34,8 @@
                 </div>
                 {% else %}
                 <div class="text-end">
-                    <a href="{% url 'login' %}" type="button" class="btn btn-outline-light me-2">{% trans "Логин" %}</a>
-                    <a href="{% url 'register' %}" type="button" class="btn btn-warning">{% trans "Регистрация" %}</a>
+                    <a href="{% url 'login' %}" type="button" class="btn btn-success">{% trans "Логин" %}</a>
+                    <a href="{% url 'register' %}" type="button" class="btn btn-secondary">{% trans "Регистрация" %}</a>
                 </div>
                 {% endif %}
 
@@ -87,7 +87,7 @@
                                     <a class="nav-link" href="{% url 'list_cinemas' %}">{% trans "Кинотеатры" %}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">{% trans "Акции" %}</a>
+                                    <a class="nav-link" href="{% url 'main_promotion'%}">{% trans "Акции" %}</a>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown"
@@ -95,7 +95,7 @@
                                         {% trans "О кинотеатре" %}
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                        <li><a class="dropdown-item" href="{% url 'news' %}">
+                                        <li><a class="dropdown-item" href="{% url 'main_news' %}">
                                             {% trans "Новости" %}
                                         </a>
                                         </li>

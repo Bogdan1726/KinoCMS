@@ -1,14 +1,12 @@
 import json
 from datetime import timedelta
-from itertools import chain
-
 from django.core import serializers
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.datetime_safe import datetime
 from django.views.generic import ListView, DetailView
 from cms.models import HomePageBanner, CarouselBanner, PromotionsPageBanner, BackgroundBanner, Movies, HomePage, Seance, \
-    Cinema, Halls, Images, Ticket, SeoBlock
+    Cinema, Halls, Images, Ticket, SeoBlock, Events
 
 
 # Create your views here.
@@ -52,6 +50,7 @@ class PosterPageView(ListView):
         context = super(PosterPageView, self).get_context_data()
         context['list_movies'] = self.model.objects.filter(date=today).select_related('movies').distinct('movies')
         context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=context['home_page_data'].seo_block_id).first()
         return context
 
 
@@ -69,6 +68,7 @@ class SoonPageView(ListView):
         context = super(SoonPageView, self).get_context_data()
         context['list_movie_soon'] = self.model.objects.filter(date_premier__gt=today).order_by('date_premier')
         context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=context['home_page_data'].seo_block_id).first()
         return context
 
 
@@ -87,6 +87,7 @@ class MovieCard(DetailView):
         context['cinemas'] = Cinema.objects.all()
         context['images'] = Images.objects.filter(gallery_id=self.object.gallery_id)
         context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=self.object.seo_block_id).first()
         return context
 
 
@@ -135,6 +136,8 @@ class TicketBookingView(DetailView):
         context['seance'] = Seance.objects.filter(id=self.kwargs.get('seance_id')).first()
         context['movie_image'] = Movies.objects.get(id=context['seance'].movies_id)
         context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=self.object.seo_block_id).first()
+
         return context
 
 
@@ -184,13 +187,16 @@ class ScheduleView(ListView):
 
     def get_context_data(self, **kwargs):
         today = datetime.now()
+        time = datetime.now().time()
         context = super(ScheduleView, self).get_context_data()
         context['today'] = today
         context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=context['home_page_data'].seo_block_id).first()
         context['week'] = [datetime.now() + timedelta(days=day) for day in range(7)]
         context['cinemas'] = Cinema.objects.all()
         context['movies'] = Movies.objects.all()
-        context['seances'] = Seance.objects.select_related('movies', 'halls').filter(date=today).order_by('time')
+        context['seances'] = Seance.objects.select_related('movies', 'halls').filter(
+            date=today, time__gt=time).order_by('time')
         return context
 
 
@@ -216,15 +222,18 @@ def serializers_queryset(queryset):
 
 def filter_seances(request):
     if request.is_ajax:
+        time = datetime.now().time()
         hall = request.GET.get('hall') or False
         type_3d = True if request.GET.get('3d') else False
         type_2d = True if request.GET.get('2d') else False
         type_imax = True if request.GET.get('imax') else False
         movie = request.GET.get('movie') or False
         cinema = request.GET.get('cinema') or False
-        date = request.GET.get('date') or datetime.now()
+        date = request.GET.get('date') or datetime.now().date()
         halls = Halls.objects.values('id', 'number').none()
         seances = Seance.objects.select_related('movies', 'halls').filter(date=date).order_by('time')
+        if date == datetime.now().date() or date == str(datetime.now().date()):
+            seances = seances.filter(time__gt=time)
         if type_3d:
             seances = seances.filter(movies__type_3d=True)
         if type_2d:
@@ -262,6 +271,8 @@ class CinemasPageView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CinemasPageView, self).get_context_data()
         context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=context['home_page_data'].seo_block_id).first()
+
         return context
 
 
@@ -270,7 +281,105 @@ class CinemasPageDetailView(DetailView):
     template_name = 'main/pages/cinemas/cinema_card.html'
     context_object_name = 'cinema'
 
+    def get_context_data(self, **kwargs):
+        halls_id = []
+        date = datetime.now()
+        context = super(CinemasPageDetailView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['halls'] = Halls.objects.filter(cinemas_id=self.object.id)
+        context['images'] = Images.objects.filter(gallery_id=self.object.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=self.object.seo_block_id).first()
+
+        for hall in context['halls']:
+            halls_id.append(hall.id)
+        context['seances'] = Seance.objects.select_related(
+            'movies', 'halls').filter(halls_id__in=halls_id, date=date).distinct('movies')[:5]
+        return context
+
+
+class HallPageDetailView(DetailView):
+    model = Halls
+    template_name = 'main/pages/cinemas/hall_card.html'
+    context_object_name = 'hall'
+
+    def get_context_data(self, **kwargs):
+        date = datetime.now()
+        context = super(HallPageDetailView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=self.object.seo_block_id).first()
+        context['images'] = Images.objects.filter(gallery_id=self.object.gallery_id)
+        context['seances'] = Seance.objects.select_related(
+            'movies', 'halls').filter(halls_id=self.object.id, date=date).distinct('movies')[:5]
+        return context
+
+
 # Cinemas end
+
+
+# Promotions
+
+class PromotionsPageView(ListView):
+    model = Events
+    template_name = 'main/pages/promotions/list_promotions.html'
+    context_object_name = 'promotions'
+
+    def get_queryset(self):
+        return self.model.objects.filter(type='promotions').order_by('date_published')
+
+    def get_context_data(self, **kwargs):
+        context = super(PromotionsPageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=context['home_page_data'].seo_block_id).first()
+        return context
+
+
+class PromotionsDetailView(DetailView):
+    model = Events
+    template_name = 'main/pages/promotions/card_promotion.html'
+    context_object_name = 'promotion'
+
+    def get_context_data(self, **kwargs):
+        context = super(PromotionsDetailView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['images'] = Images.objects.filter(gallery_id=self.object.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=self.object.seo_block_id).first()
+
+        return context
+
+
+# Promotions end
+
+# News
+
+class NewsPageView(ListView):
+    model = Events
+    template_name = 'main/pages/news/list_news.html'
+    context_object_name = 'news'
+
+    def get_queryset(self):
+        return self.model.objects.filter(type='news').order_by('date_published')
+
+    def get_context_data(self, **kwargs):
+        context = super(NewsPageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=context['home_page_data'].seo_block_id).first()
+        return context
+
+
+class NewsDetailView(DetailView):
+    model = Events
+    template_name = 'main/pages/news/card_news.html'
+    context_object_name = 'news'
+
+    def get_context_data(self, **kwargs):
+        context = super(NewsDetailView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['images'] = Images.objects.filter(gallery_id=self.object.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=self.object.seo_block_id).first()
+        return context
+
+
+# News end
 
 def get_about_cinema(request):
     return render(request, 'main/pages/about_cinema/about_cinema.html')

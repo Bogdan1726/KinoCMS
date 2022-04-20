@@ -5,7 +5,7 @@
 
 
 {% block title %}
-{{ block.super }}| {{ movie.title }}
+{{ block.super }}|Расписание
 {% endblock %}
 
 {% block style %}
@@ -161,9 +161,6 @@
     </div>
 
 
-
-
-
     <!--    table seances end -->
 </div>
 <div class="container" style="padding-top: 20px;">
@@ -183,13 +180,33 @@
         var halls = new Map();
         var checked_halls = new Map();
         var movie_id = localStorage.getItem('movie_id');
+        var cinema_id = localStorage.getItem('cinema_id')
+        var hall_id = localStorage.getItem('hall_id')
+        var hall__number = localStorage.getItem('hall_number')
         localStorage.removeItem('movie_id');
+        localStorage.removeItem('cinema_id');
+        localStorage.removeItem('hall_id');
+        localStorage.removeItem('hall_number');
+
+
+        if (cinema_id) {
+            cinema.set('cinema', cinema_id);
+            checked_halls.set('halls', 'null');
+            $("#select_cinema option[value=" + cinema_id + "]").prop('selected', true);
+        }
+
+        if (hall_id) {
+            halls.set('hall', hall_id);
+            $("#select_halls").append(new Option(hall__number, hall_id));
+            $("#select_halls option[value=" + hall_id + "]").prop('selected', true);
+        }
 
         if (movie_id) {
             movie.set('movie', movie_id);
-            filter_seances();
             $("#select-movies option[value=" + movie_id + "]").prop('selected', true);
         }
+        filter_seances();
+
 
         $(".form-check-input").change(function () {
             if ($(this).prop('checked')) {
@@ -211,8 +228,10 @@
             if (this.value !== 'default') {
                 cinema.set('cinema', this.value);
                 checked_halls.set('halls', 'null');
+                halls.delete('hall');
             } else {
                 cinema.delete('cinema');
+                halls.delete('hall');
             }
             $("#select_halls").find('option[value!="default"]').remove();
             filter_seances();
@@ -260,7 +279,6 @@
                 }
             })
         }
-
 
         function renderSelectHalls(halls) {
             if (checked_halls.get('halls') !== halls.id) {

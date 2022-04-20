@@ -38,8 +38,8 @@ class SeoBlock(models.Model):
     """
     objects = None
     url = models.URLField(verbose_name='url')
-    title_seo = models.CharField(max_length=30, verbose_name='Заголовок')
-    keywords = models.CharField(max_length=50, verbose_name='Ключевые слова')
+    title_seo = models.CharField(max_length=100, verbose_name='Заголовок')
+    keywords = models.CharField(max_length=100, verbose_name='Ключевые слова')
     description_seo = models.TextField(blank=True, default='', verbose_name='Описание')
 
     class Meta:
@@ -55,7 +55,7 @@ class Gallery(models.Model):
     Gallery model
     """
     objects = None
-    title = models.CharField(max_length=30, verbose_name='Заголовок')
+    title = models.CharField(max_length=100, verbose_name='Заголовок')
 
     def __str__(self):
         return f'{self.title}'
@@ -233,6 +233,7 @@ class Ticket(models.Model):
 
 
 class Events(models.Model):
+    objects = None
     TYPE_EVENTS = [
         ('news', 'Новость'),
         ('promotions', 'Акция'),

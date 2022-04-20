@@ -490,8 +490,14 @@
                 <p>{% trans "Стоимость услуги бронирования - 3 грн. за каждое место." %}</p>
                 <p>{% trans "ЗАБРОНИРОВАННЫЕ БИЛЕТЫ НУЖНО ВЫКУПАТЬ В КАССЕ КИНОТЕАТРА НЕ ПОЗДНЕЕ ЧЕМ ЗА ПОЛЧАСА ДО НАЧАЛА СЕАНСА" %}</p>
                 <div class="text-center" style="margin-bottom: 20px;">
+                    {% if request.user.is_authenticated %}
                     <a id="booking" class="btn btn-outline-dark" style="margin: 10px;">{% trans "Забронировать" %}</a>
                     <a id="buy" class="btn btn-outline-success">{% trans "Купить" %}</a>
+                    {% else %}
+                    <p>{% trans "Для покупки и бронирования билетов необходимо" %}
+                        <a href="{% url 'login' %}">авторизоваться</a>
+                    </p>
+                    {% endif %}
                     <div class="callout callout-success">
                         <h5>{% trans "Спасибо за покупку!" %}</h5>
                     </div>

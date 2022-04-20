@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-18 20:51+0300\n"
+"POT-Creation-Date: 2022-04-19 23:44+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,6 +119,42 @@ msgstr "Дитяча кімната"
 msgid "Новости и Акции"
 msgstr "Новини і Акції"
 
+#: main/templates/main/pages/cinemas/cinema_card.html:78
+msgid "Количество залов"
+msgstr "Кількість залів"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:83
+#: main/templates/main/pages/cinemas/hall_card.html:103
+msgid "Зал"
+msgstr "ЗАЛА"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:88
+#: main/templates/main/pages/cinemas/hall_card.html:81
+msgid "Смотрите сегодня:"
+msgstr "Дивіться сьогодні:"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:104
+#: main/templates/main/pages/cinemas/hall_card.html:98
+msgid "Расписание всех сеансов"
+msgstr "Розклад сеансів кінотеатру"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:129
+msgid "Условия"
+msgstr "Умови"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:135
+#: main/templates/main/pages/cinemas/hall_card.html:120
+msgid "ФОТОГАЛЕРЕЯ"
+msgstr "ФОТОГАЛЕРЕЯ"
+
+#: main/templates/main/pages/cinemas/hall_card.html:117
+msgid "Карта зала"
+msgstr "Карта зали"
+
+#: main/templates/main/pages/cinemas/list_cinemas.html:90
+msgid "Наши кинотеатры"
+msgstr "Наші кінотеатри"
+
 #: main/templates/main/pages/home/index.html:71
 msgid "Смотрите сегодня,"
 msgstr "Дивіться сьогодні,"
@@ -138,6 +174,7 @@ msgid "Смотрите скоро"
 msgstr "Дивіться незабаром"
 
 #: main/templates/main/pages/home/index.html:121
+#: main/templates/main/pages/poster/soon.html:54
 msgid "C"
 msgstr "З"
 

@@ -25,13 +25,25 @@ urlpatterns = [
     # cinemas
     path('cinemas/', CinemasPageView.as_view(), name='list_cinemas'),
     path('cinemas/<int:pk>/', CinemasPageDetailView.as_view(), name='cinema_card'),
+    path('cinemas/halls/<int:pk>/', HallPageDetailView.as_view(), name='hall_card'),
     # cinemas end
 
-    path('about_cinema/', get_about_cinema, name='about_cinema'),
+    # promotions
+    path('promotions/', PromotionsPageView.as_view(), name='main_promotion'),
+    path('promotions/<int:pk>/', PromotionsDetailView.as_view(), name='promotion_card'),
+    # promotions end
+
+    # about cinema
+    path('news/', NewsPageView.as_view(), name='main_news'),
+    path('news/<int:pk>/', NewsDetailView.as_view(), name='news_card'),
+
+    # about cinema end
+
+
     path('contacts/', get_contacts, name='contacts'),
     path('cafe_bar/', get_cafe_bar, name='cafe_bar'),
     path('children_room/', get_children_room, name='children_room'),
-    path('news/', get_news, name='news'),
+    path('news/', get_news, name='main_news'),
     path('vip/', get_vip, name='vip'),
     path('advertising/', get_advertising, name='advertising'),
     path('mobile_application/', get_mobile_application, name='mobile'),

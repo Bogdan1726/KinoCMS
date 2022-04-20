@@ -208,9 +208,13 @@ class CmsEventsForm(forms.ModelForm):
             'is_published': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
             'title': forms.TextInput(attrs={'class': 'form-control',
                                             'placeholder': 'Название'}),
+            'title_uk': forms.TextInput(attrs={'class': 'form-control',
+                                               'placeholder': 'Назва'}),
             'date_published': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
                                                  'placeholder': 'Описание'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                    'placeholder': 'Опис'}),
             'image': forms.FileInput(attrs={'type': 'file',
                                             'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"}),
 
