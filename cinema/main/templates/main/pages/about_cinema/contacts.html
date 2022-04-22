@@ -135,7 +135,12 @@
 {% block script %}
 
 <script>
+    s = document.createElement("script")
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + '{{ api_key }}' + "&callback=initMap&v=weekly"
+    s.defer
+    document.head.appendChild(s);
     var coordinates = []
+
 
     $(".maps").each(function (index) {
         coordinates[index] = $(this).attr("value").split(",")
@@ -164,12 +169,9 @@
 
     window.initMap = initMap;
 
-</script>
-<script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa9Q9Tr6t2PzsBzLPnBzCV9BcaQoQIdBU&callback=initMap&v=weekly"
-        defer>
 
 </script>
+
 
 {% endblock %}
 

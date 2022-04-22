@@ -1,5 +1,7 @@
 import json
 from datetime import timedelta
+
+from django.conf import settings
 from django.core import serializers
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -396,6 +398,7 @@ class ContactsPageView(ListView):
         context = super(ContactsPageView, self).get_context_data()
         context['home_page_data'] = HomePage.objects.all().first()
         context['seo_block'] = SeoBlock.objects.filter(id=objects.seo_block_id).first()
+        context['api_key'] = settings.API_KEY
         return context
 
 

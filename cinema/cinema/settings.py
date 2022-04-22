@@ -208,3 +208,6 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSl = True
 
+
+# Google Api
+API_KEY = os.getenv('GOOGLE_API_KEY')
