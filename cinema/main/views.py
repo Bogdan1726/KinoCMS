@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.datetime_safe import datetime
 from django.views.generic import ListView, DetailView
 from cms.models import HomePageBanner, CarouselBanner, PromotionsPageBanner, BackgroundBanner, Movies, HomePage, Seance, \
-    Cinema, Halls, Images, Ticket, SeoBlock, Events
+    Cinema, Halls, Images, Ticket, SeoBlock, Events, ContactsPage, Page
 
 
 # Create your views here.
@@ -381,33 +381,112 @@ class NewsDetailView(DetailView):
 
 # News end
 
-def get_about_cinema(request):
-    return render(request, 'main/pages/about_cinema/about_cinema.html')
+
+# About cinema
+class ContactsPageView(ListView):
+    model = ContactsPage
+    template_name = 'main/pages/about_cinema/contacts.html'
+    context_object_name = 'contacts'
+
+    def get_queryset(self):
+        return self.model.objects.filter(active=True).order_by('id')
+
+    def get_context_data(self, **kwargs):
+        objects = get_object_or_404(ContactsPage, id=1)
+        context = super(ContactsPageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['seo_block'] = SeoBlock.objects.filter(id=objects.seo_block_id).first()
+        return context
 
 
-def get_contacts(request):
-    return render(request, 'main/pages/about_cinema/contacts.html')
+class AboutCinemaPageView(ListView):
+    model = Page
+    template_name = 'main/pages/about_cinema/about_cinema.html'
+    context_object_name = 'cinema'
+
+    def get_queryset(self):
+        return self.model.objects.filter(is_base=True, id=2).first()
+
+    def get_context_data(self, **kwargs):
+        objects = get_object_or_404(Page, id=2, is_base=True)
+        context = super(AboutCinemaPageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['images'] = Images.objects.filter(gallery_id=objects.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=objects.seo_block_id).first()
+        return context
 
 
-def get_cafe_bar(request):
-    return render(request, 'main/pages/about_cinema/cafe_bar.html')
+class ChildrenRoomPageView(ListView):
+    model = Page
+    template_name = 'main/pages/about_cinema/children_room.html'
+    context_object_name = 'children_room'
+
+    def get_queryset(self):
+        return self.model.objects.filter(is_base=True, id=6).first()
+
+    def get_context_data(self, **kwargs):
+        objects = get_object_or_404(Page, id=6, is_base=True)
+        context = super(ChildrenRoomPageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['images'] = Images.objects.filter(gallery_id=objects.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=objects.seo_block_id).first()
+        return context
 
 
-def get_children_room(request):
-    return render(request, 'main/pages/about_cinema/children_room.html')
+class VipHallPageView(ListView):
+    model = Page
+    template_name = 'main/pages/about_cinema/vip.html'
+    context_object_name = 'vip'
+
+    def get_queryset(self):
+        return self.model.objects.filter(is_base=True, id=4).first()
+
+    def get_context_data(self, **kwargs):
+        objects = get_object_or_404(Page, id=4, is_base=True)
+        context = super(VipHallPageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['images'] = Images.objects.filter(gallery_id=objects.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=objects.seo_block_id).first()
+        return context
 
 
-def get_news(request):
-    return render(request, 'main/pages/about_cinema/news.html')
+class CafePageView(ListView):
+    model = Page
+    template_name = 'main/pages/about_cinema/cafe_bar.html'
+    context_object_name = 'cafe'
+
+    def get_queryset(self):
+        return self.model.objects.filter(is_base=True, id=3).first()
+
+    def get_context_data(self, **kwargs):
+        objects = get_object_or_404(Page, id=3, is_base=True)
+        context = super(CafePageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['images'] = Images.objects.filter(gallery_id=objects.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=objects.seo_block_id).first()
+        return context
 
 
-def get_vip(request):
-    return render(request, 'main/pages/about_cinema/vip.html')
+class AdvertisingPageView(ListView):
+    model = Page
+    template_name = 'main/pages/about_cinema/advertising.html'
+    context_object_name = 'advertising'
+
+    def get_queryset(self):
+        return self.model.objects.filter(is_base=True, id=5).first()
+
+    def get_context_data(self, **kwargs):
+        objects = get_object_or_404(Page, id=5, is_base=True)
+        context = super(AdvertisingPageView, self).get_context_data()
+        context['home_page_data'] = HomePage.objects.all().first()
+        context['images'] = Images.objects.filter(gallery_id=objects.gallery_id)
+        context['seo_block'] = SeoBlock.objects.filter(id=objects.seo_block_id).first()
+        return context
 
 
-def get_advertising(request):
-    return render(request, 'main/pages/about_cinema/advertising.html')
+class MobileApplicationPageView(ListView):
 
+    def get(self, request, *args, **kwargs):
+        return render(request, 'main/pages/about_cinema/mobile_application.html')
 
-def get_mobile_application(request):
-    return render(request, 'main/pages/about_cinema/mobile_application.html')
+# About cinema end

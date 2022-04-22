@@ -281,9 +281,13 @@ class CmsPageUpdateForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control',
                                             'placeholder': 'Название'}),
+            'title_uk': forms.TextInput(attrs={'class': 'form-control',
+                                               'placeholder': 'Назва'}),
             'active': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
                                                  'placeholder': 'Описание'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
+                                                    'placeholder': 'Опис'}),
             'image': forms.FileInput(attrs={'type': 'file',
                                             'onchange': "document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])"})
 
@@ -297,14 +301,18 @@ class CmsContactsPageUpdateForm(forms.ModelForm):
 
     class Meta:
         model = ContactsPage
-        fields = ['title', 'address', 'active', 'coordinates', 'logo']
+        fields = ['title', 'address', 'active', 'coordinates', 'logo', 'title_uk', 'address_uk']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control',
                                             'placeholder': 'Название кинотеатра'}),
+            'title_uk': forms.TextInput(attrs={'class': 'form-control uk',
+                                               'placeholder': 'Назва кинотеатру'}),
             'active': forms.CheckboxInput(attrs={'class': 'custom-control-input'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
-                                             'placeholder': 'Адресс кинотеатра'}),
+                                             'placeholder': 'Адрес кинотеатра'}),
+            'address_uk': forms.Textarea(attrs={'class': 'form-control uk', 'rows': 3,
+                                                'placeholder': 'Адреса кінотеатру'}),
             'coordinates': forms.TextInput(attrs={'class': 'form-control',
                                                   'placeholder': 'Координаты для карты'}),
             'logo': forms.FileInput(attrs={'type': 'file'})

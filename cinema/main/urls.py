@@ -33,19 +33,20 @@ urlpatterns = [
     path('promotions/<int:pk>/', PromotionsDetailView.as_view(), name='promotion_card'),
     # promotions end
 
-    # about cinema
+    # news
     path('news/', NewsPageView.as_view(), name='main_news'),
     path('news/<int:pk>/', NewsDetailView.as_view(), name='news_card'),
+    # news end
 
+    # about cinema
+    path('about_cinema/', AboutCinemaPageView.as_view(), name='about_cinema'),
+    path('about_cinema/contacts/', ContactsPageView.as_view(), name='main_contacts'),
+    path('about_cinema/children_room/', ChildrenRoomPageView.as_view(), name='children_room'),
+    path('about_cinema/vip/', VipHallPageView.as_view(), name='vip'),
+    path('about_cinema/cafe_bar/', CafePageView.as_view(), name='cafe_bar'),
+    path('about_cinema/advertising/', AdvertisingPageView.as_view(), name='advertising'),
+    path('about_cinema/mobile_application/', MobileApplicationPageView.as_view(), name='mobile'),
     # about cinema end
 
-
-    path('contacts/', get_contacts, name='contacts'),
-    path('cafe_bar/', get_cafe_bar, name='cafe_bar'),
-    path('children_room/', get_children_room, name='children_room'),
-    path('news/', get_news, name='main_news'),
-    path('vip/', get_vip, name='vip'),
-    path('advertising/', get_advertising, name='advertising'),
-    path('mobile_application/', get_mobile_application, name='mobile'),
 
 ]

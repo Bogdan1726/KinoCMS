@@ -95,6 +95,10 @@
                                         {% trans "О кинотеатре" %}
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                        <li><a class="dropdown-item" href="{% url 'about_cinema' %}">
+                                            {% trans "О кинотеатре" %}
+                                        </a>
+                                        </li>
                                         <li><a class="dropdown-item" href="{% url 'main_news' %}">
                                             {% trans "Новости" %}
                                         </a>
@@ -114,7 +118,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{% url 'contacts' %}">
+                                            <a class="dropdown-item" href="{% url 'main_contacts' %}">
                                                 {% trans "Контакты" %}
                                             </a>
                                         </li>
@@ -145,7 +149,7 @@
                         {% get_language_info_list for LANGUAGES as languages %}
                         {% for language in languages %}
                         <option value="{{ language.code }}"
-                        {% if language.code == LANGUAGE_CODE %}
+                                {% if language.code == LANGUAGE_CODE %}
                                 selected
                                 {% endif %}>
                             {{ language.name.local }}

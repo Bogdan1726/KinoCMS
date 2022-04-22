@@ -8,12 +8,12 @@
             <label class="custom-control-label" for="{{ form.active.id_for_label }}"></label>
         </div>
         <div class="btn-group">
-            <button id="ru-{{ form.prefix }}" value="{{ form.prefix }}"
-                    onclick="russian(event)" type="button" class="btn btn-default"
+            <button id="ru" value="{{ form.prefix }}"
+                    onclick="russian()" type="button" class="btn btn-default"
                     style="background-color: #ddd">Русский
             </button>
-            <button id="uk-{{ form.prefix }}" value="{{ form.prefix }}"
-                    onclick="ukraine(event)" type="button" class="btn btn-default">
+            <button id="uk" value="{{ form.prefix }}"
+                    onclick="ukraine()" type="button" class="btn btn-default">
                 Украинский
             </button>
         </div>

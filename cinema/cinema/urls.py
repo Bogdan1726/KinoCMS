@@ -8,11 +8,12 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/', include('user.urls')),
     path('cms/', include('cms.urls')),
 ] + i18n_patterns(
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include('main.urls')),
+    path('user/', include('user.urls')),
+
 )
 
 
