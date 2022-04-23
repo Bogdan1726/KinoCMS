@@ -7,6 +7,19 @@
 
 
 {% block style %}
+<style>
+    .btn-group {
+
+    }
+
+    @media (max-width: 380px) {
+        .btn-group {
+            padding: 20px;
+        }
+    }
+
+
+</style>
 <link href="{% static 'cms/css/contacts_page.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -14,6 +27,9 @@
 {% block content %}
 <div class="card-body">
     {% include 'cms/inc/_messages.html' %}
+    <div class="callout callout-danger" style="display: none;">
+        <p>Заполните все мультиязычные поля</p>
+    </div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.management_form }}
@@ -66,7 +82,7 @@
                              height="100%">
                         {% endif %}
                     </div>
-                    <div class="col-sm-4 center">
+                    <div class="col-sm-6 center">
                         <a class="btn btn-outline-success btn-file"
                            id="{{ form.prefix }}"
                            onchange="load_logo(event, this)"
@@ -190,7 +206,11 @@
             </div>
         </div>
         <div style="text-align:center">
-            <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
+            <button id="sub"
+                    onclick="russian(event)"
+                    type="submit"
+                    class="btn btn-outline-dark">Сохранить
+            </button>
             <a href="{% url 'pages' %}" class="btn btn-outline-dark">Назад</a>
         </div>
     </form>
@@ -199,38 +219,7 @@
 
 
 {% block script %}
-<script>
-    $(".uk").css('display', 'none')
-
-    function russian(event) {
-        const index = event.target.value;
-        $("#ru-" + index).removeAttr().css('background-color', '#ddd');
-        $('#uk-' + index).css('background-color', 'white');
-        $('#title-' + index).text('Название кинотеатра');
-        $('#address-' + index).text('Адресc');
-        $("#id_" + index + "-title_uk").css('display', 'none')
-        $("#id_" + index + "-address_uk").css('display', 'none')
-        $("#id_" + index + "-title").css('display', 'block')
-        $("#id_" + index + "-address").css('display', 'block')
-
-
-    }
-
-    function ukraine(event) {
-        const index = event.target.value;
-        $('#ru-' + index).css('background-color', 'white');
-        $('#uk-' + index).css('background-color', '#ddd');
-        $('#title-' + index).text('Назва кінотеатру');
-        $('#address-' + index).text('Адреса');
-        $("#id_" + index + "-title_uk").css('display', 'block')
-        $("#id_" + index + "-address_uk").css('display', 'block')
-        $("#id_" + index + "-title").css('display', 'none')
-        $("#id_" + index + "-address").css('display', 'none')
-
-
-    }
-</script>
-<!--<script src="{% static 'cms/js/language_tabs.js' %}"></script>-->
+<script src="{% static 'cms/js/language_tabs.js' %}"></script>
 <script src="{% static 'cms/js/contacts_dynamic_formset.js' %}"></script>
 {% endblock %}
 

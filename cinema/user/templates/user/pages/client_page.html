@@ -1,4 +1,6 @@
 {% extends 'user/elements/base_user.html' %}
+{% load i18n %}
+
 
 {% block title %}
 {{ block.super }}|Страница клиента
@@ -20,14 +22,14 @@
 {% block content %}
 <div class="container">
     <div class="client-container">
-        <h2>Страница клиента</h2>
+        <h2>{% trans "Страница клиента" %}</h2>
         <form class="client" method="post" action="{% url 'user' %}">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Имя</label>
+                            <label>{% trans "Имя" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.first_name }}
@@ -35,7 +37,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Фамилия</label>
+                            <label>{% trans "Фамилия" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.last_name }}
@@ -43,7 +45,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Псевдоним</label>
+                            <label>{% trans "Псевдоним" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.username }}
@@ -59,7 +61,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Адресс</label>
+                            <label>{% trans "Адресс" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.address }}
@@ -67,7 +69,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Пароль</label>
+                            <label>{% trans "Пароль" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.new_password1 }}
@@ -75,7 +77,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Номер карты</label>
+                            <label>{% trans "Номер карты" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.number_card }}
@@ -88,7 +90,7 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Язык</label>
+                            <label>{% trans "Язык" %}</label>
                         </div>
                         <div class="col-md-8">
                             {% for language in form.language %}
@@ -100,7 +102,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Пол</label>
+                            <label>{% trans "Пол" %}</label>
                         </div>
                         <div class="col-md-8">
                             {% for gender in form.gender %}
@@ -112,7 +114,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Телефон</label>
+                            <label>{% trans "Телефон" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.phone_number }}
@@ -123,7 +125,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Дата рождения</label>
+                            <label>{% trans "Дата рождения" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.date_of_birth }}
@@ -134,7 +136,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Город</label>
+                            <label>{% trans "Город" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.town }}
@@ -142,7 +144,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Повторить пароль</label>
+                            <label>{% trans "Повторить пароль" %}</label>
                         </div>
                         <div class="col-md-8">
                             {{ form.new_password2 }}
@@ -153,7 +155,7 @@
                     </div>
                 </div>
                 <div class="py-2" style="text-align:center;">
-                    <button type="submit" class="btn btn-outline-dark">Сохранить</button>
+                    <button type="submit" class="btn btn-outline-dark">{% trans "Сохранить" %}</button>
                 </div>
             </div>
         </form>

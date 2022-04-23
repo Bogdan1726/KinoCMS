@@ -7,12 +7,28 @@
 
 
 {% block style %}
+<style>
+    .btn-group {
+
+    }
+
+    @media (max-width: 380px) {
+        .btn-group {
+            padding: 20px;
+        }
+    }
+
+
+</style>
 <link href="{% static 'cms/css/other_page.css' %}" rel="stylesheet">
 {% endblock %}
 
 
 {% block content %}
 {% include 'cms/inc/_messages.html' %}
+<div class="callout callout-danger" style="display: none;">
+    <p>Заполните все мультиязычные поля</p>
+</div>
 <div class="card">
     <div class="card-body">
         <form method="post" enctype="multipart/form-data">
@@ -38,13 +54,15 @@
                     </span>
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Главная картинка</label>
-                <div class="col-sm-4" style="margin-bottom: 10px;">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+                <div class="col">
+                    <label class="col-form-label">Главная картинка</label>
+                </div>
+                <div class="col" style="margin-bottom: 10px;">
                     <img id="logo" src="{{ form.instance.image.url }}" alt="logo" width="100%"
                          height="100%">
                 </div>
-                <div class="col-sm-4 center">
+                <div class="col center">
                     <a class="btn btn-outline-success btn-file" style="margin-right: 10px;">Загрузить
                         {{ form.image }}
                         <span style="color: red;">
@@ -61,18 +79,17 @@
             <label>
                 Галерея картинок
             </label>
-
-            <div class="form-group row" id="formset">
-                <div class="col-sm-2 center">
+            <div class="can-delete-list"></div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-6 py-4" id="formset">
+                <div class="col center">
                     <label class="col-form-label">Размер 1000x190</label>
                 </div>
-                <div class="col-sm-2 center">
+                <div class="col center">
                     <a id="add-image" class="btn btn-outline-dark">Добавить</a>
                 </div>
                 {{ gallery_formset.management_form }}
-                <div class="can-delete-list"></div>
                 {% for form in gallery_formset %}
-                <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ form.prefix }}">
+                <div class="col" style="padding-bottom: 10px;" id="{{ form.prefix }}">
                     <div class="text-right">
                         <img src="/static/cms/media/del.jpg"
                              alt="del" width="20px;" height="20px;"
@@ -101,7 +118,7 @@
                 </div>
                 {% endfor %}
                 <div class="empty_form" style="display: none;">
-                    <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ gallery_formset.empty_form.prefix }}">
+                    <div class="col" style="padding-bottom: 10px;" id="{{ gallery_formset.empty_form.prefix }}">
                         <div class="text-right">
                             <img src="/static/cms/media/del.jpg"
                                  alt="del" width="20px;" height="20px;"
@@ -134,7 +151,7 @@
             </div>
             <!--            gallery formset end -->
             <!--            seo block -->
-            <div class="row">
+            <div class="row" style="padding-top: 20px;">
                 <div class="col-md-3">
                     <label>
                         SEO блок:
@@ -177,7 +194,11 @@
             </div>
             <!--            seo_block end -->
             <div style="text-align:center">
-                <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
+                <button id="sub"
+                        onclick="russian()"
+                        type="submit"
+                        class="btn btn-outline-dark">Сохранить
+                </button>
                 <a href="{% url 'pages' %}" class="btn btn-outline-dark">Назад</a>
             </div>
         </form>

@@ -15,3 +15,14 @@ function ukraine() {
     $("#id_description_uk").css('display', 'block');
     $("#id_description").css('display', 'none');
 }
+
+$('form').submit(function () {
+    if ($("#id_description_uk").val().length < 1) {
+        $(".callout").css('display', 'block');
+        $('body,html').animate({scrollTop: 0}, 400);
+        setTimeout(function () {
+            $(".callout").css('display', 'none');
+        }, 4000)
+        return false;
+    }
+})

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 23:44+0300\n"
+"POT-Creation-Date: 2022-04-23 18:36+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,15 @@ msgstr ""
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: main/templates/main/inc/_footer.html:6 main/templates/main/inc/_nav.html:113
+#: cinema/settings.py:164
+msgid "Russian"
+msgstr ""
+
+#: cinema/settings.py:165
+msgid "Ukrainian"
+msgstr ""
+
+#: main/templates/main/inc/_footer.html:6 main/templates/main/inc/_nav.html:117
 msgid "Мобильное приложение"
 msgstr "Мобільний додаток"
 
@@ -52,15 +60,18 @@ msgid "Акции"
 msgstr "Акції"
 
 #: main/templates/main/inc/_footer.html:22 main/templates/main/inc/_nav.html:95
+#: main/templates/main/inc/_nav.html:99
 msgid "О кинотеатре"
 msgstr "Про кінотеатр"
 
-#: main/templates/main/inc/_footer.html:24 main/templates/main/inc/_nav.html:99
+#: main/templates/main/inc/_footer.html:24
+#: main/templates/main/inc/_nav.html:103
+#: main/templates/main/pages/news/list_news.html:105
 msgid "Новости"
 msgstr "Новини"
 
 #: main/templates/main/inc/_footer.html:25
-#: main/templates/main/inc/_nav.html:104
+#: main/templates/main/inc/_nav.html:108
 msgid "Реклама"
 msgstr "Реклама"
 
@@ -69,7 +80,8 @@ msgid "Кафе-Бар"
 msgstr "Кафе-бар"
 
 #: main/templates/main/inc/_footer.html:27
-#: main/templates/main/inc/_nav.html:118
+#: main/templates/main/inc/_nav.html:122
+#: main/templates/main/pages/about_cinema/contacts.html:91
 msgid "Контакты"
 msgstr "Контакти"
 
@@ -103,21 +115,49 @@ msgstr "Реєстрація"
 msgid "Скоро"
 msgstr "Скоро"
 
-#: main/templates/main/inc/_nav.html:108
+#: main/templates/main/inc/_nav.html:112
 msgid "Кафе"
 msgstr "Кафе"
 
-#: main/templates/main/inc/_nav.html:123
+#: main/templates/main/inc/_nav.html:127
 msgid "VIP-зал"
 msgstr "VIP-зал"
 
-#: main/templates/main/inc/_nav.html:128
+#: main/templates/main/inc/_nav.html:132
 msgid "Детская комната"
 msgstr "Дитяча кімната"
 
 #: main/templates/main/inc/carousel_news_and_promotion.html:3
 msgid "Новости и Акции"
 msgstr "Новини і Акції"
+
+#: main/templates/main/pages/about_cinema/about_cinema.html:55
+#: main/templates/main/pages/about_cinema/advertising.html:55
+#: main/templates/main/pages/about_cinema/cafe_bar.html:55
+#: main/templates/main/pages/about_cinema/children_room.html:55
+#: main/templates/main/pages/about_cinema/mobile_application.html:62
+#: main/templates/main/pages/about_cinema/vip.html:55
+#: main/templates/main/pages/cinemas/cinema_card.html:135
+#: main/templates/main/pages/cinemas/hall_card.html:120
+msgid "ФОТОГАЛЕРЕЯ"
+msgstr "ФОТОГАЛЕРЕЯ"
+
+#: main/templates/main/pages/about_cinema/mobile_application.html:53
+msgid "Мобильное приложения"
+msgstr "Мобільний додаток"
+
+#: main/templates/main/pages/about_cinema/news.html:105
+#: main/templates/main/pages/promotions/list_promotions.html:105
+msgid "Акции и скидки"
+msgstr "Акції та знижки"
+
+#: main/templates/main/pages/about_cinema/news.html:119
+#: main/templates/main/pages/news/card_news.html:108
+#: main/templates/main/pages/news/list_news.html:119
+#: main/templates/main/pages/promotions/card_promotion.html:108
+#: main/templates/main/pages/promotions/list_promotions.html:119
+msgid "Планета Кино"
+msgstr "Планета Кіно"
 
 #: main/templates/main/pages/cinemas/cinema_card.html:78
 msgid "Количество залов"
@@ -141,11 +181,6 @@ msgstr "Розклад сеансів кінотеатру"
 #: main/templates/main/pages/cinemas/cinema_card.html:129
 msgid "Условия"
 msgstr "Умови"
-
-#: main/templates/main/pages/cinemas/cinema_card.html:135
-#: main/templates/main/pages/cinemas/hall_card.html:120
-msgid "ФОТОГАЛЕРЕЯ"
-msgstr "ФОТОГАЛЕРЕЯ"
 
 #: main/templates/main/pages/cinemas/hall_card.html:117
 msgid "Карта зала"
@@ -238,7 +273,7 @@ msgstr "Зараз у кіно"
 
 #: main/templates/main/pages/poster/poster.html:93
 #: main/templates/main/pages/poster/soon.html:93
-#: main/templates/main/pages/ticket_booking.html:494
+#: main/templates/main/pages/ticket_booking.html:495
 msgid "Купить"
 msgstr "Купити"
 
@@ -308,13 +343,141 @@ msgstr ""
 "ЗАБРОНЬОВАНІ КВИТКИ ПОТРІБНО ВИКУПАТИ У КАСІ КІНОТЕАТРУ НЕ ПІЗНІШЕ НІЖ ЗА "
 "ПІВГОДИНИ ДО ПОЧАТКУ СЕАНСУ"
 
-#: main/templates/main/pages/ticket_booking.html:493
+#: main/templates/main/pages/ticket_booking.html:494
 msgid "Забронировать"
 msgstr "Забронювати"
 
-#: main/templates/main/pages/ticket_booking.html:496
+#: main/templates/main/pages/ticket_booking.html:497
+msgid "Для покупки и бронирования билетов необходимо"
+msgstr "Для покупки та бронювання квитків необхідно"
+
+#: main/templates/main/pages/ticket_booking.html:502
 msgid "Спасибо за покупку!"
 msgstr "Дякую за покупку!"
+
+#: user/forms.py:17 user/forms.py:25
+msgid "Password"
+msgstr "Пароль"
+
+#: user/forms.py:29
+msgid "Password confirmation"
+msgstr "Підтвердження паролю"
+
+#: user/forms.py:63
+msgid "The two password fields didn’t match."
+msgstr "Два поля пароля не збігаються."
+
+#: user/forms.py:64
+msgid "Дата рождения не может быть позже текущей даты"
+msgstr "Дата народження не може бути пізніше поточної дати"
+
+#: user/forms.py:65
+msgid "Неверный формат номера телефона"
+msgstr "Невірний формат номера телефону"
+
+#: user/forms.py:66
+msgid "Номер карты неверного формата"
+msgstr "Номер картки невірного формату"
+
+#: user/forms.py:67
+msgid "Этот номер телефона уже использовался для регистрации."
+msgstr "Цей номер телефону вже використовувався для реєстрації."
+
+#: user/forms.py:71
+msgid "New password"
+msgstr "Новий пароль"
+
+#: user/forms.py:76
+msgid "New password confirmation"
+msgstr "Підтвердження нового пароля"
+
+#: user/forms.py:101
+msgid "Номер вашей карты"
+msgstr "Номер вашої картки"
+
+#: user/models.py:18
+msgid "Мужской"
+msgstr "Чоловічий"
+
+#: user/models.py:19
+msgid "Женский"
+msgstr "Жіночий"
+
+#: user/models.py:49
+msgid "user"
+msgstr "користувач"
+
+#: user/models.py:50
+msgid "users"
+msgstr "користувачі"
+
+#: user/templates/user/pages/client_page.html:25
+msgid "Страница клиента"
+msgstr "Сторінка клієнта"
+
+#: user/templates/user/pages/client_page.html:32
+msgid "Имя"
+msgstr "Ім'я"
+
+#: user/templates/user/pages/client_page.html:40
+msgid "Фамилия"
+msgstr "Прізвище"
+
+#: user/templates/user/pages/client_page.html:48
+msgid "Псевдоним"
+msgstr "Псевдонім"
+
+#: user/templates/user/pages/client_page.html:64
+msgid "Адресс"
+msgstr "Адреса"
+
+#: user/templates/user/pages/client_page.html:72
+msgid "Пароль"
+msgstr "Пароль"
+
+#: user/templates/user/pages/client_page.html:80
+msgid "Номер карты"
+msgstr "Номер картки"
+
+#: user/templates/user/pages/client_page.html:93
+msgid "Язык"
+msgstr "Мова"
+
+#: user/templates/user/pages/client_page.html:105
+msgid "Пол"
+msgstr "Стать"
+
+#: user/templates/user/pages/client_page.html:117
+msgid "Телефон"
+msgstr "Телефон"
+
+#: user/templates/user/pages/client_page.html:128
+msgid "Дата рождения"
+msgstr "Дата народження"
+
+#: user/templates/user/pages/client_page.html:139
+msgid "Город"
+msgstr "Місто"
+
+#: user/templates/user/pages/client_page.html:147
+msgid "Повторить пароль"
+msgstr "Повторити пароль"
+
+#: user/templates/user/pages/client_page.html:158
+msgid "Сохранить"
+msgstr "Зберегти"
+
+#: user/views.py:45
+msgid "Вы успешно зарегистрированы можете авторизоваться!"
+msgstr "Ви успішно зареєстровані можете авторизуватись!"
+
+#: user/views.py:49 user/views.py:78
+msgid "Исправьте ошибки и попробуйте снова"
+msgstr "Виправте помилки та спробуйте знову"
+
+#: user/views.py:74
+msgid "Данные обновлены"
+msgstr "Дані оновлено"
 
 #~ msgid "Контекстная реклама"
 #~ msgstr "Контекстна реклама"

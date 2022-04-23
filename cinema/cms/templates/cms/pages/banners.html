@@ -37,14 +37,14 @@
 
             <!--            formset-->
             <label class="col-form-label">Размер 1000x190</label>
-            <div class="form-group row" id="formset">
-                <div class="col-sm-2 center">
+            <div class="can-delete-list"></div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-6 py-4" id="formset">
+                <div class="col center">
                     <a id="add-image" class="btn btn-outline-dark">Добавить</a>
                 </div>
                 {{ home_page_banner.management_form }}
-                <div class="can-delete-list"></div>
                 {% for form in home_page_banner %}
-                <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ form.prefix }}">
+                <div class="col" style="padding-bottom: 10px;" id="{{ form.prefix }}">
                     <div class="text-right">
                         <img src="/static/cms/media/del.jpg"
                              alt="del" width="20px;" height="20px;"
@@ -81,16 +81,18 @@
                         <label class="col-form-label">Url:</label>
                         <div class="col-sm-12" style="padding-bottom: 10px;">
                             {{ form.url }}
+                            {{ form.url.errors }}
                         </div>
                         <label class="col-form-label">Текст:</label>
                         <div class="col-sm-12" style="padding-left: 10px;">
                             {{ form.text }}
+                            {{ form.text.errors }}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
                 <div class="empty_form" style="display: none;">
-                    <div class="col-sm-2" style="padding-bottom: 10px;"
+                    <div class="col" style="padding-bottom: 10px;"
                          id="{{ home_page_banner.empty_form.prefix }}">
                         <div class="text-right">
                             <img src="/static/cms/media/del.jpg"
@@ -225,14 +227,14 @@
 
             <!--            formset-->
             <label class="col-form-label">Размер 1000x190</label>
-            <div class="form-group row" id="formset_promotions">
-                <div class="col-sm-2 center">
+            <div class="can-delete-list"></div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-6 py-4" id="formset_promotions">
+                <div class="col center">
                     <a id="add-image_promotions" class="btn btn-outline-dark">Добавить</a>
                 </div>
                 {{ promotions_page_banner.management_form }}
-                <div class="can-delete-list"></div>
                 {% for form in promotions_page_banner %}
-                <div class="col-sm-2" style="padding-bottom: 10px;" id="{{ form.prefix }}">
+                <div class="col" style="padding-bottom: 10px;" id="{{ form.prefix }}">
                     <div class="text-right">
                         <img src="/static/cms/media/del.jpg"
                              alt="del" width="20px;" height="20px;"
@@ -269,12 +271,13 @@
                         <label class="col-form-label">Url:</label>
                         <div class="col-sm-12" style="padding-bottom: 10px;">
                             {{ form.url }}
+                            {{ form.url.errors }}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
                 <div class="empty_form_promotions" style="display: none;">
-                    <div class="col-sm-2" style="padding-bottom: 10px;"
+                    <div class="col" style="padding-bottom: 10px;"
                          id="{{ promotions_page_banner.empty_form.prefix }}">
                         <div class="text-right">
                             <img src="/static/cms/media/del.jpg"

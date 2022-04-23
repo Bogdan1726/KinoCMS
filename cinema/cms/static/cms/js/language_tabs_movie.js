@@ -24,3 +24,14 @@ function ukraine() {
     $('#description').text('Опис');
 
 }
+
+$('form').submit(function () {
+    if ($("#id_title_uk").val().length < 1 || $("#id_description_uk").val().length < 1) {
+        $(".callout").css('display', 'block');
+        $('body,html').animate({scrollTop: 0}, 400);
+        setTimeout(function () {
+            $(".callout").css('display', 'none');
+        }, 4000)
+        return false;
+    }
+})

@@ -14,7 +14,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -69,7 +68,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
-
 ]
 
 ROOT_URLCONF = 'cinema.urls'
@@ -147,7 +145,6 @@ AUTH_USER_MODEL = 'user.User'
 
 LANGUAGE_CODE = 'ru'
 
-
 TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
@@ -164,12 +161,9 @@ LANGUAGES = [
     ('uk', _('Ukrainian')),
 ]
 
-
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
-
-
 
 # Language end
 
@@ -199,7 +193,6 @@ LOGIN_REDIRECT_URL = '/'
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 
-
 # SMTP gmail
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -207,7 +200,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSl = True
-
 
 # Google Api
 API_KEY = os.getenv('GOOGLE_API_KEY')

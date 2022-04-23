@@ -55,7 +55,7 @@ class Gallery(models.Model):
     Gallery model
     """
     objects = None
-    title = models.CharField(max_length=100, verbose_name='Заголовок')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
 
     def __str__(self):
         return f'{self.title}'
