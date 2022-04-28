@@ -7,17 +7,33 @@
 
 
 {% block style %}
+<style>
+    .btn-group {
+
+    }
+
+    @media (max-width: 380px) {
+        .btn-group {
+            padding: 20px;
+        }
+    }
+
+
+</style>
 <link href="{% static 'cms/css/other_page.css' %}" rel="stylesheet">
 {% endblock %}
 
 
 {% block content %}
 {% include 'cms/inc/_messages.html' %}
+<div class="callout callout-danger" style="display: none;">
+    <p>Заполните все мультиязычные поля</p>
+</div>
 <div class="card">
     <div class="card-body">
         <form method="post">
             {% csrf_token %}
-            {% include 'cms/inc/_active_and_language.html' %}
+            {% include 'cms/inc/_active_and_language_home.html' %}
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Телефон</label>
                 <div class="col-sm-2">
@@ -42,6 +58,7 @@
                 <label class="col-sm-2 col-form-label">SEO текст:</label>
                 <div class="col-sm-10">
                     {{ form.seo_text }}
+                    {{ form.seo_text_uk }}
                 </div>
             </div>
             <div class="row">
@@ -77,7 +94,10 @@
                 </div>
             </div>
             <div style="text-align:center">
-                <button type="submit" class="btn btn-outline-dark">Сохранить</button>
+                <button type="submit"
+                        onclick="russian()"
+                        class="btn btn-outline-dark">Сохранить
+                </button>
                 <a href="{% url 'pages' %}" class="btn btn-outline-dark">Назад</a>
             </div>
         </form>
@@ -87,5 +107,35 @@
 
 
 {% block script %}
+<script>
+    $("#id_seo_text_uk").css('display', 'none');
+
+    function russian() {
+        $("#ru").removeAttr().css('background-color', '#ddd');
+        $('#uk').css('background-color', 'white');
+        $("#id_seo_text_uk").css('display', 'none');
+        $("#id_seo_text").css('display', 'block');
+
+    }
+
+    function ukraine() {
+        $('#ru').css('background-color', 'white');
+        $('#uk').css('background-color', '#ddd');
+        $("#id_seo_text_uk").css('display', 'block');
+        $("#id_seo_text").css('display', 'none');
+    }
+
+    $('form').submit(function () {
+        if ($("#id_seo_text_uk").val().length < 1) {
+            $(".callout").css('display', 'block');
+            $('body,html').animate({scrollTop: 0}, 400);
+            setTimeout(function () {
+                $(".callout").css('display', 'none');
+            }, 4000)
+            return false;
+        }
+    })
+
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 {% endblock %}

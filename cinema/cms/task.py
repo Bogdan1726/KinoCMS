@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 
 @app.task(bind=True)
 def send_mailing(self, list_users, template):
+    print('task send')
     for i in range(len(list_users)):
         send_mail('Рассылка от KinoCMS',
                   'KinoCMS',

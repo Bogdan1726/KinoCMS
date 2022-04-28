@@ -7,6 +7,19 @@
 
 
 {% block style %}
+<style>
+    .btn-group {
+
+    }
+
+    @media (max-width: 380px) {
+        .btn-group {
+            padding: 20px;
+        }
+    }
+
+
+</style>
 <link href="{% static 'cms/css/contacts_page.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -14,6 +27,9 @@
 {% block content %}
 <div class="card-body">
     {% include 'cms/inc/_messages.html' %}
+    <div class="callout callout-danger" style="display: none;">
+        <p>Заполните все мультиязычные поля</p>
+    </div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.management_form }}
@@ -26,6 +42,7 @@
                     <label id="title-{{ form.prefix }}" class="col-sm-2 col-form-label">Название кинотеатра</label>
                     <div class="col-sm-3">
                         {{ form.title }}
+                        {{ form.title_uk }}
                         <span style="color: red;">
                             {{ form.title.errors }}
                             </span>
@@ -35,6 +52,7 @@
                     <label id="address-{{ form.prefix }}" class="col-sm-2 col-form-label">Адресс</label>
                     <div class="col-sm-10">
                         {{ form.address }}
+                        {{ form.address_uk }}
                         <span style="color: red;">
                             {{ form.address.errors }}
                             </span>
@@ -64,7 +82,7 @@
                              height="100%">
                         {% endif %}
                     </div>
-                    <div class="col-sm-4 center">
+                    <div class="col-sm-6 center">
                         <a class="btn btn-outline-success btn-file"
                            id="{{ form.prefix }}"
                            onchange="load_logo(event, this)"
@@ -103,12 +121,14 @@
                         кинотеатра</label>
                     <div class="col-sm-3">
                         {{ form.title }}
+                        {{ form.title_uk }}
                     </div>
                 </div>
                 <div class="form-group row">
                     <label id="address-{{ form.prefix }}" class="col-sm-2 col-form-label">Адресс</label>
                     <div class="col-sm-10">
                         {{ form.address }}
+                        {{ form.address_uk }}
                     </div>
                 </div>
                 <div class="form-group row">
@@ -186,7 +206,11 @@
             </div>
         </div>
         <div style="text-align:center">
-            <button id="sub" type="submit" class="btn btn-outline-dark">Сохранить</button>
+            <button id="sub"
+                    onclick="russian(event)"
+                    type="submit"
+                    class="btn btn-outline-dark">Сохранить
+            </button>
             <a href="{% url 'pages' %}" class="btn btn-outline-dark">Назад</a>
         </div>
     </form>

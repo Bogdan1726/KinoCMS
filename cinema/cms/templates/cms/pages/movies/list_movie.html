@@ -27,9 +27,9 @@
                 </a>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
             {% for movie in object_list.movies %}
-            <div class="col-sm-3">
+            <div class="col">
                 {% if movie.active == True %}
                 <br>
                 <a class="img_movie" href="{% url 'movies_edit' movie.id %}">
@@ -88,10 +88,10 @@
 <div class="card">
     <div class="card-body">
         <h4 class="text-center">Список фильмов которые покажут скоро</h4>
-        <div class="row">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
             {% if object_list.movies_coming_soon %}
             {% for movie in object_list.movies_coming_soon %}
-            <div class="col-sm-3">
+            <div class="col">
                 {% if movie.active == True %}
                 <br>
                 <a class="img_movie" href="{% url 'movies_edit' movie.id %}">

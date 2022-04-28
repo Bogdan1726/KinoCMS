@@ -1,7 +1,5 @@
 from django.conf import settings
 from django.db import models
-import datetime
-from django.core.validators import validate_image_file_extension
 import os
 
 
@@ -19,7 +17,7 @@ class Client(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.date}-{self.user.email}"
+        return f"{self.date}"
 
 
 class TemplatesMailing(models.Model):
@@ -40,8 +38,8 @@ class SeoBlock(models.Model):
     """
     objects = None
     url = models.URLField(verbose_name='url')
-    title_seo = models.CharField(max_length=30, verbose_name='Заголовок')
-    keywords = models.CharField(max_length=50, verbose_name='Ключевые слова')
+    title_seo = models.CharField(max_length=100, verbose_name='Заголовок')
+    keywords = models.CharField(max_length=100, verbose_name='Ключевые слова')
     description_seo = models.TextField(blank=True, default='', verbose_name='Описание')
 
     class Meta:
@@ -57,7 +55,7 @@ class Gallery(models.Model):
     Gallery model
     """
     objects = None
-    title = models.CharField(max_length=30, verbose_name='Заголовок')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
 
     def __str__(self):
         return f'{self.title}'
@@ -103,9 +101,9 @@ class PromotionsPageBanner(models.Model):
 
 class CarouselBanner(models.Model):
     INTERVAL = [
-        (5, '5сек'),
-        (10, '10сек'),
-        (30, '30сек')
+        (5000, '5сек'),
+        (10000, '10сек'),
+        (30000, '30сек')
     ]
 
     objects = None
@@ -161,6 +159,7 @@ class Movies(models.Model):
 
 
 class Cinema(models.Model):
+    objects = None
     title = models.CharField(max_length=100, verbose_name='Название кинотеатра')
     description = models.TextField(verbose_name='Описание')
     conditions = models.TextField(verbose_name='Условия')
@@ -200,7 +199,8 @@ class Halls(models.Model):
         verbose_name_plural = 'Залы'
 
     def __str__(self):
-        return f"Зал №{self.number}"
+        return f"{self.number}"
+        # return f"Зал №{self.number}-{self.cinemas}"
 
 
 class Seance(models.Model):
@@ -220,6 +220,7 @@ class Seance(models.Model):
 
 
 class Ticket(models.Model):
+    objects = None
     row = models.PositiveIntegerField(verbose_name='Ряд')
     place = models.PositiveIntegerField(verbose_name='Место')
     type = models.BooleanField(default=True, verbose_name='Тип(покупка или бронь)')
@@ -232,6 +233,7 @@ class Ticket(models.Model):
 
 
 class Events(models.Model):
+    objects = None
     TYPE_EVENTS = [
         ('news', 'Новость'),
         ('promotions', 'Акция'),

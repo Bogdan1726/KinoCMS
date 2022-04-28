@@ -61,9 +61,9 @@ class CustomUserChangeForm(UserChangeForm):
 class UserUpdateForm(UserChangeForm):
     error_messages = {
         'password_mismatch': _('The two password fields didn’t match.'),
-        'error_date': 'Дата рождения не может быть позже текущей даты',
-        'error_phone': 'Неверный формат номера телефона',
-        'error_number_card': 'Номер карты неверного формата',
+        'error_date': _('Дата рождения не может быть позже текущей даты'),
+        'error_phone': _('Неверный формат номера телефона'),
+        'error_number_card': _('Номер карты неверного формата'),
         'duplicate_phone_number': _('Этот номер телефона уже использовался для регистрации.')
     }
 
@@ -98,7 +98,7 @@ class UserUpdateForm(UserChangeForm):
             'phone_number': forms.TextInput(attrs={'placeholder': '+38(092)-222-22-22',
                                                    'class': 'form-control',
                                                    'data-mask': '+38(000)-000-00-00'}),
-            'number_card': forms.TextInput(attrs={'placeholder': 'Номер вашей карты',
+            'number_card': forms.TextInput(attrs={'placeholder': _('Номер вашей карты'),
                                                   'class': 'form-control',
                                                   'data-mask': '0000-0000-0000-0000'}),
             'town': forms.Select(attrs={'class': 'form-control'}),

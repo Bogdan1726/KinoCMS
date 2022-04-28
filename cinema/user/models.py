@@ -7,20 +7,16 @@ from.managers import CustomUserManager
 from django.core.mail import send_mail
 from django.contrib import auth
 from django.db import models
-
+from django.conf import settings
 
 # Create your models here.
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    LANGUAGE = [
-        ('ru', 'Русский'),
-        ('ua', 'Украинский')
-    ]
 
     GENDER = [
-        ('m', 'Мужской'),
-        ('f', 'Женский')
+        ('m', _('Мужской')),
+        ('f', _('Женский'))
     ]
 
     username_validator = UnicodeUsernameValidator()
@@ -34,7 +30,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True, verbose_name='Активный')
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name='Дата присоединения')
     address = models.CharField(max_length=100, blank=True, verbose_name='Адресс')
-    language = models.CharField(max_length=2, default=LANGUAGE[0][0], choices=LANGUAGE, verbose_name='Язык')
+    language = models.CharField(max_length=15, choices=settings.LANGUAGES,
+                                default=settings.LANGUAGE_CODE)
+
+
     gender = models.CharField(max_length=5, default='', choices=GENDER, verbose_name='Пол')
     phone_number = models.TextField(blank=True, null=True, unique=True, verbose_name='Телефон')
     date_of_birth = models.DateField(null=True, blank=True, verbose_name='Дата рождения')

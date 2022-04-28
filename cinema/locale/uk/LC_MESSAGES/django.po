@@ -1,0 +1,483 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-23 18:36+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: cinema/settings.py:164
+msgid "Russian"
+msgstr ""
+
+#: cinema/settings.py:165
+msgid "Ukrainian"
+msgstr ""
+
+#: main/templates/main/inc/_footer.html:6 main/templates/main/inc/_nav.html:117
+msgid "Мобильное приложение"
+msgstr "Мобільний додаток"
+
+#: main/templates/main/inc/_footer.html:9
+msgid "Разработка сайтов"
+msgstr "Розробка сайтів"
+
+#: main/templates/main/inc/_footer.html:13 main/templates/main/inc/_nav.html:78
+#: main/templates/main/pages/poster/poster.html:28
+#: main/templates/main/pages/poster/soon.html:28
+msgid "Афиша"
+msgstr "Афіша"
+
+#: main/templates/main/inc/_footer.html:15 main/templates/main/inc/_nav.html:81
+msgid "Расписание"
+msgstr "Розклад"
+
+#: main/templates/main/inc/_footer.html:16
+msgid "Скоро в прокате"
+msgstr "Незабаром у прокаті"
+
+#: main/templates/main/inc/_footer.html:17 main/templates/main/inc/_nav.html:87
+msgid "Кинотеатры"
+msgstr "Кінотеатри"
+
+#: main/templates/main/inc/_footer.html:18 main/templates/main/inc/_nav.html:90
+msgid "Акции"
+msgstr "Акції"
+
+#: main/templates/main/inc/_footer.html:22 main/templates/main/inc/_nav.html:95
+#: main/templates/main/inc/_nav.html:99
+msgid "О кинотеатре"
+msgstr "Про кінотеатр"
+
+#: main/templates/main/inc/_footer.html:24
+#: main/templates/main/inc/_nav.html:103
+#: main/templates/main/pages/news/list_news.html:105
+msgid "Новости"
+msgstr "Новини"
+
+#: main/templates/main/inc/_footer.html:25
+#: main/templates/main/inc/_nav.html:108
+msgid "Реклама"
+msgstr "Реклама"
+
+#: main/templates/main/inc/_footer.html:26
+msgid "Кафе-Бар"
+msgstr "Кафе-бар"
+
+#: main/templates/main/inc/_footer.html:27
+#: main/templates/main/inc/_nav.html:122
+#: main/templates/main/pages/about_cinema/contacts.html:91
+msgid "Контакты"
+msgstr "Контакти"
+
+#: main/templates/main/inc/_nav.html:16
+msgid "Поиск"
+msgstr "Пошук"
+
+#: main/templates/main/inc/_nav.html:25
+msgid "Профиль"
+msgstr "Профіль"
+
+#: main/templates/main/inc/_nav.html:27
+msgid "Панель администратора"
+msgstr "Панель Адміністратора"
+
+#: main/templates/main/inc/_nav.html:32
+msgid "Выйти"
+msgstr "Вийти"
+
+#: main/templates/main/inc/_nav.html:37
+msgid "Логин"
+msgstr "Логін"
+
+#: main/templates/main/inc/_nav.html:38
+msgid "Регистрация"
+msgstr "Реєстрація"
+
+#: main/templates/main/inc/_nav.html:84
+#: main/templates/main/pages/poster/poster.html:33
+#: main/templates/main/pages/poster/soon.html:33
+msgid "Скоро"
+msgstr "Скоро"
+
+#: main/templates/main/inc/_nav.html:112
+msgid "Кафе"
+msgstr "Кафе"
+
+#: main/templates/main/inc/_nav.html:127
+msgid "VIP-зал"
+msgstr "VIP-зал"
+
+#: main/templates/main/inc/_nav.html:132
+msgid "Детская комната"
+msgstr "Дитяча кімната"
+
+#: main/templates/main/inc/carousel_news_and_promotion.html:3
+msgid "Новости и Акции"
+msgstr "Новини і Акції"
+
+#: main/templates/main/pages/about_cinema/about_cinema.html:55
+#: main/templates/main/pages/about_cinema/advertising.html:55
+#: main/templates/main/pages/about_cinema/cafe_bar.html:55
+#: main/templates/main/pages/about_cinema/children_room.html:55
+#: main/templates/main/pages/about_cinema/mobile_application.html:62
+#: main/templates/main/pages/about_cinema/vip.html:55
+#: main/templates/main/pages/cinemas/cinema_card.html:135
+#: main/templates/main/pages/cinemas/hall_card.html:120
+msgid "ФОТОГАЛЕРЕЯ"
+msgstr "ФОТОГАЛЕРЕЯ"
+
+#: main/templates/main/pages/about_cinema/mobile_application.html:53
+msgid "Мобильное приложения"
+msgstr "Мобільний додаток"
+
+#: main/templates/main/pages/about_cinema/news.html:105
+#: main/templates/main/pages/promotions/list_promotions.html:105
+msgid "Акции и скидки"
+msgstr "Акції та знижки"
+
+#: main/templates/main/pages/about_cinema/news.html:119
+#: main/templates/main/pages/news/card_news.html:108
+#: main/templates/main/pages/news/list_news.html:119
+#: main/templates/main/pages/promotions/card_promotion.html:108
+#: main/templates/main/pages/promotions/list_promotions.html:119
+msgid "Планета Кино"
+msgstr "Планета Кіно"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:78
+msgid "Количество залов"
+msgstr "Кількість залів"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:83
+#: main/templates/main/pages/cinemas/hall_card.html:103
+msgid "Зал"
+msgstr "ЗАЛА"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:88
+#: main/templates/main/pages/cinemas/hall_card.html:81
+msgid "Смотрите сегодня:"
+msgstr "Дивіться сьогодні:"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:104
+#: main/templates/main/pages/cinemas/hall_card.html:98
+msgid "Расписание всех сеансов"
+msgstr "Розклад сеансів кінотеатру"
+
+#: main/templates/main/pages/cinemas/cinema_card.html:129
+msgid "Условия"
+msgstr "Умови"
+
+#: main/templates/main/pages/cinemas/hall_card.html:117
+msgid "Карта зала"
+msgstr "Карта зали"
+
+#: main/templates/main/pages/cinemas/list_cinemas.html:90
+msgid "Наши кинотеатры"
+msgstr "Наші кінотеатри"
+
+#: main/templates/main/pages/home/index.html:71
+msgid "Смотрите сегодня,"
+msgstr "Дивіться сьогодні,"
+
+#: main/templates/main/pages/home/index.html:90
+msgid "Купить билет"
+msgstr "Купити квиток"
+
+#: main/templates/main/pages/home/index.html:96
+#: main/templates/main/pages/movie_card.html:88
+#: main/templates/main/pages/schedule.html:146
+msgid "Нет сеансов"
+msgstr "Немає сеансів"
+
+#: main/templates/main/pages/home/index.html:105
+msgid "Смотрите скоро"
+msgstr "Дивіться незабаром"
+
+#: main/templates/main/pages/home/index.html:121
+#: main/templates/main/pages/poster/soon.html:54
+msgid "C"
+msgstr "З"
+
+#: main/templates/main/pages/home/index.html:127
+#: main/templates/main/pages/poster/poster.html:100
+#: main/templates/main/pages/poster/soon.html:100
+msgid "Нет фильмов"
+msgstr "Немає фільмів"
+
+#: main/templates/main/pages/movie_card.html:37
+msgid "Расписание сеансов кинотеатра"
+msgstr "Розклад сеансів кінотеатру"
+
+#: main/templates/main/pages/movie_card.html:51
+msgid "ВСЕ"
+msgstr "ВСІ"
+
+#: main/templates/main/pages/movie_card.html:101
+msgid "Сбросить фильтр"
+msgstr "Скинути фільтр"
+
+#: main/templates/main/pages/movie_card.html:114
+msgid "премьера"
+msgstr "прем'єра"
+
+#: main/templates/main/pages/movie_card.html:118
+msgid "страна"
+msgstr "країна"
+
+#: main/templates/main/pages/movie_card.html:122
+msgid "продюсер"
+msgstr "продюсер"
+
+#: main/templates/main/pages/movie_card.html:126
+msgid "режисер"
+msgstr "режисер"
+
+#: main/templates/main/pages/movie_card.html:130
+msgid "сценарист"
+msgstr "сценарист"
+
+#: main/templates/main/pages/movie_card.html:135
+msgid "триллер, ужасы, комедия"
+msgstr "трилер, жахи, комедія"
+
+#: main/templates/main/pages/movie_card.html:142
+msgid "время"
+msgstr "час"
+
+#: main/templates/main/pages/movie_card.html:143
+msgid "117 мин."
+msgstr "117 хв."
+
+#: main/templates/main/pages/movie_card.html:154
+msgid "Кадры и постеры"
+msgstr "Кадри та постери"
+
+#: main/templates/main/pages/poster/poster.html:54
+msgid "Сейчас в кино"
+msgstr "Зараз у кіно"
+
+#: main/templates/main/pages/poster/poster.html:93
+#: main/templates/main/pages/poster/soon.html:93
+#: main/templates/main/pages/ticket_booking.html:495
+msgid "Купить"
+msgstr "Купити"
+
+#: main/templates/main/pages/schedule.html:73
+msgid "Кинотеатр"
+msgstr "Кінотеатри"
+
+#: main/templates/main/pages/schedule.html:83
+msgid "Дата"
+msgstr "Дата"
+
+#: main/templates/main/pages/schedule.html:95
+msgid "Фильм: все"
+msgstr "Фільм: всі"
+
+#: main/templates/main/pages/schedule.html:105
+msgid "Зал: все"
+msgstr "Зала: всі"
+
+#: main/templates/main/pages/schedule.html:118
+msgid "ВРЕМЯ"
+msgstr "ЧАС"
+
+#: main/templates/main/pages/schedule.html:119
+msgid "ФИЛЬМ"
+msgstr "ФІЛЬМ"
+
+#: main/templates/main/pages/schedule.html:120
+#: main/templates/main/pages/ticket_booking.html:162
+msgid "ЗАЛ"
+msgstr "ЗАЛА"
+
+#: main/templates/main/pages/schedule.html:121
+#: main/templates/main/pages/ticket_booking.html:165
+msgid "ЦЕНА В ГРН."
+msgstr "ЦІНА У ГРН."
+
+#: main/templates/main/pages/schedule.html:122
+msgid "БРОНИРОВАТЬ"
+msgstr "БРОНЮВАТИ"
+
+#: main/templates/main/pages/ticket_booking.html:168
+msgid "ЗАБРОНИРОВАНО"
+msgstr "ЗАБРОНЬОВАНО"
+
+#: main/templates/main/pages/ticket_booking.html:176
+msgid "ВАШ ЗАКАЗ"
+msgstr "ВАШЕ ЗАМОВЛЕННЯ"
+
+#: main/templates/main/pages/ticket_booking.html:178
+msgid "БИЛЕТОВ"
+msgstr "КВИТКІВ"
+
+#: main/templates/main/pages/ticket_booking.html:179
+msgid "СУММА"
+msgstr "СУМА"
+
+#: main/templates/main/pages/ticket_booking.html:490
+msgid "Стоимость услуги бронирования - 3 грн. за каждое место."
+msgstr "Вартість послуги бронювання – 3 грн. за кожне місце."
+
+#: main/templates/main/pages/ticket_booking.html:491
+msgid ""
+"ЗАБРОНИРОВАННЫЕ БИЛЕТЫ НУЖНО ВЫКУПАТЬ В КАССЕ КИНОТЕАТРА НЕ ПОЗДНЕЕ ЧЕМ ЗА "
+"ПОЛЧАСА ДО НАЧАЛА СЕАНСА"
+msgstr ""
+"ЗАБРОНЬОВАНІ КВИТКИ ПОТРІБНО ВИКУПАТИ У КАСІ КІНОТЕАТРУ НЕ ПІЗНІШЕ НІЖ ЗА "
+"ПІВГОДИНИ ДО ПОЧАТКУ СЕАНСУ"
+
+#: main/templates/main/pages/ticket_booking.html:494
+msgid "Забронировать"
+msgstr "Забронювати"
+
+#: main/templates/main/pages/ticket_booking.html:497
+msgid "Для покупки и бронирования билетов необходимо"
+msgstr "Для покупки та бронювання квитків необхідно"
+
+#: main/templates/main/pages/ticket_booking.html:502
+msgid "Спасибо за покупку!"
+msgstr "Дякую за покупку!"
+
+#: user/forms.py:17 user/forms.py:25
+msgid "Password"
+msgstr "Пароль"
+
+#: user/forms.py:29
+msgid "Password confirmation"
+msgstr "Підтвердження паролю"
+
+#: user/forms.py:63
+msgid "The two password fields didn’t match."
+msgstr "Два поля пароля не збігаються."
+
+#: user/forms.py:64
+msgid "Дата рождения не может быть позже текущей даты"
+msgstr "Дата народження не може бути пізніше поточної дати"
+
+#: user/forms.py:65
+msgid "Неверный формат номера телефона"
+msgstr "Невірний формат номера телефону"
+
+#: user/forms.py:66
+msgid "Номер карты неверного формата"
+msgstr "Номер картки невірного формату"
+
+#: user/forms.py:67
+msgid "Этот номер телефона уже использовался для регистрации."
+msgstr "Цей номер телефону вже використовувався для реєстрації."
+
+#: user/forms.py:71
+msgid "New password"
+msgstr "Новий пароль"
+
+#: user/forms.py:76
+msgid "New password confirmation"
+msgstr "Підтвердження нового пароля"
+
+#: user/forms.py:101
+msgid "Номер вашей карты"
+msgstr "Номер вашої картки"
+
+#: user/models.py:18
+msgid "Мужской"
+msgstr "Чоловічий"
+
+#: user/models.py:19
+msgid "Женский"
+msgstr "Жіночий"
+
+#: user/models.py:49
+msgid "user"
+msgstr "користувач"
+
+#: user/models.py:50
+msgid "users"
+msgstr "користувачі"
+
+#: user/templates/user/pages/client_page.html:25
+msgid "Страница клиента"
+msgstr "Сторінка клієнта"
+
+#: user/templates/user/pages/client_page.html:32
+msgid "Имя"
+msgstr "Ім'я"
+
+#: user/templates/user/pages/client_page.html:40
+msgid "Фамилия"
+msgstr "Прізвище"
+
+#: user/templates/user/pages/client_page.html:48
+msgid "Псевдоним"
+msgstr "Псевдонім"
+
+#: user/templates/user/pages/client_page.html:64
+msgid "Адресс"
+msgstr "Адреса"
+
+#: user/templates/user/pages/client_page.html:72
+msgid "Пароль"
+msgstr "Пароль"
+
+#: user/templates/user/pages/client_page.html:80
+msgid "Номер карты"
+msgstr "Номер картки"
+
+#: user/templates/user/pages/client_page.html:93
+msgid "Язык"
+msgstr "Мова"
+
+#: user/templates/user/pages/client_page.html:105
+msgid "Пол"
+msgstr "Стать"
+
+#: user/templates/user/pages/client_page.html:117
+msgid "Телефон"
+msgstr "Телефон"
+
+#: user/templates/user/pages/client_page.html:128
+msgid "Дата рождения"
+msgstr "Дата народження"
+
+#: user/templates/user/pages/client_page.html:139
+msgid "Город"
+msgstr "Місто"
+
+#: user/templates/user/pages/client_page.html:147
+msgid "Повторить пароль"
+msgstr "Повторити пароль"
+
+#: user/templates/user/pages/client_page.html:158
+msgid "Сохранить"
+msgstr "Зберегти"
+
+#: user/views.py:45
+msgid "Вы успешно зарегистрированы можете авторизоваться!"
+msgstr "Ви успішно зареєстровані можете авторизуватись!"
+
+#: user/views.py:49 user/views.py:78
+msgid "Исправьте ошибки и попробуйте снова"
+msgstr "Виправте помилки та спробуйте знову"
+
+#: user/views.py:74
+msgid "Данные обновлены"
+msgstr "Дані оновлено"
+
+#~ msgid "Контекстная реклама"
+#~ msgstr "Контекстна реклама"
