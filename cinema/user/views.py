@@ -16,7 +16,6 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import login as auth_login
 from django.http import HttpResponseRedirect
 
-
 # Create your views here.
 
 class UserLoginView(LoginView):
