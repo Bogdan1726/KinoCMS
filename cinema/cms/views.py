@@ -486,9 +486,11 @@ class CmsEventsCreateView(BaseCmsCreate):
 
     def get_success_url(self):
         url_request = self.request.get_full_path()
-        if url_request == '/cms/promotions/create/':
+        if url_request == '/admin/promotions/create/':
+            messages.success(self.request, 'Акция добавлена')
             return reverse_lazy('promotions')
         else:
+            messages.success(self.request, 'Новость добавлена')
             return reverse_lazy('news')
 
     def get_context_data(self, *args, **kwargs):
@@ -508,7 +510,7 @@ class CmsEventsCreateView(BaseCmsCreate):
             seo_block_form.save()
             promotion = form.save(commit=False)
             promotion.seo_block = seo_block_form.instance
-            if self.request.get_full_path() == '/cms/promotions/create/':
+            if self.request.get_full_path() == '/admin/promotions/create/':
                 promotion.type = 'promotions'
             else:
                 promotion.type = 'news'
@@ -522,7 +524,6 @@ class CmsEventsCreateView(BaseCmsCreate):
                         images.save()
             gallery_formset.save()
             promotion.save()
-            messages.success(self.request, 'Данные обновлены')
             return super().form_valid(form)
         return self.form_invalid(form)
 
