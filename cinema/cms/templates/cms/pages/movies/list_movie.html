@@ -52,35 +52,35 @@
                 </a>
                 {% endif %}
                 <h5 style="padding-top:10px; text-align: center;">{{ movie.title }}</h5>
-            </div>
-            <!-- Model for delete -->
-            <div class="modal fade" id="deleteModal1-{{ forloop.counter }}" tabindex="-1" role="dialog"
-                 aria-labelledby="deleteModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"
-                                id="deleteModal1Label-{{ forloop.counter }}">Удаление фильма</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form method="post" action="{% url 'movies_delete' movie.id %}">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                                Ви уверены что хотите удалить фильм {{ movie.title }}?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
+                <!-- Model for delete -->
+                <div class="modal fade" id="deleteModal1-{{ forloop.counter }}" tabindex="-1" role="dialog"
+                     aria-labelledby="deleteModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title"
+                                    id="deleteModal1Label-{{ forloop.counter }}">Удаление фильма</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
-                                <button type="submit" class="btn btn-primary">Удалить</button>
                             </div>
-                        </form>
+                            <form method="post" action="{% url 'movies_delete' movie.id %}">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    Ви уверены что хотите удалить фильм {{ movie.title }}?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Удалить</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
+                <!-- /.model for delete -->
             </div>
-            <!-- /.model for delete -->
             {% endfor %}
         </div>
     </div>
@@ -113,35 +113,35 @@
                 </a>
                 {% endif %}
                 <h5 style="padding-top:10px; text-align: center;">{{ movie.title }}</h5>
-            </div>
-            <!-- Model for delete -->
-            <div class="modal fade" id="deleteModal-{{ forloop.counter }}" tabindex="-1" role="dialog"
-                 aria-labelledby="deleteModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"
-                                id="deleteModalLabel-{{ forloop.counter }}">Удаление фильма</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form method="post" action="{% url 'movies_delete' movie.id %}">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                                Ви уверены что хотите удалить фильм {{ movie.title }}?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
+                <!-- Model for delete -->
+                <div class="modal fade" id="deleteModal-{{ forloop.counter }}" tabindex="-1" role="dialog"
+                     aria-labelledby="deleteModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title"
+                                    id="deleteModalLabel-{{ forloop.counter }}">Удаление фильма</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
-                                <button type="submit" class="btn btn-primary">Удалить</button>
                             </div>
-                        </form>
+                            <form method="post" action="{% url 'movies_delete' movie.id %}">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    Ви уверены что хотите удалить фильм {{ movie.title }}?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Удалить</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
+                <!-- /.model for delete -->
             </div>
-            <!-- /.model for delete -->
             {% endfor %}
             {% else %}
             <p>Нет доступных</p>

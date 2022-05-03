@@ -8,7 +8,7 @@ from django.urls import include
 from main import main_language
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('old_admin/', admin.site.urls),
     path('admin/', include('cms.urls')),
 ] + i18n_patterns(
     path('i18n/', main_language.set_language, name="set_language"),
